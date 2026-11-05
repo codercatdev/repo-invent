@@ -7,6 +7,8 @@ export const GITHUB_API = "https://api.github.com";
 export const MAX_FILES = 40;
 export const MAX_TOTAL_BYTES = 300 * 1024;
 export const MAX_FILE_BYTES = 100 * 1024;
+export const REQUEST_TIMEOUT_MS = 20_000;
+export const CACHE_TTL_MS = 15 * 60 * 1000;
 
 const BINARY_EXTENSIONS = new Set([
   ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".tar",
@@ -23,6 +25,22 @@ const MANIFEST_NAMES = new Set([
 ]);
 
 const MANIFEST_EXTENSIONS = [".tf", ".tfvars"];
+
+// Files that describe code rather than being it. Reading ten of them burns the
+// cap without telling the scanner anything about the architecture.
+const DOC_EXTENSIONS = new Set([".md", ".markdown", ".rst", ".txt", ".adoc"]);
+const DOC_NAMES = new Set([
+  "LICENSE",
+  "LICENSE.txt",
+  "LICENCE",
+  "NOTICE",
+  "AUTHORS",
+  "CHANGELOG",
+  "CODE_OF_CONDUCT.md",
+  "CONTRIBUTING.md",
+  "SECURITY.md",
+  "CODEOWNERS",
+]);
 
 const BOILERPLATE_DIRS = new Set([
   "node_modules", ".git", "dist", "build", "out", "target", "vendor", ".venv",
@@ -49,6 +67,7 @@ export interface FetchOptions {
   fetchImpl?: typeof fetch;
   maxFiles?: number;
   maxTotalBytes?: number;
+  timeoutMs?: number;
 }
 
 interface TreeEntry {
@@ -104,11 +123,19 @@ function isManifest(path: string): boolean {
   return MANIFEST_EXTENSIONS.some((extension) => name.endsWith(extension));
 }
 
+function isDoc(path: string): boolean {
+  const name = baseName(path);
+  if (DOC_NAMES.has(name)) return true;
+  if (MANIFEST_NAMES.has(name)) return false;
+  return DOC_EXTENSIONS.has(extensionOf(path));
+}
+
 /**
  * Order candidate files so the caps are spent on what matters.
  *
- * Manifests and IaC describe the architecture; a stray `src/util.ts` mostly
- * repeats what `package.json` already said.
+ * Manifests and IaC describe the architecture; documentation describes nothing
+ * the scanner can diagnose, so a README must never outrank a package.json just
+ * because it is smaller.
  */
 export function rankCandidates(files: RepoFile[]): RepoFile[] {
   const scored = files
@@ -116,13 +143,17 @@ export function rankCandidates(files: RepoFile[]): RepoFile[] {
     .filter((file) => !BINARY_EXTENSIONS.has(extensionOf(file.path)))
     .filter((file) => file.size <= MAX_FILE_BYTES)
     .map((file) => {
-      const name = baseName(file.path);
       const depth = file.path.split("/").length;
+      const name = baseName(file.path).toLowerCase();
       let score = 50;
-      if (isManifest(file.path)) score = 0;
+      if (name === "package.json" || name === "pyproject.toml" || name === "go.mod" || name === "cargo.toml") {
+        // The dependency manifest leads: it names the SDK clients, which is the
+        // strongest signal the scanner gets.
+        score = 0;
+      } else if (isManifest(file.path)) score = 2;
+      else if (isDoc(file.path)) score = 90;
       else if (depth <= 2) score = 10;
       else if (depth === 3) score = 30;
-      if (name.toLowerCase().startsWith("readme")) score = 20;
       if (file.path.includes("/src/")) score -= 5;
       return { file, score };
     });
@@ -166,6 +197,18 @@ function rateLimitFailure(response: Response): FetchFailure {
   return failure;
 }
 
+interface CacheEntry {
+  at: number;
+  value: FetchResult;
+}
+
+const cache = new Map<string, CacheEntry>();
+
+/** Forget cached scans, for a test that needs a fresh read. */
+export function clearFetchCache(): void {
+  cache.clear();
+}
+
 /**
  * Fetch a public repository's metadata, tree and the handful of files worth
  * reading. No clone, no git binary, five to fifteen HTTP calls.
@@ -183,10 +226,18 @@ export async function fetchRepo(input: string, options: FetchOptions = {}): Prom
   const headers = headersFor(options.token);
   const maxFiles = options.maxFiles ?? MAX_FILES;
   const maxTotalBytes = options.maxTotalBytes ?? MAX_TOTAL_BYTES;
+  const timeoutMs = options.timeoutMs ?? REQUEST_TIMEOUT_MS;
+  const cacheKey = `${ref.owner}/${ref.repo}#${ref.ref ?? ""}#${maxFiles}#${maxTotalBytes}`;
+  const cached = cache.get(cacheKey);
+  if (cached !== undefined && Date.now() - cached.at < CACHE_TTL_MS) return cached.value;
+  // Every call is bounded: a giant tree or a stalled connection must fail loudly
+  // rather than hang a judge's demo.
+  const timedFetch: typeof fetch = (input, init) =>
+    doFetch(input, { ...init, signal: AbortSignal.timeout(timeoutMs) });
 
   let metaResponse: Response;
   try {
-    metaResponse = await doFetch(`${GITHUB_API}/repos/${ref.owner}/${ref.repo}`, { headers });
+    metaResponse = await timedFetch(`${GITHUB_API}/repos/${ref.owner}/${ref.repo}`, { headers });
   } catch (error) {
     return {
       ok: false,
@@ -233,7 +284,7 @@ export async function fetchRepo(input: string, options: FetchOptions = {}): Prom
   const treeUrl = `${GITHUB_API}/repos/${ref.owner}/${ref.repo}/git/trees/${encodeURIComponent(head)}?recursive=1`;
   let treeResponse: Response;
   try {
-    treeResponse = await doFetch(treeUrl, { headers });
+    treeResponse = await timedFetch(treeUrl, { headers });
   } catch (error) {
     return {
       ok: false,
@@ -291,7 +342,7 @@ export async function fetchRepo(input: string, options: FetchOptions = {}): Prom
       .join("/")}?ref=${encodeURIComponent(head)}`;
     let response: Response;
     try {
-      response = await doFetch(rawUrl, {
+      response = await timedFetch(rawUrl, {
         headers: { ...headers, Accept: "application/vnd.github.raw+json" },
       });
     } catch {
@@ -322,5 +373,7 @@ export async function fetchRepo(input: string, options: FetchOptions = {}): Prom
     fetchedFiles: fetched.length,
     fetchedBytes: totalBytes,
   };
-  return { ok: true, snapshot };
+  const value: FetchResult = { ok: true, snapshot };
+  cache.set(cacheKey, { at: Date.now(), value });
+  return value;
 }
