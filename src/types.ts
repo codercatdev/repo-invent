@@ -191,11 +191,14 @@ export interface RemediationTicket {
   acceptanceTest: string;
   sessionIds: string[];
   docLinks: string[];
+  taggedServices?: string[];
 }
 
 export interface RemediationPlan {
   tickets: RemediationTicket[];
   generatedAt: string;
+  /** Gap id to severity, so an export can label a ticket without re-diagnosing. */
+  severityByGap?: Record<string, "high" | "medium" | "low">;
 }
 
 export interface PrescriptionPlan {
