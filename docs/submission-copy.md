@@ -63,7 +63,7 @@ Details implemented from the documentation and confirmed against the live catalo
 
 ## Demo
 
-The site opens on a bundled sample repository that ships inside the app, so the full result appears with no sign-in, no AWS account and no network. Any other public repository can be pasted in.
+One click on "see the sample result" scans a small repository bundled inside the app, so the full result appears with no sign-in, no AWS account and no network. Any public repository can also be pasted in and read live.
 
 ## Honest limitations
 

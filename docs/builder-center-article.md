@@ -26,6 +26,8 @@ The week ends December 4. The tickets start the next Monday. That is the whole i
 
 Steps one to four need nothing. The demo answers in about ten seconds.
 
+The site has a **"see the sample result"** button that scans a small order service bundled inside the app, so the full result appears even with GitHub rate-limited or offline. That sample has five real gaps on purpose, and its files ship with the code so anyone can check the diagnosis against them.
+
 ## Reading a repository without cloning it
 
 Five to fifteen HTTP calls:
