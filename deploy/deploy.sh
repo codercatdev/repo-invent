@@ -65,17 +65,14 @@ ROLE_ARN="arn:aws:iam::${ACCOUNT_ID}:role/${ROLE_NAME}"
 
 echo "==> shipping the function"
 if aws lambda get-function "${PROFILE_ARG[@]}" --function-name "$FUNCTION_NAME" --region "$REGION" >/dev/null 2>&1; then
+  # One update at a time: Lambda refuses a second update while the first is in
+  # progress, and the handler and runtime do not change between deploys.
   aws lambda update-function-code "${PROFILE_ARG[@]}" \
     --function-name "$FUNCTION_NAME" \
     --zip-file "fileb://$ZIP_PATH" \
     --region "$REGION" >/dev/null
-  aws lambda update-function-configuration "${PROFILE_ARG[@]}" \
-    --function-name "$FUNCTION_NAME" \
-    --runtime "$RUNTIME" \
-    --handler "$HANDLER" \
-    --timeout 30 \
-    --memory-size 256 \
-    --region "$REGION" >/dev/null
+  aws lambda wait function-updated "${PROFILE_ARG[@]}" \
+    --function-name "$FUNCTION_NAME" --region "$REGION"
 else
   aws lambda create-function "${PROFILE_ARG[@]}" \
     --function-name "$FUNCTION_NAME" \
