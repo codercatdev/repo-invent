@@ -622,7 +622,11 @@
             <span>${esc(level)}</span>
             ${availabilityPill(session)}
           </div>
+          ${Array.isArray(session.speakers) && session.speakers.length
+            ? `<p><strong>Speakers:</strong> ${esc(session.speakers.join(", "))}</p>`
+            : ""}
           ${session.abstract ? `<p>${esc(session.abstract)}</p>` : ""}
+          ${session.code ? `<p class="note">Code ${esc(session.code)}</p>` : ""}
           <div class="rowbtns">
             <button class="btn btn-primary" type="button" data-act="save">Save to my schedule</button>
             <button class="btn btn-ghost" type="button" data-act="close">Close</button>
