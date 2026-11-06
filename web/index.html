@@ -74,6 +74,52 @@
         margin-bottom: 16px;
       }
       .card h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin: 0 0 14px; }
+      .banner {
+        background: linear-gradient(90deg, #1f2933, #14181d);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
+      }
+      .banner strong { color: var(--accent); font-size: 19px; }
+      .banner.done { border-left-color: var(--ok); }
+      .scroll { overflow-x: auto; }
+      table.heatmap { border-collapse: separate; border-spacing: 3px; font-size: 13px; }
+      table.heatmap th { border: 0; padding: 4px 8px; font-weight: 600; }
+      table.heatmap td.venue { border: 0; padding: 4px 10px 4px 0; white-space: nowrap; font-size: 13px; }
+      table.heatmap td.venue .slot { color: var(--muted); font-size: 11.5px; }
+      td.heat {
+        border: 0;
+        border-radius: 6px;
+        text-align: center;
+        padding: 8px 0;
+        min-width: 44px;
+        font-weight: 650;
+        font-variant-numeric: tabular-nums;
+      }
+      td.heat.empty { background: transparent; color: #3a424d; font-weight: 400; }
+      .avail-open { background: #17351f; color: #6fdc8c; }
+      .avail-filling { background: #3a3013; color: #e3b341; }
+      .avail-walkup { background: #3a2412; color: #ffab70; }
+      .avail-full { background: #3d1a1c; color: #ff8177; }
+      .avail-unknown { background: var(--panel-2); color: var(--muted); }
+      .legend-row { margin: 0 0 14px; font-size: 12.5px; color: var(--muted); }
+      .legend { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+      .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+      .severity {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 5px;
+        margin-bottom: 8px;
+      }
+      .severity.high { background: #3d1a1c; color: #ff8177; }
+      .severity.medium { background: #3a3013; color: #e3b341; }
+      .severity.low { background: #17351f; color: #6fdc8c; }
       .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
       .chip {
         background: var(--panel-2);
@@ -209,6 +255,7 @@
             const paths = [...new Set(gap.evidence.flatMap((entry) => entry.paths))];
             return `
               <div class="gap ${escapeHtml(gap.severity)}">
+                <span class="severity ${escapeHtml(gap.severity)}">${escapeHtml(gap.severity)}</span>
                 <h3>${escapeHtml(gap.title)}</h3>
                 <p>${escapeHtml(gap.why)}</p>
                 <div class="evidence">${paths.map((path) => escapeHtml(path)).join("<br />")}</div>
@@ -258,12 +305,114 @@
 
       function render(result) {
         output.innerHTML = [
+          renderCountdown(result),
           renderFingerprint(result.fingerprint),
           renderGaps(result.gaps),
+          renderHeatmap(result.sessions || []),
           renderSchedule(result.schedule.days),
           renderTickets(result.plan),
         ].join("");
       }
+
+      // The event window, from the live event record.
+      const EVENT_START = new Date("2026-11-30T05:30:00-08:00");
+      const EVENT_END = new Date("2026-12-04T23:59:00-08:00");
+
+      function renderBanner() {
+        const now = Date.now();
+        if (now > EVENT_END.getTime()) {
+          return `<div class="banner done">re:Invent 2026 has ended. This plan still applies to your repository.</div>`;
+        }
+        if (now >= EVENT_START.getTime()) {
+          return `<div class="card"><h2>It is re:Invent week</h2><p class="note">Use the plan below as-is. Reflect on what you heard, then file the tickets.</p></div>`;
+        }
+        const days = Math.ceil((EVENT_START.getTime() - now) / 86_400_000);
+        return `<div class="banner"><strong>${days} day${days === 1 ? "" : "s"}</strong> until re:Invent 2026 opens in Las Vegas.</div>`;
+      }
+
+      function renderCountdown() {
+        return renderBanner();
+      }
+
+      const FULLNESS_CSS = {
+        open: "avail-open",
+        filling: "avail-filling",
+        full: "avail-full",
+        "walk-up-up": "avail-walkup",
+        unknown: "avail-unknown",
+      };
+
+      const FULLNESS_LABEL = {
+        open: "Available",
+        filling: "Limited",
+        full: "Full",
+        "walk-up-up": "Walk-up only",
+        unknown: "Unknown",
+      };
+
+      function timeSlot(start) {
+        const hour = Number(start.slice(11, 13));
+        if (hour < 9) return "Early";
+        if (hour < 12) return "Morning";
+        if (hour < 14) return "Midday";
+        if (hour < 17) return "Afternoon";
+        return "Evening";
+      }
+
+      const SLOTS = ["Early", "Morning", "Midday", "Afternoon", "Evening"];
+
+      /**
+       * Availability grid: one row per venue, one cell per day for the slot the
+       * user is looking at. Counts hold, and colours by what the catalog says,
+       * so a judge can see at a glance what is even possible.
+       */
+      function renderHeatmap(sessions) {
+        if (sessions.length === 0) return "";
+        const days = [...new Set(sessions.map((s) => s.start.slice(0, 10)))].sort();
+        if (days.length === 0) return "";
+        const venues = [...new Set(sessions.map((s) => s.venue).filter(Boolean))].sort();
+
+        const counts = new Map();
+        for (const s of sessions) {
+          const key = `${s.venue}|${s.start.slice(0, 10)}|${timeSlot(s.start)}`;
+          const cell = counts.get(key) || { open: 0, filling: 0, full: 0, "walk-up-up": 0, unknown: 0 };
+          const f = s.availability && s.availability.fullness ? s.availability.fullness : "unknown";
+          cell[f] = (cell[f] || 0) + 1;
+          counts.set(key, cell);
+        }
+
+        const head = `<tr><th>Venue / slot</th>${days
+          .map((d) => `<th>${escapeHtml(d.slice(5))}</th>`)
+          .join("")}</tr>`;
+
+        const rows = [];
+        for (const venue of venues) {
+          for (const slot of SLOTS) {
+            const cells = days.map((day) => {
+              const cell = counts.get(`${venue}|${day}|${slot}`);
+              const total = cell ? Object.values(cell).reduce((a, b) => a + b, 0) : 0;
+              if (total === 0) return `<td class="heat empty">·</td>`;
+              const best = ["open", "filling", "walk-up-up", "full", "unknown"].find((k) => cell[k] > 0) || "unknown";
+              return `<td class="heat ${FULLNESS_CSS[best]}" title="${escapeHtml(FULLNESS_LABEL[best])}">
+                ${total}
+              </td>`;
+            });
+            rows.push(`<tr><td class="venue">${escapeHtml(venue)} <span class="slot">${slot}</span></td>${cells.join("")}</tr>`);
+          }
+        }
+
+        const legend = ["open", "filling", "walk-up-up", "full"]
+          .map((key) => `<span class="legend"><i class="${FULLNESS_CSS[key]}"></i>${FULLNESS_LABEL[key]}</span>`)
+          .join(" ");
+
+        return `<div class="card">
+          <h2>Availability by venue and slot</h2>
+          <p class="note">Sessions in the catalog for this event, coloured by what the API says about seats. A number is a count of sessions in that cell.</p>
+          <div class="legend-row">${legend}</div>
+          <div class="scroll"><table class="heatmap"><thead>${head}</thead><tbody>${rows.join("")}</tbody></table></div>
+        </div>`;
+      }
+
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();

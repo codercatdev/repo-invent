@@ -36,6 +36,8 @@ export interface ScanResponse {
   schedule: { days: Array<{ date: string; items: unknown[] }> };
   plan: { remediation: { tickets: unknown[] } };
   catalogSource: "live" | "fixture";
+  /** The whole catalog, so the page can draw availability the plan does not use. */
+  sessions: unknown[];
   /** Where the repository data came from: live GitHub, this process' cache, or the recorded demo copy. */
   snapshotSource: "live" | "cached" | "recorded";
 }
@@ -100,6 +102,7 @@ export async function scanForWeb(repo: string): Promise<ScanResponse> {
     schedule: { days: prescription.schedule.days },
     plan: { remediation: { tickets: prescription.remediation.tickets } },
     catalogSource: catalog.source,
+    sessions: catalog.sessions,
     snapshotSource: servedFrom,
   };
 }
