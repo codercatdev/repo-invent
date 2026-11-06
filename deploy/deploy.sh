@@ -120,8 +120,28 @@ echo "Deployed."
 echo "  URL: $URL"
 echo "  Function: $FUNCTION_NAME ($REGION)"
 echo
-echo "Smoke test:"
-echo "  curl -s '${URL}health'"
+echo "==> verifying the deploy"
+BASE="${URL%/}"
+HEALTH="$(curl -s -m 20 -o /dev/null -w '%{http_code}' "${BASE}/health" || echo 000)"
+PAGE="$(curl -s -m 20 "${BASE}/" 2>/dev/null || true)"
+if [ "$HEALTH" != "200" ]; then
+  echo "  FAILED: /health returned ${HEALTH}" >&2
+  exit 1
+fi
+echo "  /health 200"
+# A build check: the deployed page must carry the current features, so a stale
+# function is caught here rather than by a judge.
+for marker in "Availability by venue" "What you learned" "Open the full report"; do
+  if printf '%s' "$PAGE" | grep -q "$marker"; then
+    echo "  page has: $marker"
+  else
+    echo "  FAILED: page is missing \"$marker\" (stale build?)" >&2
+    exit 1
+  fi
+done
+
+echo
+echo "Deployed and verified: $BASE"
 echo
 echo "To remove everything:"
 echo "  ./deploy/teardown.sh $REGION ${2:-}"
