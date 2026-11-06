@@ -64,6 +64,7 @@ Usage:
   repo-invent apply --file <plan.json> [--yes]
   repo-invent export --file <plan.json> [--out <dir>]
   repo-invent mcp
+  repo-invent what-can-i-make --at <time> --venue <name> [--offline] [--json]
   repo-invent audit [--offline]
 
 Commands:
@@ -75,7 +76,8 @@ Commands:
   apply     Reserve and favourite the sessions a plan calls for. Needs sign-in and --yes.
   export    Write reinvent-plan.md and issues.json from a plan.
   mcp       Run the local MCP server on stdio.
-  audit     Probe which AWS Events operations this account can reach.
+  what-can-i-make  Mid-week: what can I still get to from where I am standing?
+  audit     Probe which Events operations this account can reach.
 
 Environment:
   GITHUB_TOKEN          Raises GitHub rate limits; not required.
@@ -306,6 +308,30 @@ async function run(argv: string[]): Promise<number> {
       const { StdioServerTransport } = await import("@modelcontextprotocol/sdk/server/stdio.js");
       await createServer().connect(new StdioServerTransport());
       return new Promise<number>(() => 0);
+    }
+
+    case "what-can-i-make": {
+      const at = flags.get("at");
+      const venue = flags.get("venue");
+      if (typeof at !== "string" || typeof venue !== "string") {
+        throw new Error('usage: repo-invent what-can-i-make --at "2026-12-01T12:40" --venue "MGM Grand" [--offline]');
+      }
+      const client = buildClient(flags.has("offline"), config.eventId);
+      const catalog = await client.listSessions({ includeAbstracts: false });
+      let held: string[] = [];
+      if (!flags.has("offline")) {
+        try {
+          const schedule = await client.getSchedule();
+          held = schedule.reservations.map((session) => session.sessionId);
+        } catch {
+          held = [];
+        }
+      }
+      const { whatCanIMake, renderCandidates } = await import("./solver/candidates.js");
+      const report = whatCanIMake(catalog, { at, venue, held, limit: 40 });
+      if (flags.has("json")) process.stdout.write(JSON.stringify(report, null, 2) + "\n");
+      else process.stdout.write(renderCandidates(report) + "\n");
+      return 0;
     }
 
     case "audit": {
