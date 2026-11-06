@@ -25,8 +25,8 @@ repository scan as our differentiator on the home screen.
 
 ## Next
 
-1. `/api/catalog` route, cached, so the Catalog tab can search locally.
-2. `/api/parties` route reading `data/parties.json`.
+- [x] `/api/catalog` route (`f809b7d`): 200, fixture source, 16 sessions
+- [x] `/api/parties` route (`f809b7d`): 200, 171 parties, 6 days
 3. New mobile shell: `web/app.html`, four tabs, bottom bar.
 4. Move the current scan page to `web/scan.html`, linked from Home.
 5. Session detail sheet with Reserve and Favourite.
