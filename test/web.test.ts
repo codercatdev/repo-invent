@@ -36,6 +36,27 @@ describe("web scan", () => {
     }
   });
 
+  it("always declares a snapshot source the page can label", async () => {
+    const { scanForWeb } = await import("../src/web.js");
+    const real = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response("", {
+        status: 403,
+        headers: { "x-ratelimit-remaining": "0", "x-ratelimit-reset": "0" },
+      })) as typeof fetch;
+    try {
+      const result = await scanForWeb("https://github.com/aws-samples/aws-serverless-ecommerce-platform");
+      // The fallback must name its origin; the page renders it verbatim, so an
+      // absent value would silently present recorded data as a live read.
+      expect(["live", "cached", "recorded"]).toContain(result.snapshotSource);
+      expect(result.snapshotSource).toBe("recorded");
+      expect(result.gaps.length).toBeGreaterThan(0);
+      expect(result.plan.remediation.tickets.length).toBeGreaterThan(0);
+    } finally {
+      globalThis.fetch = real;
+    }
+  });
+
   it("refuses a request with no repo", async () => {
     const server = createWebServer();
     await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
