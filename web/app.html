@@ -807,14 +807,22 @@
         const s = state.schedule;
         const reserved = (s && s.reservations) || [];
         const favorites = (s && s.favorites) || [];
-        const all = reserved.concat(favorites).sort((a, b) => String(a.start || "").localeCompare(String(b.start || "")));
+        const blocked = ((s && s.personalTime) || []).map((entry) => ({
+          sessionId: entry.personalTimeId,
+          title: entry.title || "Blocked time",
+          start: entry.startDateTime,
+          end: entry.endDateTime,
+          venue: entry.location || "",
+          blocked: true,
+        }));
+        const all = reserved.concat(favorites, blocked).sort((a, b) => String(a.start || "").localeCompare(String(b.start || "")));
 
-        if (reserved.length === 0 && favorites.length === 0) {
+        if (reserved.length === 0 && favorites.length === 0 && blocked.length === 0) {
           renderSuggestedWeek(s !== null);
           return;
         }
 
-        $("cal-summary").textContent = `${reserved.length} reserved, ${favorites.length} saved`;
+        $("cal-summary").textContent = `${reserved.length} reserved, ${favorites.length} saved` + (blocked.length ? `, ${blocked.length} blocked` : "");
         const days = [...new Set(all.map((entry) => String(entry.start || "").slice(0, 10)))].sort();
         const active = days[0];
 
@@ -830,14 +838,15 @@
           $("calendar-list").innerHTML = rows
             .map((entry) => {
               const reservedTag = reserved.some((r) => r.sessionId === entry.sessionId);
+              const isBlocked = entry.blocked === true;
               return `<div class="item">
                 <h3>${esc(entry.title || entry.sessionId)}</h3>
                 <div class="meta">
                   <span>${esc(String(entry.start || "").slice(11, 16))}</span>
                   <span>${esc([entry.venue, entry.room].filter(Boolean).join(" "))}</span>
-                  <span class="pill ${reservedTag ? "open" : ""}">${reservedTag ? "reserved" : "saved"}</span>
+                  <span class="pill ${reservedTag ? "open" : isBlocked ? "walkup" : ""}">${reservedTag ? "reserved" : isBlocked ? "blocked" : "saved"}</span>
                 </div>
-                ${reservedTag ? "" : `<div class="meta" style="margin-top:8px"><button class="link-btn" type="button" data-remove="${esc(entry.sessionId)}">Remove</button></div>`}
+                ${reservedTag || isBlocked ? "" : `<div class="meta" style="margin-top:8px"><button class="link-btn" type="button" data-remove="${esc(entry.sessionId)}">Remove</button></div>`}
               </div>`;
             })
             .join("");
