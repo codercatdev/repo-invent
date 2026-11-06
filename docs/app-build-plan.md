@@ -29,6 +29,7 @@ repository scan as our differentiator on the home screen.
 - [x] `/api/parties` route (`f809b7d`): 200, 171 parties, 6 days
 - [x] Mobile shell `web/app.html` at `/`: 4 tabs, bottom bar (`3bb5e65`)
 - [x] Scan page kept at `/scan`, opened by the Home button (`3bb5e65`)
+- [x] Repo check in Home: scans and lists gaps (`cb1c96a`)
 5. Session detail sheet with Reserve and Favourite.
 
 ## Rules the UI must keep
