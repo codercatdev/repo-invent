@@ -198,8 +198,12 @@ const isEntry =
 
 if (isEntry) {
   const port = Number(process.env["REPO_INVENT_PORT"] ?? 8080);
-  // localhost only: this is a local demo surface, never a public listener.
-  createWebServer().listen(port, "127.0.0.1", () => {
-    process.stdout.write(`repo:Invent web demo on http://127.0.0.1:${port}\n`);
+  // Loopback by default. A bind address can be given explicitly, so the demo can
+  // be reached from a phone on the same network, but nothing listens publicly
+  // unless someone asked for it.
+  const bind = process.env["REPO_INVENT_BIND"] ?? "127.0.0.1";
+  createWebServer().listen(port, bind, () => {
+    const shown = bind === "0.0.0.0" ? "all interfaces" : bind;
+    process.stdout.write(`repo:Invent web demo on http://${shown}:${port}\n`);
   });
 }
