@@ -14,7 +14,9 @@ import { sampleSnapshot } from "./scanner/demo-sample.js";
 
 /** True for the bundled sample repository, whose files ship with the app. */
 function isSampleRepo(url: string): boolean {
-  return /reinvent-demo-shop/iu.test(url);
+  // `sample://` is the page's own marker; the name match keeps a real GitHub
+  // repository of the same name working too.
+  return url.startsWith("sample://") || /reinvent-demo-shop/iu.test(url);
 }
 import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types.js";
 
@@ -70,20 +72,26 @@ export async function renderReportFor(repo: string): Promise<string> {
 
 async function scanForPrescription(repo: string): Promise<PrescriptionPlan> {
   const config = loadConfig();
-  const result = await fetchRepo(
-    repo,
-    config.githubToken === undefined ? {} : { token: config.githubToken },
-  );
+  // The bundled sample never touches the network: its files ship with the app.
+  const bundled = isSampleRepo(repo) ? sampleSnapshot() : null;
+  const result =
+    bundled !== null
+      ? null
+      : await fetchRepo(repo, config.githubToken === undefined ? {} : { token: config.githubToken });
   let snapshot;
-  if (!result.ok) {
+  if (bundled !== null) {
+    snapshot = bundled;
+  } else if (result !== null && !result.ok) {
     if (result.error.kind === "rate_limited" && isDemoRepo(repo)) {
       snapshot = demoSnapshotCache ?? DEMO_REPO.snapshot;
     } else {
       throw new Error(`${result.error.message}`);
     }
-  } else {
+  } else if (result !== null) {
     snapshot = result.snapshot;
     if (isDemoRepo(repo)) demoSnapshotCache = result.snapshot;
+  } else {
+    throw new Error("could not read the repository");
   }
 
   const manifestScan = scanManifests(snapshot);

@@ -181,11 +181,12 @@
         <button id="go" type="submit">Scan repo</button>
       </form>
       <p class="examples">
-        Try the
-        <a href="#" data-repo="https://github.com/reprohackathon/reinvent-demo-shop"><strong>sample repository</strong></a>
-        — it has five real gaps, and the scan needs no sign-in, no AWS account, and no network.
+        <a href="#" data-repo="https://github.com/aws-samples/aws-serverless-ecommerce-platform">Try a real repository</a>
+        — scanned live over the GitHub API.
         <br />
-        Or paste any public repository of your own.
+        Or
+        <a href="#" id="try-sample"><strong>see the sample result</strong></a>,
+        from a small order service bundled with this app. It needs no network and has five known gaps.
       </p>
     </header>
 
@@ -577,7 +578,18 @@
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const repo = input.value.trim();
+        runScan(input.value.trim());
+      });
+
+      // The bundled sample needs no GitHub round trip: its files ship with the
+      // app, so it always produces the same result.
+      document.getElementById("try-sample")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        input.value = "the bundled sample";
+        runScan("sample://reinvent-demo-shop");
+      });
+
+      async function runScan(repo) {
         if (!repo) return;
         go.disabled = true;
         output.innerHTML = "";
@@ -595,11 +607,13 @@
           }
           const source = data.snapshotSource;
           const origin =
-            source === "live"
-              ? "Live GitHub read."
-              : source === "cached"
-                ? "GitHub is rate-limited; showing a copy cached in this process."
-                : "GitHub is rate-limited; showing the recorded snapshot of this repository.";
+            repo.startsWith("sample://")
+              ? "The bundled sample. Its files ship with this app, so this result is identical every time."
+              : source === "live"
+                ? "Live GitHub read."
+                : source === "cached"
+                  ? "GitHub is rate-limited; showing a copy cached in this process."
+                  : "GitHub is rate-limited; showing the recorded snapshot of this repository.";
           setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}. ${origin}`, false);
           render(data);
           // The report lives behind its own route, so it can be opened, printed
@@ -616,7 +630,7 @@
         } finally {
           go.disabled = false;
         }
-      });
+      }
 
       if (location.search) {
         const prefill = new URLSearchParams(location.search).get("repo");
