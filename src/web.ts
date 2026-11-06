@@ -156,6 +156,10 @@ export async function scanForWeb(repo: string): Promise<ScanResponse> {
   };
 }
 
+function escapeReportText(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function json(response: ServerResponse, status: number, body: unknown): void {
   const payload = JSON.stringify(body);
   response.writeHead(status, {
@@ -207,6 +211,28 @@ export function createWebServer(): ReturnType<typeof createServer> {
 
     if (request.method === "GET" && url.pathname === "/health") {
       json(response, 200, { ok: true });
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/report") {
+      const repo = url.searchParams.get("repo");
+      if (!repo) {
+        response.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
+        response.end("<p>Provide ?repo=&lt;github-url&gt;</p>");
+        return;
+      }
+      try {
+        const html = await renderReportFor(repo);
+        response.writeHead(200, {
+          "Content-Type": "text/html; charset=utf-8",
+          "Content-Length": Buffer.byteLength(html),
+        });
+        response.end(html);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "the scan failed";
+        response.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
+        response.end(`<p>${escapeReportText(message)}</p>`);
+      }
       return;
     }
 
