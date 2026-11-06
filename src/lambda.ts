@@ -1,0 +1,95 @@
+import { readFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { scanForWeb } from "./web.js";
+
+interface LambdaEvent {
+  rawPath?: string;
+  rawQueryString?: string;
+  requestContext?: { http?: { method?: string } };
+  body?: string | null;
+  isBase64Encoded?: boolean;
+}
+
+interface LambdaResult {
+  statusCode: number;
+  headers: Record<string, string>;
+  body: string;
+  isBase64Encoded?: boolean;
+}
+
+const MAX_BODY_BYTES = 4096;
+
+function html(response: string, status = 200): LambdaResult {
+  return {
+    statusCode: status,
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+    body: response,
+  };
+}
+
+function json(status: number, body: unknown): LambdaResult {
+  return {
+    statusCode: status,
+    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+    body: JSON.stringify(body),
+  };
+}
+
+function webDir(): string {
+  const here = import.meta.url.startsWith("file:")
+    ? fileURLToPath(new URL(".", import.meta.url))
+    : dirname(import.meta.url);
+  // dist/lambda.js -> ../web in the packaged bundle.
+  return join(here, "..", "web");
+}
+
+/**
+ * One request on AWS Lambda behind a Function URL.
+ *
+ * The page and the scan endpoint are the whole surface. Nothing here writes to
+ * an account, and the catalog stays the fixture unless REPO_INVENT_LIVE_CATALOG
+ * is set on the function.
+ */
+export async function handler(event: LambdaEvent): Promise<LambdaResult> {
+  const path = event.rawPath ?? "/";
+  const method = event.requestContext?.http?.method ?? "GET";
+
+  if (method === "GET" && (path === "/" || path === "/index.html" || path === "")) {
+    try {
+      return html(await readFile(join(webDir(), "index.html"), "utf8"));
+    } catch (error) {
+      return html(
+        `page not found in the bundle: ${error instanceof Error ? error.message : "unknown"}`,
+        500,
+      );
+    }
+  }
+
+  if (method === "GET" && (path === "/health" || path === "/health/")) {
+    return json(200, { ok: true });
+  }
+
+  if (method === "POST" && path === "/api/scan") {
+    const raw = event.isBase64Encoded && typeof event.body === "string"
+      ? Buffer.from(event.body, "base64").toString("utf8")
+      : (event.body ?? "");
+    if (raw.length > MAX_BODY_BYTES) return json(413, { error: "request body too large" });
+    let repo: unknown;
+    try {
+      repo = (JSON.parse(raw) as { repo?: unknown }).repo;
+    } catch {
+      return json(400, { error: "body must be JSON" });
+    }
+    if (typeof repo !== "string" || repo.trim().length === 0) {
+      return json(400, { error: "repo must be a GitHub URL" });
+    }
+    try {
+      return json(200, await scanForWeb(repo.trim()));
+    } catch (error) {
+      return json(400, { error: error instanceof Error ? error.message : "the scan failed" });
+    }
+  }
+
+  return json(404, { error: "not found" });
+}
