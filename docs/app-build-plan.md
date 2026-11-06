@@ -50,7 +50,7 @@ repository check directly under the Ask box on Home.
 
 1. A live public deploy needs the user: `./deploy/deploy.sh us-east-1 <profile>`.
 2. The deployed Function URL still serves an older build.
-3. Party data is a point-in-time scrape; re-run the two scripts to refresh.
+3. Party data is a point-in-time scrape; re-run the two scripts to refresh. Re-scraped 2026-11-06: still 171 parties, no new rows, so the dataset is current.
 
 ## Rules the UI must keep
 
