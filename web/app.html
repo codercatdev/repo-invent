@@ -189,6 +189,7 @@
       .chips button { white-space: nowrap; background: var(--panel); border: 1px solid var(--line); color: var(--muted); padding: 8px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; }
       .chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 650; }
       .item { display: block; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 9px; text-decoration: none; color: inherit; }
+          .item a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
       .item h3 { font-size: 14.5px; margin: 0 0 4px; line-height: 1.35; }
       .item .meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
       .pill { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); }
@@ -253,7 +254,7 @@
       </section>
 
       <section class="tabview" id="view-parties" data-tab="parties" hidden>
-        <div class="hero"><p>171 parties. Six nights.</p></div>
+        <div class="hero"><p>Vendor and community parties, by night.</p><p class="note" id="party-summary"></p></div>
         <div class="daybar" id="party-days"></div>
         <div id="party-list"></div>
       </section>
@@ -442,31 +443,41 @@
         return { bar, list, days };
       }
 
+      function partyCard(p) {
+        const place = p.address ? `${p.venue} · ${p.address}` : p.venue || p.location || "";
+        return `<div class="item">
+          <h3>${esc(p.title)}</h3>
+          <div class="meta">
+            <span>${esc(p.timeLabel || "")}</span>
+            ${p.sponsors.length ? `<span>by ${esc(p.sponsors.join(", "))}</span>` : ""}
+            ${p.atCapacity ? '<span class="pill full">at capacity</span>' : ""}
+          </div>
+          <div class="meta" style="margin-top:6px">
+            <span>${esc(place)}</span>
+          </div>
+          <div class="meta" style="margin-top:8px;gap:14px">
+            ${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">RSVP</a>` : '<span class="note">no link listed</span>'}
+            ${p.mapUrl ? `<a href="${esc(p.mapUrl)}" target="_blank" rel="noopener">Map</a>` : ""}
+          </div>
+        </div>`;
+      }
+
       function renderParties() {
         const dateOf = (p) => p.start || p.date;
-        const groups = dayGroups(state.parties, dateOf, (p) => `
-          <a class="item" href="${esc(p.url || "#")}" target="_blank" rel="noopener">
-            <h3>${esc(p.title)}</h3>
-            <div class="meta">
-              <span>${esc(p.timeLabel || "")}</span>
-              <span>${esc(p.location || "")}</span>
-              ${p.sponsors.length ? `<span>by ${esc(p.sponsors.join(", "))}</span>` : ""}
-              ${p.atCapacity ? '<span class="pill full">at capacity</span>' : ""}
-            </div>
-          </a>`);
+        const groups = dayGroups(state.parties, dateOf, partyCard);
         $("party-days").innerHTML = groups.bar;
         $("party-list").innerHTML = groups.list;
+        $("party-summary").textContent = `${state.parties.length} parties, ${groups.days?.length ?? 0} nights`;
         for (const chip of $("party-days").querySelectorAll("button")) {
           chip.addEventListener("click", () => {
             for (const other of $("party-days").querySelectorAll("button")) {
               other.setAttribute("aria-pressed", String(other === chip));
             }
             const d = chip.dataset.day;
-            $("party-list").innerHTML = state.parties.filter((p) => dateOf(p).slice(0, 10) === d)
-              .map((p) => `<a class="item" href="${esc(p.url || "#")}" target="_blank" rel="noopener">
-                <h3>${esc(p.title)}</h3>
-                <div class="meta"><span>${esc(p.timeLabel || "")}</span><span>${esc(p.location || "")}</span></div>
-              </a>`).join("");
+            $("party-list").innerHTML = state.parties
+              .filter((p) => dateOf(p).slice(0, 10) === d)
+              .map(partyCard)
+              .join("");
           });
         }
       }

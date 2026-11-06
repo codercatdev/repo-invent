@@ -6,6 +6,12 @@ describe("lambda handler", () => {
     const result = await handler({ rawPath: "/", requestContext: { http: { method: "GET" } } });
     expect(result.statusCode).toBe(200);
     expect(result.headers["Content-Type"]).toContain("text/html");
+    expect(result.body).toContain("Invent 2026");
+  });
+
+  it("serves the original scan page at /scan", async () => {
+    const result = await handler({ rawPath: "/scan", requestContext: { http: { method: "GET" } } });
+    expect(result.statusCode).toBe(200);
     expect(result.body).toContain("repo:Invent");
   });
 

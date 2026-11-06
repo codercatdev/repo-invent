@@ -25,7 +25,10 @@
       "url": "https://kubeauto.day/las-vegas",
       "location": "Rockhouse Grand Canal Shoppes The Venetian",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Rockhouse Grand Canal Shoppes",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rockhouse%20Grand%20Canal%20Shoppes%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-29",
@@ -41,7 +44,10 @@
       "url": "https://www.prosperops.com/event/aws-reinvent-finops-leaders-dinner/?utm_source=conferenceparties",
       "location": "Delmonico Steakhouse The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Delmonico Steakhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Delmonico%20Steakhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-29",
@@ -56,7 +62,10 @@
       "url": "https://marketing.piercloud.com/pier-racing?utm_source=awsparties&utm_medium=site&utm_campaign=pierracing",
       "location": "SpeedVegas 14200 S Las Vegas Blvd",
       "added": "10/18",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SpeedVegas",
+      "address": "14200 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SpeedVegas%2014200%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-11-29",
@@ -71,7 +80,10 @@
       "url": "https://luma.com/y4zpryyh",
       "location": "Register to See Address",
       "added": "9/11",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-29",
@@ -86,7 +98,10 @@
       "url": "https://luma.com/bbmjig1j",
       "location": "Penthouse Suite The Cosmopolitan",
       "added": "10/18",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Penthouse Suite",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Penthouse%20Suite%20The%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -101,7 +116,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -116,7 +134,10 @@
       "url": "https://www.meetup.com/stripe-at-re-invent/events/317090451",
       "location": "Mon Ami Gabi Paris Hotel",
       "added": "10//22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Mon Ami Gabi",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Mon%20Ami%20Gabi%20Paris%20Hotel%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -131,7 +152,10 @@
       "url": "https://stripe.events/stripe-at-reinvent2026",
       "location": "Mon Ami Gabi Paris Hotel",
       "added": "10/14",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Mon Ami Gabi",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Mon%20Ami%20Gabi%20Paris%20Hotel%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -146,7 +170,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -161,7 +188,10 @@
       "url": "https://app.basisworldwide.com/supercar-experience?utm_source=cp&utm_medium=lstng&utm_campaign=svtxt&utm_id=svtxt",
       "location": "SpeedVegas 14200 S Las Vegas Blvd",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SpeedVegas",
+      "address": "14200 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SpeedVegas%2014200%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -177,7 +207,10 @@
       "url": "https://www.britive.com/resource/events/aws-reinvent-2026-britive",
       "location": "Tower Suite Caesars Palace",
       "added": "11/3",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Tower Suite",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Tower%20Suite%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -192,7 +225,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -207,7 +243,10 @@
       "url": "https://luma.com/0wxyztme",
       "location": "Chéri Rooftop Paris",
       "added": "",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Chéri Rooftop",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ch%C3%A9ri%20Rooftop%20Paris%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -222,7 +261,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -237,7 +279,10 @@
       "url": "https://newrelic.com/events/2026-11-30/happyhour",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "10/28",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -252,7 +297,10 @@
       "url": "https://luma.com/sqqi6khx?utm_source=conference-parties&utm_medium=site-listing&utm_campaign=monday-eng-mixer&utm_id=re-invent-2026-sushisamba",
       "location": "SushiSAMBA The Venetian",
       "added": "9/28",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -268,7 +316,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-excelien/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -286,7 +337,10 @@
       "url": "https://luma.com/ol8iv9zc?utm_source=conferenceparties&utm_medium=directory&utm_campaign=reinvent2026",
       "location": "Register to See Address Near The Venetian & Caesars Palace",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Near%20The%20Venetian%20%26%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -301,7 +355,10 @@
       "url": "https://www.joincatalyst.com/catalyst-pre-party-at-aws-reinvent",
       "location": "Register to See Address",
       "added": "10/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -317,7 +374,10 @@
       "url": null,
       "location": "Expo Hall The Venetian",
       "added": "8/10",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Expo Hall",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Expo%20Hall%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -332,7 +392,10 @@
       "url": "https://docs.google.com/forms/d/1FDy7jze78eGROSi0CwZoitpXQWh9y84cBhxdsNc-8MM/edit",
       "location": "Happy Camper Fashion Show LV",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Happy Camper Fashion Show LV",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Happy%20Camper%20Fashion%20Show%20LV%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -347,7 +410,10 @@
       "url": "https://events.cdmmedia.com/event/da77ecec-d140-4e8a-ac91-a3f3c06ca1f2/summary/?refid=mktg-a-cp-nice-awsreinvent2026",
       "location": "SushiSAMBA The Venetian",
       "added": "10/27",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -363,7 +429,10 @@
       "url": "https://www.eventbrite.com/e/reinvent-reception-with-the-new-stack-hydrolix-tickets-2003796176304",
       "location": "Delmonico Steakhouse The Venetian",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Delmonico Steakhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Delmonico%20Steakhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -378,7 +447,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-welcome-happy-hour/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -393,7 +465,10 @@
       "url": "https://luma.com/r87odmij",
       "location": "Rockhouse The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Rockhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rockhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -408,7 +483,10 @@
       "url": "https://luma.com/dgbkfdrf",
       "location": "Upscale Restaurant Cosmopolitan",
       "added": "9/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Upscale Restaurant",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Upscale%20Restaurant%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -423,7 +501,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -440,7 +521,10 @@
       "url": "https://luma.com/evenings?utm_source=CP",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -455,7 +539,10 @@
       "url": "https://www.darktrace.com/event-registration/darktrace-after-dark-at-aws-re-invent",
       "location": "Clique Bar The Cosmopolitan",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Clique Bar",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Clique%20Bar%20The%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -470,7 +557,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -485,7 +575,10 @@
       "url": "https://events.Trellix.com/AccessGrantedreInvent2026/ConferenceParties",
       "location": "Minus5 Ice Bar & 1923 Prohibition Lounge Venetian Shoppes",
       "added": "10/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Minus5 Ice Bar & 1923 Prohibition Lounge Shoppes",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Minus5%20Ice%20Bar%20%26%201923%20Prohibition%20Lounge%20Venetian%20Shoppes%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -503,7 +596,10 @@
       "url": "https://luma.com/platform-wsip",
       "location": "INDUSTRIAL event space 2330 S Industrial Rd",
       "added": "9/9",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "INDUSTRIAL event space",
+      "address": "2330 S Industrial Rd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=INDUSTRIAL%20event%20space%202330%20S%20Industrial%20Rd%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -518,7 +614,10 @@
       "url": "https://www.qodo.ai/reinvent/#vip-night",
       "location": "INDUSTRIAL event space 2330 S Industrial Rd",
       "added": "10/29",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "INDUSTRIAL event space",
+      "address": "2330 S Industrial Rd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=INDUSTRIAL%20event%20space%202330%20S%20Industrial%20Rd%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -533,7 +632,10 @@
       "url": "https://mazehq.com/event/ferris-wheel-bar-at-reinvent-2026/?utm_source=conferenceparties&utm_term=reinvent",
       "location": "High Roller The LINQ Promenade 3545 S Las Vegas Blvd",
       "added": "9/23",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "High Roller Promenade",
+      "address": "3545 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=High%20Roller%20The%20LINQ%20Promenade%203545%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -548,7 +650,10 @@
       "url": "https://luma.com/cnk2r17n",
       "location": "Carmine's The Forum Shops Caesars Palace",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Carmine's The Forum Shops",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Carmine's%20The%20Forum%20Shops%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -567,7 +672,10 @@
       "url": "https://www.eventbrite.co.uk/e/hunters-unicorns-happy-hour-at-the-vesper-bar-the-cosmo-tickets-2003467972638",
       "location": "Vesper Bar Cosmopolitan",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Vesper Bar",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Vesper%20Bar%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -582,7 +690,10 @@
       "url": "https://luma.com/scanner-wiv2",
       "location": "Carbone Riviera Bellagio",
       "added": "10/27",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Carbone Riviera",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Carbone%20Riviera%20Bellagio%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -597,7 +708,10 @@
       "url": "https://redis.io/events/redis-welcome-party-at-aws-reinvent-2026/",
       "location": "Cañonita The Venetian Shoppes",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Cañonita Shoppes",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ca%C3%B1onita%20The%20Venetian%20Shoppes%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -613,7 +727,10 @@
       "url": "https://www.skyflow.com/dinners/the-ai-enterprise-securing-data-identity-at-runtime",
       "location": "Delmonico Steakhouse The Venetian",
       "added": "10/9",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Delmonico Steakhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Delmonico%20Steakhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -628,7 +745,10 @@
       "url": null,
       "location": "Register to See Address",
       "added": "10/26",
-      "atCapacity": true
+      "atCapacity": true,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-11-30",
@@ -643,7 +763,10 @@
       "url": "https://www.harness.io/event/aws-re-invent-2026?&utm_medium=advertising&utm_term=confparties&utm_content=tradeshow",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "10/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -658,7 +781,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/scaling-your-ai-agents-with-datadog-and-our-partners/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -673,7 +799,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-datadogs-emea-breakfast/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -688,7 +817,10 @@
       "url": "https://luma.com/FairwaytotheCloud",
       "location": "Bali Hai Golf Club 5160 S Las Vegas Blvd",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bali Hai Golf Club",
+      "address": "5160 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bali%20Hai%20Golf%20Club%205160%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -703,7 +835,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -718,7 +853,10 @@
       "url": "https://www.snowflake.com/event/watch-the-opening-keynote-with-us-at-wakuda-20261201/",
       "location": "Wakuda Palazzo, The Venetian",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Wakuda",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Wakuda%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -733,7 +871,10 @@
       "url": "https://luma.com/dztqp1c4",
       "location": "Speed Vegas 14200 S Las Vegas Blvd",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Speed Vegas",
+      "address": "14200 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Speed%20Vegas%2014200%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -748,7 +889,10 @@
       "url": "https://luma.com/le-labo-women-in-cyber",
       "location": "Le Labo The Wynn",
       "added": "10/18",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Le Labo The",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Labo%20The%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -767,7 +911,10 @@
       "url": "https://luma.com/83ji8ar9",
       "location": "Register to See Address",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -782,7 +929,10 @@
       "url": "https://web.cvent.com/event/11908510-ab2c-4e0f-b348-02f3adf933e3/register",
       "location": "Fogo de Chão The Venetian",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -798,7 +948,10 @@
       "url": "https://www.britive.com/resource/events/aws-reinvent-2026-britive",
       "location": "Tower Suite Caesars Palace",
       "added": "11/3",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Tower Suite",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Tower%20Suite%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -813,7 +966,10 @@
       "url": "https://luma.com/9iccjhyt",
       "location": "Carmine's The Forum Shops Caesars Palace",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Carmine's The Forum Shops",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Carmine's%20The%20Forum%20Shops%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -829,7 +985,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-bigdata-boutique/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -844,7 +1003,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -860,7 +1022,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-excelien/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -875,7 +1040,10 @@
       "url": "https://luma.com/nfv9qtqp",
       "location": "Register to See Address Caesars Palace",
       "added": "10/16",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -891,7 +1059,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-directeam/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -906,7 +1077,10 @@
       "url": "https://www.brooksource.com/aws-reinvent",
       "location": "Stadia Bar Caesars Palace",
       "added": "10/28",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Stadia Bar",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Stadia%20Bar%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -922,7 +1096,10 @@
       "url": "https://luma.com/z0npkjtn",
       "location": "F1 Arcade Caesars Palace",
       "added": "10/27",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "F1 Arcade",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=F1%20Arcade%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -940,7 +1117,10 @@
       "url": "https://luma.com/data-reinvent",
       "location": "North Show Terrace Wynn",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "North Show Terrace",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=North%20Show%20Terrace%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -955,7 +1135,10 @@
       "url": "https://www.apexon.com/aws-reinvent-2026/",
       "location": "Bar Luca - The Venetian",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bar Luca -",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bar%20Luca%20-%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -971,7 +1154,10 @@
       "url": "https://wiv.ai/events/air-over-vegas-take-ai-to-new-heights",
       "location": "Maverick Helicopters 6075 S Las Vegas Blvd",
       "added": "10/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Maverick Helicopters",
+      "address": "6075 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maverick%20Helicopters%206075%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -986,7 +1172,10 @@
       "url": "https://cloudgov.ai/ooa/",
       "location": "TAO Asian Bistro The Venetian",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "TAO Asian Bistro",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=TAO%20Asian%20Bistro%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1002,7 +1191,10 @@
       "url": "https://attend.cloudera.com/sip-and-scale-danica-patrick-aws/aws-parties-site",
       "location": "Register to See Address",
       "added": "11/3",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1017,7 +1209,10 @@
       "url": "https://events.1password.io/access-neat-evening-of-whiskey",
       "location": "The Encore 3121 S Las Vegas Blvd",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The",
+      "address": "3121 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Encore%203121%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1032,7 +1227,10 @@
       "url": "https://na2.hubs.ly/H08cw-K0",
       "location": "Dinner Upscale Restaurant Caesars Palace VIP Helicopter Tour",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Dinner Upscale Restaurant VIP Helicopter Tour",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Dinner%20Upscale%20Restaurant%20Caesars%20Palace%20VIP%20Helicopter%20Tour%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1047,7 +1245,10 @@
       "url": "https://lp.controlmonkey.io/reinvent-private-stk-dinner-2026?utm_source=conferenceparties&utm_medium=listing&utm_campaign=reinvent26",
       "location": "STK Las Vegas The Cosmopolitan",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "STK Las Vegas",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=STK%20Las%20Vegas%20The%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1063,7 +1264,10 @@
       "url": "https://events.businessinsider.com/ai-insider-las-vegas/",
       "location": "Catch ARIA",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Catch",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Catch%20ARIA%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1078,7 +1282,10 @@
       "url": "https://web.cvent.com/event/47c6819a-ca55-4e8b-a04a-33fa0224ccce/summary",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1093,7 +1300,10 @@
       "url": "https://luma.com/a9duyd99",
       "location": "Toca Madera Shops at Crystals 3720 S Las Vegas Blvd",
       "added": "10/126",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Toca Madera Shops at Crystals",
+      "address": "3720 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Toca%20Madera%20Shops%20at%20Crystals%203720%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1108,7 +1318,10 @@
       "url": "https://newrelic.com/events/2026-12-01/happy-hour",
       "location": "Vista Cocktail Lounge Caesars Palace",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Vista Cocktail Lounge",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Vista%20Cocktail%20Lounge%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1126,7 +1339,10 @@
       "url": "https://cybersecurity.arcticwolf.com/261201_RamsaysKitchenreInventCISOHappyHour.html",
       "location": "Ramsay’s Kitchen Harrah’s",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Ramsay’s Kitchen Harrah’s",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ramsay%E2%80%99s%20Kitchen%20Harrah%E2%80%99s%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1146,7 +1362,10 @@
       "url": "https://www.eventbrite.com/e/cloud-cocktails-at-play-tickets-1997894868333",
       "location": "Play Playground Luxor",
       "added": "10/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Play Playground",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Play%20Playground%20Luxor%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1161,7 +1380,10 @@
       "url": "https://events.thoughtworks.com/twshiftintohappyhour/ConferenceParties",
       "location": "Opium Room TAO Asian Bistro The Venetian",
       "added": "9/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Opium Room TAO Asian Bistro",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Opium%20Room%20TAO%20Asian%20Bistro%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1176,7 +1398,10 @@
       "url": "https://luma.com/fad-rdl4",
       "location": "Rockhouse The Venetian",
       "added": "9/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Rockhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Rockhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1191,7 +1416,10 @@
       "url": "https://arrow.swoogo.com/awsreinventreception/rta",
       "location": "F1 Arcade Caesars Palace",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "F1 Arcade",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=F1%20Arcade%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1208,7 +1436,10 @@
       "url": "https://luma.com/reinvent-speak-easy?utm_campaign=58045796-1226%20AWS%20re%3Ainvent&utm_source=Event&utm_medium=Conference%20parties%20tracking%20URL&utm_content=URL%20for%20conference%20parties",
       "location": "Allē Lounge on 66 111 Resorts World Ave",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Allē Lounge on 66 111 Ave",
+      "address": "111 Resorts World Ave",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=All%C4%93%20Lounge%20on%2066%20111%20Resorts%20World%20Ave%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1223,7 +1454,10 @@
       "url": "https://bit.ly/4jci2hY",
       "location": "Shelby Heritage Center 6405 Ensworth St",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Shelby Heritage Center",
+      "address": "6405 Ensworth St",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Shelby%20Heritage%20Center%206405%20Ensworth%20St%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1239,7 +1473,10 @@
       "url": "https://luma.com/x3ftka38",
       "location": "The Oakroom Rockhouse The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Oakroom Rockhouse",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Oakroom%20Rockhouse%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1254,7 +1491,10 @@
       "url": "https://luma.com/scanner-fmqq",
       "location": "Maverick Helicopters 6075 S Las Vegas Blvd",
       "added": "10/27",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Maverick Helicopters",
+      "address": "6075 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Maverick%20Helicopters%206075%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1269,7 +1509,10 @@
       "url": "https://events.1password.io/remixatspritz",
       "location": "Spritz The Venetian",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Spritz",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Spritz%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1284,7 +1527,10 @@
       "url": "https://events.Trellix.com/SecuretheSizzle2026/ConferenceParties",
       "location": "Braseria by EDO 3900 Paradise Rd",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Braseria by EDO",
+      "address": "3900 Paradise Rd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Braseria%20by%20EDO%203900%20Paradise%20Rd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1300,7 +1546,10 @@
       "url": "https://luma.com/ul0tgyw9",
       "location": "F1 Arcade Caesars Palace",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "F1 Arcade",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=F1%20Arcade%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1315,7 +1564,10 @@
       "url": "https://luma.com/5g7wzhbr",
       "location": "Upscale Restaurant Cosmopolitan",
       "added": "9/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Upscale Restaurant",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Upscale%20Restaurant%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1335,7 +1587,10 @@
       "url": "https://luma.com/agent-soundcheck?utm_source=conferenceparties",
       "location": "On The Record Speakeasy Park MGM",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "On The Record Speakeasy",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=On%20The%20Record%20Speakeasy%20Park%20MGM%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1350,7 +1605,10 @@
       "url": "https://luma.com/qi5jgr7d?utm_source=conferenceparties",
       "location": "HaSalon Palazzo, The Venetian",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "HaSalon",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=HaSalon%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1365,7 +1623,10 @@
       "url": "https://luma.com/goslojhx",
       "location": "SushiSAMBA The Venetian",
       "added": "9/25",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1380,7 +1641,10 @@
       "url": "https://luma.com/z7viu4b8",
       "location": "Sphere 255 Sands Ave",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Sphere",
+      "address": "255 Sands Ave",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sphere%20255%20Sands%20Ave%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1396,7 +1660,10 @@
       "url": "https://luma.com/434tayyl",
       "location": "Four Seasons Hotel",
       "added": "9/2",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Four Seasons Hotel",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Four%20Seasons%20Hotel%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1411,7 +1678,10 @@
       "url": "https://invite.presidio.com/steakhousesocialpresidioreinvent2026",
       "location": "Fogo de Chão The Venetian",
       "added": "10/14",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1426,7 +1696,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1442,7 +1715,10 @@
       "url": "https://luma.com/x6201711",
       "location": "F1 Arcade Caesars Palace",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "F1 Arcade",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=F1%20Arcade%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1459,7 +1735,10 @@
       "url": "https://luma.com/TriviaDec26",
       "location": "Register to See Address",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1476,7 +1755,10 @@
       "url": "https://luma.com/agents-after-dark",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1491,7 +1773,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-appreciation-party/",
       "location": "Brooklyn Bowl 3545 S Las Vegas Blvd",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Brooklyn Bowl",
+      "address": "3545 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brooklyn%20Bowl%203545%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1506,7 +1791,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-appreciation-party/",
       "location": "Brooklyn Bowl 3545 S Las Vegas Blvd",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Brooklyn Bowl",
+      "address": "3545 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brooklyn%20Bowl%203545%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1521,7 +1809,10 @@
       "url": "https://events.neo4j.com/neo4jreceptionaws2026?utm_source=third-party&utm_medium=organic-social&utm_campaign=exec",
       "location": "The Barbershop Cuts & Cocktails Cosmopolitan",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Barbershop Cuts & Cocktails",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Barbershop%20Cuts%20%26%20Cocktails%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1536,7 +1827,10 @@
       "url": null,
       "location": "Sphere 255 Sands Ave",
       "added": "8/24",
-      "atCapacity": true
+      "atCapacity": true,
+      "venue": "Sphere",
+      "address": "255 Sands Ave",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sphere%20255%20Sands%20Ave%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1551,7 +1845,10 @@
       "url": "https://rubrik.registration.goldcast.io/events/609f6951-a243-44e0-88cf-705115b973c2",
       "location": "Omnia Nightclub<Caesars Palace",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Omnia Nightclub<",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Omnia%20Nightclub%3CCaesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1566,7 +1863,10 @@
       "url": "https://luma.com/o1pqx5yy",
       "location": "TAO Asian Bistro & Nightclub The Venetian",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "TAO Asian Bistro & Nightclub",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=TAO%20Asian%20Bistro%20%26%20Nightclub%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1583,7 +1883,10 @@
       "url": "https://www.devoteam.com/lets-connect-at-aws-reinvent/",
       "location": "Brasserie B Caesars Palace",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Brasserie B",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20B%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1598,7 +1901,10 @@
       "url": "https://events.doit.com/event/AttributeinParis/summary",
       "location": "Chéri Rooftop Paris LV",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Chéri Rooftop LV",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ch%C3%A9ri%20Rooftop%20Paris%20LV%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1615,7 +1921,10 @@
       "url": "https://www.eventbrite.com/e/2004183502808",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1632,7 +1941,10 @@
       "url": "https://luma.com/planet-1sbk",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-01",
@@ -1647,7 +1959,10 @@
       "url": "https://clickhouse.com/houseparty/reinvent",
       "location": "Intrigue Nightclub Wynn",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Intrigue Nightclub",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Intrigue%20Nightclub%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1662,7 +1977,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-public-sector-breakfast/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1677,7 +1995,10 @@
       "url": "https://luma.com/3kjztmsw",
       "location": "TAO Asian Bistro The Venetian",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "TAO Asian Bistro",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=TAO%20Asian%20Bistro%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1692,7 +2013,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1708,7 +2032,10 @@
       "url": "https://luma.com/1xw154pn?utm_source=conferenceparties&utm_medium=directory&utm_campaign=reinvent2026",
       "location": "Register to See Address",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1724,7 +2051,10 @@
       "url": "hhttps://events.elastic.co/innovathersataws/ConferenceParties",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "10/7",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1739,7 +2069,10 @@
       "url": "https://app.basisworldwide.com/18-holes?utm_source=cp&utm_medium=txt&utm_campaign=18txt&utm_id=18txt",
       "location": "Bali Hai Golf Club 5160 S Las Vegas Blvd",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bali Hai Golf Club",
+      "address": "5160 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bali%20Hai%20Golf%20Club%205160%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1754,7 +2087,10 @@
       "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=mycgiL7A3kuD7f5rb5ck1aA2qLvFH5lBtqWs1cOZjT1UQUU0TjVZT1pITFhWUlZaMU1YVDExU0pQSCQlQCN0PWcu&route=shorturl",
       "location": "Madame Tussauds The Venetian",
       "added": "10/8",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Madame Tussauds",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Madame%20Tussauds%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1769,7 +2105,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1785,7 +2124,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-excelien/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1800,7 +2142,10 @@
       "url": "https://luma.com/94nhxjot",
       "location": "Register to See Address In Caesars Palace",
       "added": "8/25",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20In%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1816,7 +2161,10 @@
       "url": null,
       "location": "Expo Hall The Venetian",
       "added": "8/24",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Expo Hall",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Expo%20Hall%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1831,7 +2179,10 @@
       "url": "https://luma.com/n68xcyez",
       "location": "Vista Cocktail Lounge Caesars Palace",
       "added": "11/5",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Vista Cocktail Lounge",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Vista%20Cocktail%20Lounge%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1847,7 +2198,10 @@
       "url": "https://luma.com/mqv2uyje",
       "location": "The Vinyl Room Mandalay Bay",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Vinyl Room",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Vinyl%20Room%20Mandalay%20Bay%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1863,7 +2217,10 @@
       "url": "https://cognition.com/events/reinvent-after-hours",
       "location": "Zero Bond Wynn",
       "added": "10/30",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Zero Bond",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Zero%20Bond%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1879,7 +2236,10 @@
       "url": "https://luma.com/ffbk3mnc",
       "location": "Sugarcane The Venetian",
       "added": "11/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Sugarcane",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sugarcane%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1895,7 +2255,10 @@
       "url": "https://hi.kloia.com/reinvent-2026-happy-hour",
       "location": "Chayo Mexican Kitchen & Tequila Bar - The LINQ",
       "added": "11/3",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Chayo Mexican Kitchen & Tequila Bar -",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Chayo%20Mexican%20Kitchen%20%26%20Tequila%20Bar%20-%20The%20LINQ%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1911,7 +2274,10 @@
       "url": "https://luma.com/kmqfz9et",
       "location": "Terrace Pointe Café Wynn",
       "added": "10/4",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Terrace Pointe Café",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Terrace%20Pointe%20Caf%C3%A9%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1926,7 +2292,10 @@
       "url": "https://na2.hubs.ly/H08n5tV0",
       "location": "Dinner Upscale Restaurant Caesars Palace",
       "added": "10/14",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Dinner Upscale Restaurant",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Dinner%20Upscale%20Restaurant%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1942,7 +2311,10 @@
       "url": "https://luma.com/uum4472x",
       "location": "The Venetian",
       "added": "9/2",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Venetian",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1958,7 +2330,10 @@
       "url": "https://pages.atos.net/atos-bmc-networking-reception-atos",
       "location": "Cañonita The Venetian Shoppes",
       "added": "11/2",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Cañonita Shoppes",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ca%C3%B1onita%20The%20Venetian%20Shoppes%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1973,7 +2348,10 @@
       "url": "https://hubs.li/Q04CYMQ90",
       "location": "Gordon Ramsay's Kitchen Harrah's",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Gordon Ramsay's Kitchen",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Gordon%20Ramsay's%20Kitchen%20Harrah's%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -1989,7 +2367,10 @@
       "url": "https://luma.com/StripexRamp",
       "location": "Gymkhana ARIA",
       "added": "11/3",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Gymkhana",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Gymkhana%20ARIA%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2009,7 +2390,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-partner-happy-hour/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2026,7 +2410,10 @@
       "url": "https://luma.com/i99nfjls?utm_source=conferenceparties&utm_medium=social&utm_campaign=banner",
       "location": "INDUSTRIAL event space 2330 S Industrial Rd",
       "added": "10/30",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "INDUSTRIAL event space",
+      "address": "2330 S Industrial Rd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=INDUSTRIAL%20event%20space%202330%20S%20Industrial%20Rd%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2041,7 +2428,10 @@
       "url": "https://bit.ly/479WTgY",
       "location": "Hard Shake Waldorf Astoria",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Hard Shake Waldorf Astoria",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Hard%20Shake%20Waldorf%20Astoria%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2056,7 +2446,10 @@
       "url": "https://luma.com/notion-eget",
       "location": "Vanderpump Gardens The Venetian",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Vanderpump Gardens",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Vanderpump%20Gardens%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2072,7 +2465,10 @@
       "url": "https://events.elastic.co/awsacutabovetherest/ConferenceParties",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "10/7",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2087,7 +2483,10 @@
       "url": "https://luma.com/czcx4j10",
       "location": "Upscale Restaurant Cosmopolitan",
       "added": "9/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Upscale Restaurant",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Upscale%20Restaurant%20Cosmopolitan%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2103,7 +2502,10 @@
       "url": "https://luma.com/antith-tyid",
       "location": "Register to See Address",
       "added": "10/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2119,7 +2521,10 @@
       "url": "https://luma.com/jbj2va14",
       "location": "Gordon Ramsay Hell's Kitchen Caesars Palace",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Gordon Ramsay Hell's Kitchen",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Gordon%20Ramsay%20Hell's%20Kitchen%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2134,7 +2539,10 @@
       "url": "https://cdm.events/custom/thoughtworks2/?refid=mktg-a-cp-thought-awsreinvent2026",
       "location": "Carbone Riviera Bellagio",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Carbone Riviera",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Carbone%20Riviera%20Bellagio%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2149,7 +2557,10 @@
       "url": "https://luma.com/scanner-ksg3",
       "location": "Sphere 255 Sands Ave",
       "added": "10/27",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Sphere",
+      "address": "255 Sands Ave",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sphere%20255%20Sands%20Ave%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2165,7 +2576,10 @@
       "url": "https://luma.com/xec7trx4",
       "location": "The Tipsy Robot Grand Canal Shoppes The Venetian",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Tipsy Robot Grand Canal Shoppes",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=The%20Tipsy%20Robot%20Grand%20Canal%20Shoppes%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2180,7 +2594,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2195,7 +2612,10 @@
       "url": "https://events.1password.io/agentsafterdarkmasquerade",
       "location": "Grand Lux Café The Venetian",
       "added": "10/23",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Grand Lux Café",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Grand%20Lux%20Caf%C3%A9%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2214,7 +2634,10 @@
       "url": "https://www.honeycomb.io/events/the-1923-secret-social",
       "location": "1923 Prohibition Bar Grand Canal Shoppes The Venetian",
       "added": "10/18",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "The Venetian",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=1923%20Prohibition%20Bar%20Grand%20Canal%20Shoppes%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2231,7 +2654,10 @@
       "url": "https://luma.com/pre1zzw3",
       "location": "Atomic Liquors 917 E Fremont St",
       "added": "8/29",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Atomic Liquors",
+      "address": "917 E Fremont St",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Atomic%20Liquors%20917%20E%20Fremont%20St%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2248,7 +2674,10 @@
       "url": "https://na2.hubs.ly/H08wjYm0",
       "location": "TAO Nightclub The Venetian",
       "added": "10/20",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "TAO Nightclub",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=TAO%20Nightclub%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2263,7 +2692,10 @@
       "url": "https://go.slalom.com/ai-afterhours",
       "location": "Ole Red 3627 S Las Vegas Blvd",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Ole Red",
+      "address": "3627 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Ole%20Red%203627%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2278,7 +2710,10 @@
       "url": "https://luma.com/below-deck?utm_medium=third_party&utm_source=conference_parties&utm_campaign=26Q4_Event_AWS_reInvent_HappyHour_120326&utm_content=",
       "location": "Juliet Cocktail Room The Venetian",
       "added": "10/23",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Juliet Cocktail Room",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Juliet%20Cocktail%20Room%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2297,7 +2732,10 @@
       "url": "https://www.missioncloud.com/events/ignite-2026",
       "location": "OMNIA Nightclub Caesars Palace",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "OMNIA Nightclub",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=OMNIA%20Nightclub%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-02",
@@ -2315,7 +2753,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10//6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2330,7 +2771,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2345,7 +2789,10 @@
       "url": "https://luma.com/notion-pv77",
       "location": "Caneletto The Venetian",
       "added": "10/21",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Caneletto",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Caneletto%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2360,7 +2807,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2375,7 +2825,10 @@
       "url": "https://www.gruntwork.io/lp/gruntwork-racing",
       "location": "Las Vegas Speedway 7000 Las Vegas Blvd N",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Las Vegas Speedway",
+      "address": "7000 Las Vegas Blvd N",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Las%20Vegas%20Speedway%207000%20Las%20Vegas%20Blvd%20N%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2390,7 +2843,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2406,7 +2862,10 @@
       "url": "https://events.elastic.co/SPARKPartnerLunchwithAWS/ConferenceParties",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2421,7 +2880,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2437,7 +2899,10 @@
       "url": "https://datafy.io/sushisamba-reinvent-excelien/",
       "location": "SushiSAMBA The Venetian",
       "added": "11/1",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "SushiSAMBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=SushiSAMBA%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2452,7 +2917,10 @@
       "url": "https://luma.com/xu1fmw7v",
       "location": "TBA Caesars Palace",
       "added": "10/29",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "TBA",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=TBA%20Caesars%20Palace%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2467,7 +2935,10 @@
       "url": "https://luma.com/cb3abu8i",
       "location": "Spritz The Venetian",
       "added": "10/29",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Spritz",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Spritz%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2483,7 +2954,10 @@
       "url": "https://events.elastic.co/preplayhappyhourwithelasticata/ConferenceParties",
       "location": "CUT by Wolfgang Puck The Venetian",
       "added": "10/8",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "CUT by Wolfgang Puck",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=CUT%20by%20Wolfgang%20Puck%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2500,7 +2974,10 @@
       "url": "https://redis.io/events/agent-arena-at-aws-reinvent-2026/?utm_medium=referral-employee-sm&utm_source=employee&utm_campaign=sales-invite-aws-reinvent",
       "location": "Juliet Cocktail Room The Venetian",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Juliet Cocktail Room",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Juliet%20Cocktail%20Room%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2515,7 +2992,10 @@
       "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
       "location": "Fogo de Chão The Venetian",
       "added": "10/12",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Fogo de Chão",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Fogo%20de%20Ch%C3%A3o%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2530,7 +3010,10 @@
       "url": "https://www.agenticfabriq.com/reinvent/private-dinner",
       "location": "Register to See Address",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2545,7 +3028,10 @@
       "url": "https://luma.com/3jy18etl?utm_source=conferenceparties&utm_medium=listing&utm_campaign=reinvent26",
       "location": "Flight Club Palazzo, The Venetian",
       "added": "10/15",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Flight Club",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Flight%20Club%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2560,7 +3046,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-apj-happy-hour/",
       "location": "Bazaar Meat Palazzo, The Venetian",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Bazaar Meat",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Bazaar%20Meat%20Palazzo%2C%20The%20Venetian%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2575,7 +3064,10 @@
       "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-security-reception/",
       "location": "La Cave Wynn",
       "added": "10/31",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "La Cave",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=La%20Cave%20Wynn%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2590,7 +3082,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2605,7 +3100,10 @@
       "url": "https://luma.com/north-hbdj",
       "location": "T-Mobile Arena 3780 S Las Vegas Blvd",
       "added": "10/22",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "T-Mobile Arena",
+      "address": "3780 S Las Vegas Blvd",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=T-Mobile%20Arena%203780%20S%20Las%20Vegas%20Blvd%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2620,7 +3118,10 @@
       "url": null,
       "location": "Las Vegas Festival Grounds",
       "added": "8/10",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Las Vegas Festival Grounds",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Las%20Vegas%20Festival%20Grounds%20Las%20Vegas"
     },
     {
       "date": "2026-12-03",
@@ -2635,7 +3136,10 @@
       "url": "https://www.agenticfabriq.com/reinvent/sphere",
       "location": "Sphere 255 Sands Ave",
       "added": "10/26",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Sphere",
+      "address": "255 Sands Ave",
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Sphere%20255%20Sands%20Ave%20Las%20Vegas"
     },
     {
       "date": "2026-12-04",
@@ -2650,7 +3154,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-04",
@@ -2665,7 +3172,10 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     },
     {
       "date": "2026-12-04",
@@ -2680,7 +3190,14 @@
       "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
       "location": "Register to See Address",
       "added": "10/6",
-      "atCapacity": false
+      "atCapacity": false,
+      "venue": "Private venue",
+      "address": null,
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=Register%20to%20See%20Address%20Las%20Vegas"
     }
-  ]
+  ],
+  "venueCount": 86,
+  "updatedAt": "2026-11-06T23:07:02.174Z",
+  "addressCount": 26,
+  "hiddenAddressCount": 28
 }

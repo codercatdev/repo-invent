@@ -29,8 +29,13 @@ describe("web scan", () => {
       const page = await fetch(`http://127.0.0.1:${port}/`);
       expect(page.status).toBe(200);
       const html = await page.text();
-      expect(html).toContain("repo:Invent");
+      expect(html).toContain("Invent 2026");
+      expect(html).toContain("view-home");
       expect(html).toContain("/api/scan");
+
+      const scanPage = await fetch(`http://127.0.0.1:${port}/scan`);
+      expect(scanPage.status).toBe(200);
+      expect(await scanPage.text()).toContain("repo:Invent");
     } finally {
       await new Promise<void>((resolve) => server.close(() => resolve()));
     }
