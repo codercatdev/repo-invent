@@ -110,3 +110,25 @@ export async function mySchedule(): Promise<MySchedule> {
     },
   };
 }
+
+/**
+ * Save a session to the account, then confirm it from `GetSchedule`.
+ *
+ * The API answers a batch with per-id outcomes and has no idempotency key, so a
+ * `200` is not proof. This reports `saved` only for a favourite it read back.
+ */
+export async function favoriteSession(
+  sessionId: string,
+): Promise<{ saved: boolean; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  const result = await client.associateFavorites([sessionId]);
+  if (result.outcome.failed.some((entry) => entry.sessionId === sessionId)) {
+    const reason = result.outcome.failed.find((entry) => entry.sessionId === sessionId)?.reason;
+    return { saved: false, reason: reason ?? "refused" };
+  }
+  const snapshot = await client.getSchedule();
+  const saved = snapshot.favorites.some((entry) => entry.sessionId === sessionId);
+  return saved ? { saved: true } : { saved: false, reason: "not read back from the schedule" };
+}

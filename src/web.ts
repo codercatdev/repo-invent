@@ -10,7 +10,7 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
-import { mySchedule, sessionStatus } from "./session.js";
+import { favoriteSession, mySchedule, sessionStatus } from "./session.js";
 import { sampleSnapshot } from "./scanner/demo-sample.js";
 
 /** True for the bundled sample repository, whose files ship with the app. */
@@ -322,6 +322,36 @@ export function createWebServer(): ReturnType<typeof createServer> {
     // Sign-in runs on this machine because AWS only accepts a loopback
     // redirect. The CLI does the browser dance; this route reports whether a
     // live token is already on disk.
+    if (request.method === "POST" && url.pathname === "/api/favorite") {
+      let body: string;
+      try {
+        body = await readBody(request);
+      } catch (error) {
+        json(response, 413, { error: error instanceof Error ? error.message : "body too large" });
+        return;
+      }
+      let sessionId: unknown;
+      try {
+        sessionId = (JSON.parse(body) as { sessionId?: unknown }).sessionId;
+      } catch {
+        json(response, 400, { error: "body must be JSON" });
+        return;
+      }
+      if (typeof sessionId !== "string" || sessionId.length === 0) {
+        json(response, 400, { error: "sessionId is required" });
+        return;
+      }
+      try {
+        json(response, 200, await favoriteSession(sessionId));
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "favourite failed";
+        json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 400, {
+          error: /not signed in|no_tokens|sign in again/i.test(message) ? "not signed in" : message,
+        });
+      }
+      return;
+    }
+
     if (request.method === "GET" && url.pathname === "/api/schedule") {
       try {
         json(response, 200, await mySchedule());

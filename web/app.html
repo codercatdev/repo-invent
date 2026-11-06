@@ -190,6 +190,14 @@
       .chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 650; }
       .item { display: block; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 9px; text-decoration: none; color: inherit; }
           .item a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
+      .item-btn { width: 100%; text-align: left; font: inherit; cursor: pointer; }
+      .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 40; }
+      .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; background: var(--panel); border-radius: 18px 18px 0 0; border-top: 1px solid var(--line); max-height: 82vh; overflow: auto; padding: 18px 18px 26px; max-width: 560px; margin: 0 auto; }
+      .sheet h2 { font-size: 17px; margin: 0 0 8px; line-height: 1.35; }
+      .sheet .meta { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+      .sheet p { color: var(--muted); font-size: 14px; }
+      .sheet .rowbtns { display: flex; gap: 10px; margin-top: 16px; }
+      .sheet .rowbtns .btn { flex: 1; }
       .item h3 { font-size: 14.5px; margin: 0 0 4px; line-height: 1.35; }
       .item .meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
       .pill { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); }
@@ -390,14 +398,14 @@
       }
 
       function item(session) {
-        return `<a class="item" href="#catalog" data-id="${esc(session.sessionId)}">
+        return `<button class="item item-btn" type="button" data-id="${esc(session.sessionId)}">
           <h3>${esc(session.title)}</h3>
           <div class="meta">
             <span>${esc(when(session))}</span>
             <span>${esc(session.venue || "")} ${esc(session.room || "")}</span>
             ${availabilityPill(session)}
           </div>
-        </a>`;
+        </button>`;
       }
 
       function renderCatalog() {
@@ -422,6 +430,77 @@
         $("catalog-list").innerHTML = rows.length
           ? state.catalog && rows.map(item).join("")
           : '<p class="empty">Nothing matches that.</p>';
+      }
+
+      function closeSheet() {
+        for (const node of document.querySelectorAll(".sheet, .sheet-bg")) node.remove();
+      }
+
+      function openSheet(session) {
+        closeSheet();
+        const bg = document.createElement("div");
+        bg.className = "sheet-bg";
+        bg.addEventListener("click", closeSheet);
+        const sheet = document.createElement("div");
+        sheet.className = "sheet";
+        sheet.setAttribute("role", "dialog");
+        sheet.setAttribute("aria-modal", "true");
+        const level = typeof session.level === "number" ? String(session.level) : String(session.level || "");
+        sheet.innerHTML = `
+          <h2>${esc(session.title)}</h2>
+          <div class="meta">
+            <span>${esc(when(session))}</span>
+            <span>${esc([session.venue, session.room].filter(Boolean).join(" "))}</span>
+            <span>${esc(level)}</span>
+            ${availabilityPill(session)}
+          </div>
+          ${session.abstract ? `<p>${esc(session.abstract)}</p>` : ""}
+          <div class="rowbtns">
+            <button class="btn btn-primary" type="button" data-act="save">Save to my schedule</button>
+            <button class="btn btn-ghost" type="button" data-act="close">Close</button>
+          </div>
+          <p class="note" id="sheet-note"></p>`;
+        document.body.append(bg, sheet);
+        sheet.querySelector('[data-act="close"]').addEventListener("click", closeSheet);
+        sheet.querySelector('[data-act="save"]').addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          const note = sheet.querySelector("#sheet-note");
+          button.disabled = true;
+          note.textContent = "Saving...";
+          try {
+            const response = await fetch("/api/favorite", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sessionId: session.sessionId }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+              note.textContent = data.error === "not signed in" ? "Sign in from the CLI first." : data.error;
+              return;
+            }
+            note.textContent = data.saved ? "Saved. It is on your account." : "Not saved: " + (data.reason || "refused");
+            if (data.saved) {
+              const schedule = await fetch("/api/schedule");
+              state.schedule = schedule.ok ? await schedule.json() : state.schedule;
+              renderCalendar();
+              $("who").textContent = "signed in";
+            }
+          } catch {
+            note.textContent = "Could not reach the server.";
+          } finally {
+            button.disabled = false;
+          }
+        });
+      }
+
+      function wireRows(container) {
+        for (const row of container.querySelectorAll("[data-id]")) {
+          row.addEventListener("click", (event) => {
+            event.preventDefault();
+            const session = state.catalog.find((s) => s.sessionId === row.dataset.id);
+            if (session) openSheet(session);
+          });
+        }
       }
 
       $("q").addEventListener("input", (event) => {
@@ -543,6 +622,7 @@
           const next = state.catalog.slice().sort((a, b) => String(a.start).localeCompare(String(b.start))).slice(0, 3);
           $("next-count").textContent = `${state.catalog.length} in the catalog`;
           $("home-next").innerHTML = next.map(item).join("");
+          wireRows($("home-next"));
         } catch { $("catalog-count").textContent = "Catalog could not load."; }
 
         try {
