@@ -187,3 +187,21 @@ export async function addPersonalTime(
     ? { ok: true, id: match.personalTimeId }
     : { ok: false, reason: 'not found after write' };
 }
+
+/**
+ * Remove a block of personal time, then confirm it is gone.
+ *
+ * `DeletePersonalTime` answers 204 with no body, so the schedule is read back
+ * and the id must be absent for this to report success.
+ */
+export async function removePersonalTime(
+  personalTimeId: string,
+): Promise<{ removed: boolean; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  await client.deletePersonalTime(personalTimeId);
+  const snapshot = await client.getSchedule();
+  const still = snapshot.personalTime.some((entry) => entry.personalTimeId === personalTimeId);
+  return still ? { removed: false, reason: "still on the schedule" } : { removed: true };
+}

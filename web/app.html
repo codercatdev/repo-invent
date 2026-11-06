@@ -846,7 +846,7 @@
                   <span>${esc([entry.venue, entry.room].filter(Boolean).join(" "))}</span>
                   <span class="pill ${reservedTag ? "open" : isBlocked ? "walkup" : ""}">${reservedTag ? "reserved" : isBlocked ? "blocked" : "saved"}</span>
                 </div>
-                ${reservedTag || isBlocked ? "" : `<div class="meta" style="margin-top:8px"><button class="link-btn" type="button" data-remove="${esc(entry.sessionId)}">Remove</button></div>`}
+                <div class="meta" style="margin-top:8px">${reservedTag ? "" : isBlocked ? `<button class="link-btn" type="button" data-unblock="${esc(entry.sessionId)}">Remove</button>` : `<button class="link-btn" type="button" data-remove="${esc(entry.sessionId)}">Remove</button>`}</div>
               </div>`;
             })
             .join("");
@@ -854,6 +854,9 @@
         draw(active);
         for (const button of $("calendar-list").querySelectorAll("[data-remove]")) {
           button.addEventListener("click", () => removeFavorite(button.dataset.remove, button));
+        }
+        for (const button of $("calendar-list").querySelectorAll("[data-unblock]")) {
+          button.addEventListener("click", () => remove_blocked(button.dataset.unblock, button));
         }
         for (const chip of $("cal-days").querySelectorAll("button")) {
           chip.addEventListener("click", () => {
@@ -918,6 +921,30 @@
           note.textContent = "Could not reach the server.";
         }
       });
+
+      async function remove_blocked(personalTimeId, button) {
+        button.disabled = true;
+        button.textContent = "Removing...";
+        try {
+          const response = await fetch("/api/personal-time/remove", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ personalTimeId }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data.removed) {
+            button.textContent = data.error === "not signed in" ? "Sign in first" : "Not removed";
+            button.disabled = false;
+            return;
+          }
+          const schedule = await fetch("/api/schedule");
+          state.schedule = schedule.ok ? await schedule.json() : state.schedule;
+          renderCalendar();
+        } catch {
+          button.textContent = "Not removed";
+          button.disabled = false;
+        }
+      }
 
       async function removeFavorite(sessionId, button) {
         button.disabled = true;
