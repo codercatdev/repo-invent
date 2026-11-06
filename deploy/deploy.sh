@@ -40,9 +40,9 @@ npm run build >/dev/null
 
 echo "==> packaging"
 rm -f "$ZIP_PATH"
-# dist and node_modules only: the Lambda needs the compiled output and its
-# runtime dependencies, never the sources or the tests.
-zip -qr "$ZIP_PATH" dist node_modules package.json web \
+# The compiled output, its runtime dependencies, the static page, and the
+# bundled data files. Never the sources or the tests.
+zip -qr "$ZIP_PATH" dist node_modules package.json web data \
   -x "node_modules/.bin/*" "node_modules/**/test/*" "node_modules/**/*.md"
 
 ACCOUNT_ID="$(aws sts get-caller-identity "${PROFILE_ARG[@]}" --query Account --output text)"
