@@ -10,6 +10,7 @@ import { scanManifests } from "./scanner/manifest-parser.js";
 import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
+import { RemoteMcpBridge } from "./api/remote-mcp-bridge.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
 import {
   addPersonalTime,
@@ -407,6 +408,52 @@ export function createWebServer(): ReturnType<typeof createServer> {
         json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 400, {
           error: /not signed in|no_tokens|sign in again/i.test(message) ? "not signed in" : message,
         });
+      }
+      return;
+    }
+
+    // The same AWS Events operations, reached over the remote MCP server
+    // rather than REST, so an agent can call one tool by name.
+    if (request.method === "GET" && url.pathname === "/api/mcp/tools") {
+      try {
+        const tools = await new RemoteMcpBridge().listTools();
+        json(response, 200, { count: tools.length, tools });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "MCP list failed";
+        json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 502, { error: message });
+      }
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/mcp/call") {
+      let body: string;
+      try {
+        body = await readBody(request);
+      } catch (error) {
+        json(response, 413, { error: error instanceof Error ? error.message : "body too large" });
+        return;
+      }
+      let parsed: { tool?: unknown; args?: unknown };
+      try {
+        parsed = JSON.parse(body) as typeof parsed;
+      } catch {
+        json(response, 400, { error: "body must be JSON" });
+        return;
+      }
+      if (typeof parsed.tool !== "string" || parsed.tool.length === 0) {
+        json(response, 400, { error: "tool is required" });
+        return;
+      }
+      const args =
+        parsed.args !== null && typeof parsed.args === "object"
+          ? (parsed.args as Record<string, unknown>)
+          : {};
+      try {
+        const result = await new RemoteMcpBridge().callTool(parsed.tool, args);
+        json(response, result.isError ? 422 : 200, result);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "tool call failed";
+        json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 502, { error: message });
       }
       return;
     }
