@@ -121,6 +121,15 @@
       .severity.medium { background: #3a3013; color: #e3b341; }
       .severity.low { background: #17351f; color: #6fdc8c; }
       .report-link { color: var(--accent); text-decoration: none; font-weight: 650; border-bottom: 1px solid var(--accent); }
+      .progress-summary { font-size: 15px; font-weight: 650; color: var(--text); margin: 0 0 6px; }
+      table.ratings td { border-bottom: 1px solid var(--line); padding: 7px 8px; font-size: 14px; }
+      td.stars { white-space: nowrap; }
+      .star {
+        background: none; border: 0; padding: 0 1px; cursor: pointer;
+        color: #3a424d; font-size: 18px; line-height: 1;
+      }
+      .star:hover, .star.on { color: var(--accent); }
+      .star:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
       .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
       .chip {
         background: var(--panel-2);
@@ -266,6 +275,112 @@
         return `<div class="card"><h2>Gaps (${gaps.length})</h2>${items}</div>`;
       }
 
+      // Reflections live in this browser only. Nothing is sent, because there is
+      // no account here and nothing to gain from holding someone's notes.
+      const STORE_KEY = "repo-invent:reflections";
+
+      function loadReflections() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+          return Array.isArray(raw) ? raw : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveReflections(list) {
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(list.slice(0, 200)));
+        } catch {
+          /* storage full or blocked: the page still works */
+        }
+      }
+
+      function closingRating() {
+        return 3;
+      }
+
+      function progressFor(gaps, reflections) {
+        const covered = new Set();
+        for (const r of reflections) {
+          if (r.rating < closingRating()) continue;
+          for (const id of r.gapIds || []) covered.add(id);
+        }
+        const closed = gaps.filter((g) => covered.has(g.id));
+        const open = gaps.filter((g) => !covered.has(g.id));
+        const rated = reflections.length;
+        const summary = rated === 0
+          ? `${open.length} gap${open.length === 1 ? "" : "s"} open. Rate a session to start closing them.`
+          : `${closed.length} of ${gaps.length} gap${gaps.length === 1 ? "" : "s"} closed from ${rated} rated session${rated === 1 ? "" : "s"}.`;
+        return { closed, open, summary };
+      }
+
+      /**
+       * Progress panel plus a rating control per scheduled session.
+       *
+       * The rating is the only thing that closes a gap, so sitting in a room
+       * and being bored does not pretend the gap is gone.
+       */
+      function renderProgress(gaps, days) {
+        const reflections = loadReflections();
+        const progress = progressFor(gaps, reflections);
+        if (days.length === 0) return "";
+
+        const items = days.flatMap((day) => day.items.filter((i) => i.sessionId));
+        const bySession = new Map(reflections.map((r) => [r.sessionId, r]));
+
+        const rows = items
+          .map((item) => {
+            const saved = bySession.get(item.sessionId);
+            const stars = [1, 2, 3, 4, 5]
+              .map(
+                (n) =>
+                  `<button type="button" class="star ${saved && saved.rating >= n ? "on" : ""}"
+                     data-session="${escapeHtml(item.sessionId)}"
+                     data-title="${escapeHtml(item.title)}"
+                     data-gaps="${escapeHtml((item.gaps || []).join(","))}"
+                     data-rating="${n}"
+                     aria-label="Rate ${n} of 5">★</button>`,
+              )
+              .join("");
+            const note = saved && saved.note ? escapeHtml(saved.note) : "";
+            return `<tr>
+              <td>${escapeHtml(item.title)}</td>
+              <td class="stars">${stars}</td>
+              <td class="note">${note}</td>
+            </tr>`;
+          })
+          .join("");
+
+        return `<div class="card" id="progress-card">
+          <h2>What you learned</h2>
+          <p class="progress-summary">${escapeHtml(progress.summary)}</p>
+          <p class="note">Rate a session 3 or more to close the gaps it was planned for. Stored in this browser only.</p>
+          <table class="ratings"><tbody>${rows}</tbody></table>
+          <p style="margin-top:14px"><a class="report-link" href="#" id="learning-link">Download your learning notes →</a></p>
+        </div>`;
+      }
+
+      function learningMarkdown(gaps, days) {
+        const reflections = loadReflections();
+        const progress = progressFor(gaps, reflections);
+        const lines = ["# What I learned at re:Invent 2026", "", progress.summary, ""];
+        const sorted = [...reflections].sort((a, b) => b.rating - a.rating);
+        for (const r of sorted) {
+          lines.push(`## ${r.title}`, "", "★".repeat(r.rating) + "☆".repeat(5 - r.rating), "");
+          if (r.note) lines.push(r.note, "");
+          if ((r.gapIds || []).length > 0) lines.push(`Closes: ${r.gapIds.join(", ")}`, "");
+        }
+        if (progress.open.length > 0) {
+          lines.push("## Still open", "");
+          for (const gap of progress.open) lines.push(`- ${gap.title}`);
+          lines.push("");
+        }
+        void days;
+        void gaps;
+        return lines.join("\n");
+      }
+
       function renderSchedule(days) {
         const items = days.flatMap((day) => day.items.map((item) => ({ ...item, date: day.date })));
         if (items.length === 0) {
@@ -304,15 +419,58 @@
         return `<div class="card"><h2>Tickets (${tickets.length})</h2>${body}</div>`;
       }
 
+      let current = null;
+
       function render(result) {
+        current = result;
         output.innerHTML = [
           renderCountdown(result),
           renderFingerprint(result.fingerprint),
           renderGaps(result.gaps),
           renderHeatmap(result.sessions || []),
           renderSchedule(result.schedule.days),
+          renderProgress(result.gaps, result.schedule.days),
           renderTickets(result.plan),
         ].join("");
+        wireProgress();
+      }
+
+      function wireProgress() {
+        for (const button of output.querySelectorAll(".star")) {
+          button.addEventListener("click", () => {
+            const list = loadReflections();
+            const sessionId = button.dataset.session;
+            const rating = Number(button.dataset.rating);
+            const existing = list.find((r) => r.sessionId === sessionId);
+            const record = {
+              sessionId,
+              title: button.dataset.title || "",
+              rating,
+              note: existing ? existing.note || "" : "",
+              gapIds: (button.dataset.gaps || "").split(",").filter(Boolean),
+              at: new Date().toISOString(),
+            };
+            const next = list.filter((r) => r.sessionId !== sessionId);
+            next.push(record);
+            saveReflections(next);
+            if (current) render(current);
+          });
+        }
+        const link = document.getElementById("learning-link");
+        if (link && current) {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const blob = new Blob([learningMarkdown(current.gaps, current.schedule.days)], {
+              type: "text/markdown",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "reinvent-learning-notes.md";
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        }
       }
 
       // The event window, from the live event record.
