@@ -464,7 +464,19 @@ export function createWebServer(): ReturnType<typeof createServer> {
           });
           return;
         }
-        json(response, result.isError ? 422 : 200, result);
+        // The MCP server marks a failed call `isError: false` when the tool
+        // itself answered with an error body: a missing session comes back as
+        // `{"message":"No session was found","httpStatus":404}`. Passing that
+        // on as success is the exact trap the REST client already guards, so
+        // the body is read here too.
+        const bodyText = result.content
+          .map((part) => (part as { text?: string }).text ?? "")
+          .join("");
+        const failure = /"httpStatus"\s*:\s*(4\d\d|5\d\d)/u.test(bodyText);
+        json(response, result.isError || failure ? 422 : 200, {
+          ...result,
+          ...(failure ? { failure: true } : {}),
+        });
       } catch (error) {
         const message = error instanceof Error ? error.message : "tool call failed";
         json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 502, { error: message });
