@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>repo:Invent — what does your repo lack?</title>
+    <meta name="description" content="Read a public GitHub repository, find its AWS architecture gaps, and get a re:Invent 2026 plan that becomes tickets." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d10;
+        --panel: #14181d;
+        --panel-2: #1b2027;
+        --line: #2a313a;
+        --text: #e8edf3;
+        --muted: #9aa6b4;
+        --accent: #ff9900;
+        --ok: #3fb950;
+        --warn: #d29922;
+        --bad: #f85149;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      header {
+        padding: 56px 24px 32px;
+        max-width: 940px;
+        margin: 0 auto;
+      }
+      h1 { font-size: 34px; line-height: 1.2; margin: 0 0 10px; letter-spacing: -0.5px; }
+      h1 span { color: var(--accent); }
+      .lede { color: var(--muted); font-size: 17px; margin: 0 0 6px; max-width: 62ch; }
+      main { max-width: 940px; margin: 0 auto; padding: 0 24px 80px; }
+      form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 26px 0 8px;
+      }
+      input[type="url"] {
+        flex: 1 1 380px;
+        min-width: 0;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 15px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      input[type="url"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+      button {
+        background: var(--accent);
+        color: #16181c;
+        border: 0;
+        border-radius: 10px;
+        padding: 14px 22px;
+        font-size: 15px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.55; cursor: progress; }
+      .examples { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+      .examples a { color: var(--muted); }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+      }
+      .card h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin: 0 0 14px; }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .chip {
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 11px;
+        font-size: 13px;
+      }
+      .gap { border-left: 3px solid var(--line); padding: 12px 0 12px 14px; margin-bottom: 10px; }
+      .gap.high { border-left-color: var(--bad); }
+      .gap.medium { border-left-color: var(--warn); }
+      .gap.low { border-left-color: var(--ok); }
+      .gap h3 { margin: 0 0 6px; font-size: 15px; }
+      .gap p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+      .evidence { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--muted); }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+      th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+      td.time { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; color: var(--muted); }
+      .tag { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+      .tag.reserve { color: var(--ok); border-color: #26523a; }
+      .tag.walk-up { color: var(--warn); border-color: #5c4818; }
+      .tag.watchlist { color: #58a6ff; border-color: #1f3d5c; }
+      .tag.personal { color: var(--muted); }
+      .error { color: var(--bad); }
+      .note { color: var(--muted); font-size: 13px; }
+      .hidden { display: none; }
+      footer { color: var(--muted); font-size: 13px; max-width: 940px; margin: 0 auto; padding: 0 24px 60px; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel-2); padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1><span>repo:</span>Invent</h1>
+      <p class="lede">
+        re:Invent tells you what is new. This tells you what your repo is missing.
+      </p>
+      <p class="lede">
+        Paste a public GitHub repository. Get its architecture gaps, the sessions that close them, and a week you can walk.
+      </p>
+      <form id="scan-form">
+        <input
+          id="repo"
+          type="url"
+          placeholder="https://github.com/owner/repository"
+          aria-label="Public GitHub repository URL"
+          required
+        />
+        <button id="go" type="submit">Scan repo</button>
+      </form>
+      <p class="examples">
+        Try
+        <a href="#" data-repo="https://github.com/aws-samples/aws-serverless-ecommerce-platform">aws-samples/aws-serverless-ecommerce-platform</a>
+        — no sign-in, no AWS account.
+      </p>
+    </header>
+
+    <main>
+      <p id="status" class="note"></p>
+      <div id="output"></div>
+    </main>
+
+    <footer>
+      Scanning reads at most 40 files over the GitHub API. That is a demo build: no clone, no credentials, no writes.
+      <br />
+      The full tool adds live AWS Events API scheduling, a local MCP server, and a remediation export. See the repository README.
+    </footer>
+
+    <script>
+      "use strict";
+
+      const status = document.getElementById("status");
+      const output = document.getElementById("output");
+      const form = document.getElementById("scan-form");
+      const input = document.getElementById("repo");
+      const go = document.getElementById("go");
+
+      for (const link of document.querySelectorAll("[data-repo]")) {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          input.value = link.dataset.repo;
+          input.focus();
+        });
+      }
+
+      function setStatus(text, isError) {
+        status.textContent = text;
+        status.className = isError ? "note error" : "note";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
+      const ACTION_LABEL = {
+        reserve: ["reserve", "Reserve"],
+        "favorite-walk-up": ["walk-up", "Walk-up queue"],
+        "favorite-watchlist": ["watchlist", "Watchlist"],
+        "personal-time": ["personal", "Personal time"],
+      };
+
+      function renderFingerprint(fingerprint) {
+        const services = fingerprint.services.length
+          ? fingerprint.services.map((entry) => `<span class="chip">${escapeHtml(entry.service)}</span>`).join(" ")
+          : '<span class="note">no AWS services detected</span>';
+        const facts = [
+          ["Level", String(fingerprint.recommendedLevel)],
+          ["IaC", fingerprint.iac.join(", ")],
+          ["Compute", fingerprint.compute.join(", ")],
+          ["MCP", fingerprint.hasMcpConfig ? "yes" : "no"],
+          ["Docker", fingerprint.hasDocker ? "yes" : "no"],
+        ];
+        return `
+          <div class="card">
+            <h2>Stack detected</h2>
+            <div class="row">${services}</div>
+            <div class="row" style="margin-top:14px">
+              ${facts.map(([name, value]) => `<span class="chip">${escapeHtml(name)}: ${escapeHtml(value)}</span>`).join(" ")}
+            </div>
+          </div>`;
+      }
+
+      function renderGaps(gaps) {
+        if (gaps.length === 0) {
+          return `<div class="card"><h2>Gaps</h2><p class="note">No architecture gaps were found in the files that were read. A repo too small to support a claim reports nothing rather than guessing.</p></div>`;
+        }
+        const items = gaps
+          .map((gap) => {
+            const paths = [...new Set(gap.evidence.flatMap((entry) => entry.paths))];
+            return `
+              <div class="gap ${escapeHtml(gap.severity)}">
+                <h3>${escapeHtml(gap.title)}</h3>
+                <p>${escapeHtml(gap.why)}</p>
+                <div class="evidence">${paths.map((path) => escapeHtml(path)).join("<br />")}</div>
+              </div>`;
+          })
+          .join("");
+        return `<div class="card"><h2>Gaps (${gaps.length})</h2>${items}</div>`;
+      }
+
+      function renderSchedule(days) {
+        const items = days.flatMap((day) => day.items.map((item) => ({ ...item, date: day.date })));
+        if (items.length === 0) {
+          return `<div class="card"><h2>Plan</h2><p class="note">Nothing could be scheduled from this catalog.</p></div>`;
+        }
+        const rows = items
+          .map((item) => {
+            const [css, label] = ACTION_LABEL[item.action] || ["personal", item.action];
+            const time = `${item.start.slice(11, 16)}–${item.end.slice(11, 16)}`;
+            return `<tr>
+              <td class="time">${escapeHtml(item.date)} ${escapeHtml(time)}</td>
+              <td>${escapeHtml(item.title)}</td>
+              <td class="note">${escapeHtml(item.venue)}</td>
+              <td><span class="tag ${css}">${escapeHtml(label)}</span></td>
+            </tr>`;
+          })
+          .join("");
+        return `<div class="card"><h2>Plan (${items.length} sessions)</h2>
+          <table><thead><tr><th>When</th><th>Session</th><th>Venue</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody></table></div>`;
+      }
+
+      function renderTickets(plan) {
+        const tickets = plan.remediation.tickets;
+        if (tickets.length === 0) return "";
+        const body = tickets
+          .map(
+            (ticket) => `
+            <div class="gap medium">
+              <h3>${escapeHtml(ticket.id)} — ${escapeHtml(ticket.title)}</h3>
+              <p>${escapeHtml(ticket.why)}</p>
+              <div class="evidence">Acceptance: ${escapeHtml(ticket.acceptanceTest)}</div>
+            </div>`,
+          )
+          .join("");
+        return `<div class="card"><h2>Tickets (${tickets.length})</h2>${body}</div>`;
+      }
+
+      function render(result) {
+        output.innerHTML = [
+          renderFingerprint(result.fingerprint),
+          renderGaps(result.gaps),
+          renderSchedule(result.schedule.days),
+          renderTickets(result.plan),
+        ].join("");
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const repo = input.value.trim();
+        if (!repo) return;
+        go.disabled = true;
+        output.innerHTML = "";
+        setStatus("Reading the repository…", false);
+        try {
+          const response = await fetch("/api/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ repo }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            setStatus(data.error || "The scan failed.", true);
+            return;
+          }
+          setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}.`, false);
+          render(data);
+        } catch (error) {
+          setStatus(`Could not reach the scanner: ${error instanceof Error ? error.message : "unknown error"}`, true);
+        } finally {
+          go.disabled = false;
+        }
+      });
+
+      if (location.search) {
+        const prefill = new URLSearchParams(location.search).get("repo");
+        if (prefill) {
+          input.value = prefill;
+          form.requestSubmit();
+        }
+      }
+    </script>
+  </body>
+</html>
