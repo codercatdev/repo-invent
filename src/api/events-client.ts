@@ -359,6 +359,18 @@ export function normalizeSession(raw: RawSession): ReinventSession {
   return session;
 }
 
+// The API accepts 1 to 10 session ids per request, and counts each SESSION
+// against the quota, so a batch buys round trips and nothing else.
+export const MAX_BATCH_SIZE = 10;
+
+function chunks<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let index = 0; index < items.length; index += size) {
+    out.push(items.slice(index, index + size));
+  }
+  return out;
+}
+
 export class AwsEventsClient {
   readonly eventId: string;
   private readonly fixture: Catalog | undefined;
@@ -628,6 +640,14 @@ export class AwsEventsClient {
     return normalizeSession(raw);
   }
 
+  /**
+   * Read the caller's own schedule.
+   *
+   * The live response wraps everything in `schedule` and names the reserved
+   * list `reserved`, not `reservations`. The earlier reader looked at the top
+   * level, which silently reported an empty schedule for an account that had
+   * favourites — the exact trap the docs warn about.
+   */
   async getSchedule(eventId: string = this.eventId): Promise<ScheduleSnapshot> {
     if (this.fixture) {
       return { reservations: [], favorites: [], personalTime: [] };
@@ -636,25 +656,38 @@ export class AwsEventsClient {
       "GetSchedule",
       this.url(`/events/${eventId}/schedule`),
     );
-    const readSessions = (value: unknown): ReinventSession[] =>
-      Array.isArray(value)
-        ? value.map((entry) =>
-            entry && typeof entry === "object" && "sessionId" in entry
-              ? normalizeSession(entry as RawSession)
-              : normalizeSession({ sessionId: String(entry) }),
-          )
-        : [];
+    const schedule = (body["schedule"] ?? body) as Record<string, unknown>;
+    // The reserved and favourite lists hold bare session ids, so each entry is
+    // a string, not an object.
+    const readIds = (value: unknown): ReinventSession[] => {
+      if (!Array.isArray(value)) return [];
+      return value.map((entry) =>
+        entry && typeof entry === "object"
+          ? normalizeSession(entry as RawSession)
+          : normalizeSession({ sessionId: String(entry) }),
+      );
+    };
     return {
-      reservations: readSessions(body["reservations"] ?? body["reservedSessions"]),
-      favorites: readSessions(body["favorites"]),
-      personalTime: Array.isArray(body["personalTime"])
-        ? (body["personalTime"] as PersonalTimeEntry[])
+      reservations: readIds(
+        schedule["reserved"] ?? schedule["reservations"] ?? schedule["reservedSessions"],
+      ),
+      favorites: readIds(schedule["favorites"]),
+      personalTime: Array.isArray(schedule["personalTime"])
+        ? (schedule["personalTime"] as PersonalTimeEntry[])
         : [],
     };
   }
 
+  /**
+   * Read a `BulkResult`, which is what both bulk writes return.
+   *
+   * The real response wraps everything in `result`, succeeds under `successful`,
+   * and reports a refusal as `{sessionId, code, conflictsWith?}`. A `200` still
+   * does not mean every session succeeded.
+   */
   private parseBatch(body: unknown, requested: string[]): BatchResult {
-    const record = (body ?? {}) as Record<string, unknown>;
+    const outer = (body ?? {}) as Record<string, unknown>;
+    const record = (outer["result"] ?? outer) as Record<string, unknown>;
     const succeeded: string[] = [];
     const failed: BatchOutcome["failed"] = [];
 
@@ -672,7 +705,9 @@ export class AwsEventsClient {
             .filter((entry): entry is string => entry !== null)
         : [];
 
-    succeeded.push(...readIds(record["succeeded"] ?? record["succeededSessionIds"]));
+    succeeded.push(
+      ...readIds(record["successful"] ?? record["succeeded"] ?? record["succeededSessionIds"]),
+    );
 
     const failures = record["failed"] ?? record["failures"] ?? record["failedSessions"];
     if (Array.isArray(failures)) {
@@ -686,9 +721,14 @@ export class AwsEventsClient {
         const id = item["sessionId"];
         if (typeof id !== "string") continue;
         const failure: BatchOutcome["failed"][number] = { sessionId: id };
-        const reason = item["reason"] ?? item["code"] ?? item["status"];
+        const reason = item["code"] ?? item["reason"] ?? item["status"];
         if (typeof reason === "string") failure.reason = reason;
-        if (item["detail"] !== undefined) failure.detail = item["detail"];
+        const conflicts = item["conflictsWith"];
+        if (Array.isArray(conflicts) && conflicts.length > 0) {
+          failure.detail = { conflictsWith: conflicts };
+        } else if (item["detail"] !== undefined) {
+          failure.detail = item["detail"];
+        }
         failed.push(failure);
       }
     }
@@ -714,14 +754,25 @@ export class AwsEventsClient {
       }
       return { outcome: { succeeded, failed }, ambiguous: [] };
     }
-    const body = await this.write<unknown>(
-      "ReserveSessions",
-      this.url(`/events/${eventId}/reservations`),
-      { sessionIds },
-      "POST",
-      sessionIds.length,
-    );
-    return this.parseBatch(body, sessionIds);
+    // A longer list is sent in batches of ten, the API's per-request maximum,
+    // and the outcomes are merged.
+    const succeeded: string[] = [];
+    const failed: BatchOutcome["failed"] = [];
+    const ambiguous: string[] = [];
+    for (const batch of chunks(sessionIds, MAX_BATCH_SIZE)) {
+      const body = await this.write<unknown>(
+        "ReserveSessions",
+        this.url(`/events/${eventId}/reservations`),
+        { sessionIds: batch },
+        "POST",
+        batch.length,
+      );
+      const part = this.parseBatch(body, batch);
+      succeeded.push(...part.outcome.succeeded);
+      failed.push(...part.outcome.failed);
+      ambiguous.push(...part.ambiguous);
+    }
+    return { outcome: { succeeded, failed }, ambiguous };
   }
 
   /**
@@ -765,14 +816,23 @@ export class AwsEventsClient {
   ): Promise<BatchResult> {
     if (sessionIds.length === 0) return { outcome: { succeeded: [], failed: [] }, ambiguous: [] };
     if (this.fixture) return { outcome: { succeeded: sessionIds, failed: [] }, ambiguous: [] };
-    const body = await this.write<unknown>(
-      "AssociateFavorites",
-      this.url(`/events/${eventId}/favorites`),
-      { sessionIds },
-      "POST",
-      sessionIds.length,
-    );
-    return this.parseBatch(body, sessionIds);
+    const succeeded: string[] = [];
+    const failed: BatchOutcome["failed"] = [];
+    const ambiguous: string[] = [];
+    for (const batch of chunks(sessionIds, MAX_BATCH_SIZE)) {
+      const body = await this.write<unknown>(
+        "AssociateFavorites",
+        this.url(`/events/${eventId}/favorites`),
+        { sessionIds: batch },
+        "POST",
+        batch.length,
+      );
+      const part = this.parseBatch(body, batch);
+      succeeded.push(...part.outcome.succeeded);
+      failed.push(...part.outcome.failed);
+      ambiguous.push(...part.ambiguous);
+    }
+    return { outcome: { succeeded, failed }, ambiguous };
   }
 
   async disassociateFavorite(sessionId: string, eventId: string = this.eventId): Promise<void> {
