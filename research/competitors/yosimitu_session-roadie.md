@@ -1,0 +1,503 @@
+# Session Roadie（愛称: re:Roadie）
+
+[English](README.en.md) | 日本語
+
+![re:Roadie: Your backstage crew for re:Invent.](docs/re-roadie-banner.png)
+
+**会場の裏方として、あなたの代わりに公式アプリを整え続けるエージェント。あなたは公式アプリを開くだけでいい。**
+
+re:Invent 参加者の意図とプロフィールをもとに、[AWS Events API](https://docs.aws.amazon.com/events/latest/devguide/what-is-events-api.html) でセッションの計画・予約・移動時間確保・変更追従を行い、結果を**公式アプリの個人スケジュールに書き戻す**ローカルCLIエージェントです。
+
+公式アプリの代わりになるUIは持ちません（会場では公式アプリを見るだけで済むようにする、という発想です）。手元のPCで予定を俯瞰するための、参照専用のローカルHTML（`re-roadie view`）だけを出力できます（設計の説明は [docs/design.md](docs/design.md) を参照）。
+
+### 画面サンプル
+
+`re-roadie view` が出力するHTMLのサンプルです。セッション・予約・個人予定はすべて架空で、公式カタログのデータは含みません。移動ブロックと警告は、実際の計算ロジックで出しています。
+
+「予定」タブ（日別タイムライン。移動ブロック、昼にかかる警告、満席の印）、「セッション一覧」タブ（おすすめ順。点数と理由つき）、「更新履歴」タブ（期間ごとの新規・削除・変更）です。
+
+[![re-roadie view の「予定」タブ（サンプル）](docs/sample/schedule-sample.png)](docs/sample/schedule-sample.png)
+[![re-roadie view の「セッション一覧」タブ（サンプル）](docs/sample/schedule-sample-list.png)](docs/sample/schedule-sample-list.png)
+[![re-roadie view の「更新履歴」タブ（サンプル）](docs/sample/schedule-sample-digest.png)](docs/sample/schedule-sample-digest.png)
+
+- 操作できるサンプル: [日本語](docs/sample/schedule-sample.html) / [English](docs/sample/schedule-sample.en.html)（ダウンロードしてブラウザで開く。各約85KB、外部通信なし）
+- 英語版の画面: `re-roadie view --lang en`。英語版のスクリーンショットは [予定](docs/sample/schedule-sample.en.png) / [セッション一覧](docs/sample/schedule-sample-list.en.png) / [更新履歴](docs/sample/schedule-sample-digest.en.png)
+- 作り直すとき: `npx tsx scripts/generate-sample-html.ts`（日英の両方を作る）
+
+> **注意**: 本ツールは個人が開発した非公式のツールで、AWS・Amazon が提供・承認したものではありません。AWS Events API の公式ドキュメントに基づいて動作しますが、利用は自己責任でお願いします。予約・お気に入り・個人予定を実際に書き換えるため、実行前に必ず差分を確認してください。
+
+## このツールが守っていること
+
+本ツールは次を守ります。
+
+- **クォータを厳守する**：`ListSessions`/`GetSession` 120回/分、`GetSchedule` 60回/分、書き込み系30回/分（[src/api/quotas.ts](src/api/quotas.ts)）。`429` は `Retry-After` に従ってリトライします。
+- **カタログデータを再配布しない**：取得したセッション情報はローカルの `data/` 配下にのみ保存し、リポジトリにコミットしません（`.gitignore` 参照）。
+- **個人情報はローカル保存のみ**：プロフィール・意図・メモはAPIに送信せず、ローカルファイルにのみ保存します。
+- **ホスティングしない**：全機能は利用者自身のマシン上で、利用者自身としてサインインして動作します。
+
+## 必要環境
+
+- Node.js 22 以上
+- Git
+- macOS / Windows
+
+Windows では、[nodejs.org](https://nodejs.org/) の LTS インストーラー（`.msi`）か、`winget` で入れられます。入れたあとはターミナルを開き直してください。
+
+```powershell
+winget install OpenJS.NodeJS.LTS
+winget install Git.Git
+node -v
+```
+
+## セットアップ
+
+```bash
+git clone https://github.com/yosimitu/session-roadie.git
+cd session-roadie
+npm install
+npm run build
+```
+
+以降のコマンドは、リポジトリのルート（`session-roadie`）で実行します。`data/` は実行時のカレントディレクトリ基準で作られるためです。
+
+## 更新のしかた
+
+リポジトリのルートで、次を実行します。
+
+```bash
+git pull
+npm install
+npm run build
+```
+
+実行されるのは `dist/` のコードなので、`npm run build` を忘れると古いままです。そのあと、使い方に応じて次を行います。
+
+| 使い方 | 更新後にやること |
+| --- | --- |
+| Claude Code から使う（MCP） | Claude Code を再起動する。起動中のサーバーは古いコードのままで、新しいツールが使えない |
+| `watch` を定期実行している | 何もしなくてよい。次回の実行から新しい `dist/` が使われる |
+| CLI を直接使う | そのまま使える |
+
+- サインイン（`data/token.json`）、プロフィール、メモ、カタログのスナップショットなどの `data/` 配下は `.gitignore` の対象で、`git pull` では上書きされません。サインインし直す必要は通常ありません。
+- `git pull` が失敗するときは、ローカルで編集したファイルが原因です。`git status` で確認し、残したい変更は `git stash` で退避してください。
+- ビルドでエラーが出るときは、Node.js が 22 未満の可能性があります。`node -v` で確認してください。
+- zip で入れた場合は `git pull` が使えません。新しい zip を別のフォルダに展開し、`data/` をコピーしてから `npm install && npm run build` を実行します。
+- 前の版に戻すときは、`git log` で戻したいコミットを確認し、`git checkout <コミット>` のあとで再ビルドします。
+
+## 使い方
+
+初回は対話ウィザードで簡単なプロフィールと意図を作成し、Builder IDでサインインします（YAMLを直接書く必要はありません）。
+
+```bash
+node dist/cli.js init
+node dist/cli.js auth login
+```
+
+`init` では、普段の仕事・今回の目的・体力・参加日（初日と最終日）・関心テーマに加えて、希望レベル・スポンサーセッションの可否・最も早い開始時刻・昼にかかるときの警告・固定の予定を聞きます。必須は最初の3つで、残りは「未定」「特になし」「制限なし」でもかまいません。回答は予定の組み立てに次のように反映されます。数値と形式の対応は仮置きで、[src/planning/preferences.ts](src/planning/preferences.ts) で調整できます。
+
+| 回答 | 反映先 |
+| --- | --- |
+| 体力 | 1日の上限本数と、セッション間の最低空き時間（`relaxed`＝3本・30分、`normal`＝4本・15分、`packed`＝制限なし） |
+| 目的 | 本数が同じ組み合わせの中で優先する形式（`learning`＝Workshop/Builders' session等、`research`＝Breakout/Lightning talk、`networking`＝Chalk talk/Builders' session、`report`＝Breakout） |
+| 参加日 | 最適化・検索の対象日 |
+| 関心テーマ | カタログのトピックに変換して保存（Claudeが検索条件に使う） |
+| 関心テーマの優先順位（任意。2つ以上選んだときに、1位から順に） | 「セッション一覧」の**おすすめ**の重みを、お気に入りの傾向より優先して決める（1位＝1、最下位＝0.5、間は等間隔）。省略すると、お気に入りのトピックの出現回数（最多を1として比例）を基本の重みにし、関心テーマは最低0.5にする |
+| 希望レベル（200まで / 300まで / 制限なし） | `catalog_search` の既定の絞り込み（`maxLevel`）。レベルが数値で読めないセッションは残す。2194件中、200までだと約8割、300までだと約2割が除かれる（2026-10-08時点のスナップショット） |
+| スポンサーセッション（含める / 避ける） | `catalog_search` の既定の絞り込み（`excludeSponsored`）。略称が `-S` / `-S-R1` で終わるものと、タイトルに `(sponsored by` を含むものを除く |
+| 最も早い開始時刻 | `schedule_optimize` で、これより前に始まる回を選ばない（会場現地時刻） |
+| 昼休みの警告（警告する / しない） | `schedule_optimize` と `schedule_plan` が、選んだ・これから予約する回が 12:00〜13:00 にかかるとき `warnings` で知らせる。回は除外しない（ちょうど12:00終了・13:00開始は警告なし） |
+| 固定の予定（会食・社内会議など） | `schedule_optimize` で、重なる回を選ばない。公式アプリには書き込まず、`profile.yaml` にだけ保存する |
+
+`auth login` はブラウザを開いて Builder ID のサインイン画面に遷移します。サインイン後、ブラウザは `http://localhost:8484`〜`8489` のいずれかに戻ります（ローカルで待ち受けるだけで、外部に公開されるポートではありません）。
+
+### アカウントが複数ある場合
+
+re:Invent の登録に使う Builder ID と、ほかの Builder ID（たとえば Community Builder のもの）を使い分けるときの注意です。
+
+- re:Roadie の予約・お気に入り・個人予定は、**`auth login` でサインインしたアカウント**に書き込まれます。公式アプリで見るスケジュールと同じアカウントでサインインしてください。
+- サインイン中のアカウントは、メールで確認できます。`re-roadie auth login` の完了時、`re-roadie auth status`、`re-roadie view` の HTML のヘッダー（「この予定のアカウント」）に出ます。MCP の `auth_login` と `auth_status` も `email` を返します。
+- Claude Code に別の MCP サーバー（たとえば公式の `awsevents` のリモート MCP）をつないでいる場合、そのサーバーは、Claude Code のセッションにログインしているアカウントで動きます。re:Roadie のサインインとは別なので、**そのサーバーの書き込みのツール（`ReserveSessions`、`CreatePersonalTime` など）を使うと、別のアカウントのスケジュールを書き換えます**。予定の変更には、re:Roadie のツールを使ってください。カタログを読むだけなら、書き換えの心配はありません。
+- アカウントを変えるときは、`auth logout`（トークンの削除と、Builder ID のブラウザのセッションの終了）のあとで、`auth login` をやり直します。
+- `view` の HTML のヘッダーにある公式サイトへのリンクは、ブラウザのログイン状態で開きます。re:Roadie のサインインは引き継がれません。アカウントごとにブラウザのプロファイルを分けると、混ざりません。
+- `view` の HTML には、サインイン中のメールが入ります。他の人に渡すときは注意してください（`data/*.html` はコミットされません）。
+
+### 代表的なコマンド
+
+| コマンド | 説明 |
+| --- | --- |
+| `re-roadie sync` | カタログを全件取得し、前回のローカルスナップショットとの差分（新規・変更・キャンセル）を表示する。<ul><li>取得のたびに、その日のスナップショットを保存する</li></ul><b>オプション</b><ul><li>`--since YYYY-MM-DD`: 保存済みの任意の過去日と比べる（例: `--since 2026-09-24` で「ここ1週間の新着」を確認）</li></ul> |
+| `re-roadie schedule` | 現在のスケジュール（予約・お気に入り・個人予定）を表示する。 |
+| `re-roadie view` | 現在のスケジュールとカタログ全件を、タブ付きの1枚のHTML（既定 `data/schedule.html`）に書き出す。参照専用で、公式の予定は変更しない。<ul><li>タブは「予定」「セッション一覧」「全体像」「メモ候補」「更新履歴」</li><li>予定タブは、重複・個人予定との重複・移動不足・昼にかかる回を警告する。日ごとに、予約したセッションの合計時間と会場移動（回数・移動時間の概算）も出す</li><li>セッション一覧に、おすすめ順の並び替えと印がある（生成時に LLM なしで計算）</li><li>ヘッダーに、公式サイトのイベントカタログとカレンダーへのリンクがある（クリックしたときだけ開く）</li><li>外部のスクリプト・スタイルは読み込まない</li><li>カタログ全件を埋め込むため約2.7MB（更新履歴の期間が増えるとその分大きくなる）。コミットしない（`data/*.html` は無視）</li><li>各タブの詳細は `re-roadie view --help`</li></ul><b>オプション</b><ul><li>`--date YYYY-MM-DD`: 「予定」タブをその日だけにする</li><li>`--new-since YYYY-MM-DD`: 「新着」の比較元（既定は今日より前で最新の日付別スナップショット）</li><li>`--lang en`: 画面を英語にする（カタログ由来のタイトル・概要は原文のまま。英→日の翻訳ボタンは日本語版だけ）</li><li>`--out`: 出力先</li></ul> |
+| `re-roadie ics` | 予約したセッションを、カレンダーアプリに取り込める `.ics`（既定 `data/schedule.ics`、コミットしない）に書き出す。参照専用で、公式の予定は変更しない。<ul><li>時刻は UTC で書くので、取り込んだアプリが手元のタイムゾーンで表示する。説明欄に現地時刻（PST）を入れる</li><li>セッションごとに決まった UID を付けるので、取り込み直しても重複せず更新される</li><li>個人予定は含めない</li></ul><b>オプション</b><ul><li>`--favorites`: 未予約のお気に入りも、仮の予定（☆つき）として含める</li><li>`-o`: 出力先</li></ul> |
+| `re-roadie brief` | 予約のある日の予定を、朝に見られる形でコンソールに出す。参照専用。<ul><li>その日の予約（時刻順）、会場間の移動と空き時間、セッションの合計時間、警告（移動が間に合わない・時間が重なる）を出す</li><li>移動時間は概算で、開始の10分前までに着くために必要な時間を加えて判定する</li><li>日付は会場現地（PST）。省略時は、今日以降で予約のある最初の日</li><li>通知にしたいときは、`watch` の `--brief` を使う</li></ul><b>オプション</b><ul><li>`-d`, `--date YYYY-MM-DD`: 会場現地の日付を指定する</li></ul> |
+| `re-roadie digest` | 保存済みの日別スナップショットを隣り合う日どうしで比べ、カタログの更新履歴（新規・削除・会場／部屋／日時の変更）を日ごとにまとめた HTML（既定 `data/digest.html`、コミットしない）に書き出す。<ul><li>ネットワークは使わない</li><li>スナップショットがない日をまたぐ期間は「N日分をまとめた差分」と注記する</li><li>スナップショットは `sync` と `watch` が保存する</li></ul><b>オプション</b><ul><li>`--since YYYY-MM-DD`: その日以降に絞る</li><li>`-o`: 出力先</li></ul> |
+| `re-roadie apply <desiredStateFile>` | あるべき状態（予約・お気に入りにしたいセッションID）を実スケジュールと突き合わせ、差分だけ実行する。<ul><li>実行前に操作内容を表示して確認を取る</li><li>変更があるときは、実行前の予約・お気に入りを `data/schedule-backup-<eventId>-<日時>.json` に保存する</li><li>実行後は必ず `GetSchedule` で再照合する</li></ul><b>オプション</b><ul><li>`-y`, `--yes`: 確認プロンプトを省く</li></ul> |
+| `re-roadie watch` | カタログを取得し、前回の確認からの変化を知らせる（予約はしない）。対象は、満席だったお気に入りと、その再演の空席表示、プロフィール（参加日・希望レベル・スポンサー除外・関心テーマ）に合う新着、予約・お気に入りの会場・時間の変更と取消。<ul><li>初回は基準を保存するだけで通知しない</li><li>カタログが0件のとき、または取得件数が前回の半分未満のときは、状態を更新しない</li><li>空席表示は予約できることを保証しない（`limited` でも満席のことがある）</li><li>`--notify` では、プロフィールに合うかを問わず、新着の件数と上位3件（合うものが先、スポンサー枠は後ろ）も別の通知で出す</li><li>実行のたびに、その日のカタログを日別スナップショット（`data/catalog-<eventId>-YYYY-MM-DD.json`、約3MB。同じ日は上書き）に保存し、`data/digest.html` も作り直す（書き出しに失敗しても通知は止めない）。そのため、引数なしの `sync` の比較元は、直近の `watch` の取得分になる</li><li>状態は `data/watch-state-<eventId>.json`（コミットされない）。MCP の `catalog_watch` と共有するので、どちらか一方で使う</li></ul><b>オプション</b><ul><li>`--interval 10`: 指定した分（5分以上の整数）ごとに繰り返す。省略時は1回だけ</li><li>`--notify`: デスクトップ通知も出す（macOS と Windows。それ以外ではコンソール表示のみ）</li><li>`--brief`: 会場現地（PST）の今日に予約があるとき、その日の予定の要約（`brief` と同じ内容）も出す。`--notify` と併用すると通知する。`--interval` で繰り返すときは同じ日に1回だけ。予約の無い日は何も出さない</li></ul> |
+| `re-roadie now` | いまから間に合うセッションを出す（予約はしない）。<ul><li>条件は、開始が「いま＋現在地からの移動時間」以降で、`--within` 以内に始まり、予約・個人予定と重ならず、満席表示でないこと。お気に入り・関心トピック・空席の多い順</li><li>開始の10分前までに着く必要があるため、間に合う判定は移動時間に10分を足す</li><li>満席表示のセッションは別の見出しで出す。公式 FAQ では各セッションに当日並ぶ人向けの席が一部残されており、現地の列に並べば入れる場合がある（席は保証されない）</li><li>予約できない形式（`isReservable` が false）は、その旨を注記する</li><li>`walkUp` は当日会場で並ぶ形式と思われるが、未確認</li></ul><b>オプション</b><ul><li>`--within <分>`: この分数以内に始まるものに絞る（既定90）</li><li>`--venue <会場>`: 現在地。省略時は、開催中・直近に終わった予約の会場</li><li>`--at "2026-12-02 10:30"`: 会場の現地時刻。会期外でも試せる</li><li>`--limit <件数>`: 表示件数（既定10）</li></ul> |
+| `re-roadie forecast` | 空席表示の履歴から、近いうちに埋まりそうなセッション、動いていない関心トピックの穴場、空きが増えているものを出す（予約はしない）。<ul><li>履歴は `sync` と `watch` が日ごとにためる（`data/seat-history-<eventId>.json` と日付別スナップショット）</li><li>段階が進む速さが続くと仮定した見積もりで、残席数ではない</li><li>履歴が2日分に満たないと予報は出ない。観測が少ないうちは信頼度が `low`</li></ul><b>オプション</b><ul><li>`--horizon <日数>`: この日数以内に満席になる見込みのものを出す（既定14）</li><li>`--limit <件数>`: 区分ごとの表示件数（既定10）</li></ul> |
+| `re-roadie detour` | 予約の合間に収まる「寄り道」を、日ごとに提案する（予約はしない）。<ul><li>関心の強さ（宣言した関心=3、予約=2、お気に入り=1 を、トピックごとに足したもの）が小さい順に、3以下のものだけを出す</li><li>予約・個人予定と重ならず、移動時間が取れ、満席でなく、プロフィールのレベル・スポンサー・開始時刻の条件に合うものが対象</li><li>ランダムではなく、同じ入力なら同じ結果になる</li></ul><b>オプション</b><ul><li>`-d`, `--date <日付...>`: 対象の日（複数可）。省略時は予約のある日</li><li>`--per-day <件数>`: 1日あたりの候補数（既定3）</li></ul> |
+| `re-roadie trends` | カタログの傾向を出す。話題・サービス・形式・レベル・日別の件数と割合、基準日からの増減、増えたサービス、タイトルに増えた語、指定した語の件数、予約・お気に入りが全体より多い／少ない話題。<ul><li>件数は掲載数で、AWS の注力や参加者数を表すとは限らない（非公開から公開になっただけで増えることもある）</li><li>語はタイトルに含まれるかどうかだけを数える</li><li>サインインできなくても、個人との比較を除いて出す</li></ul><b>オプション</b><ul><li>`--since YYYY-MM-DD`: 比べる基準日（省略時は保存済みで最も古い日）</li><li>`--keyword AgentCore Kiro`: 件数を数えたい語（複数可）</li><li>`--limit <件数>`: 区分ごとの表示件数（既定10）</li></ul> |
+| `re-roadie conflicts` | 予約済みセッションの時間重複を検出し、「諦めてよいもの」を提案する。<ul><li>再演・類似セッションの有無という事実ベースの根拠をつける</li><li>個人予定（基調講演など）と重なる予約も表示する</li></ul> |
+| `re-roadie travel-blocks` | 予約済みセッション間の移動時間を計算し、間に合わない場合は警告、間に合う場合は `CreatePersonalTime` で移動時間を公式スケジュールに書き込む。<ul><li>予約した席は開始の10分前までに部屋に着かないと当日並ぶ人に譲られる（公式 FAQ）ため、「間に合う」の判定には移動時間に10分を足す（同じ会場で終了と同時に次が始まる場合も不足）</li><li>ブロックは空き時間すべてではなく、前のセッションの終了直後から、必要な移動時間（5分刻みに切り上げ）だけを埋める</li></ul><b>オプション</b><ul><li>`-y`, `--yes`: 確認プロンプトを省く</li></ul> |
+| `re-roadie notes add/list/report/apply` | セッションへのメモの記録・一覧・テーマ別の帰国後報告・当日リマインダーの書き込みをする。<br><b>オプション</b><ul><li>`notes apply` の `-y`, `--yes`: 確認プロンプトを省く</li></ul> |
+| `re-roadie auth login` | ブラウザで Builder ID にサインインする。 |
+| `re-roadie auth status` | サインイン状態と、サインイン中のアカウント（メール）を表示する。 |
+| `re-roadie auth logout` | サインアウトする。<ul><li>refresh token を失効させ、ローカルのトークンを削除し、Builder ID のブラウザセッションも終了する</li></ul> |
+
+全コマンド共通で `-e, --event-id <eventId>`（既定 `reinvent2026`）を指定できます。各コマンドの `--help` に、動作の条件と注意点を載せています。
+
+`re-roadie` は `node dist/cli.js` の別名です。`npm run build` のあと、リポジトリのルートでは `node dist/cli.js <サブコマンド>`（または `npx re-roadie <サブコマンド>`）として実行できます。`re-roadie` だけで呼びたいときは、ルートで `npm link` を実行してください。
+
+`apply`/`travel-blocks`/`notes apply` は実行前に確認プロンプトを出します。自動実行したい場合は `-y`/`--yes` を付けてください。
+
+### カタログが0件のとき
+
+予約解禁の前後などに、公式APIの `ListSessions` が `totalCount: 0` を返すことがあります。`sync` は、保存済みのスナップショットを空で上書きしないよう、「0件」で中断します。保存済みのスナップショットはそのまま使えるので、検索や予定の組み立ては続けられます。時間をおいて `sync` をやり直してください。
+
+### `apply` に渡す「あるべき状態」ファイルの例
+
+```json
+{
+  "reserve": ["SVS401", "BOA315"],
+  "favorite": ["CMP318"]
+}
+```
+
+`reserve`/`favorite` のどちらかを省略すると、その種類は現状維持になります（全取消・全解除したい場合は `[]` を明示します）。
+
+このファイルに何を入れるか（＝自由文の意図をどのセッションIDに変換するか）は、本ツールの外側（対話的なエージェントや利用者自身の判断）が担います。Session Roadie は「決まった、あるべき状態」を安全かつ冪等に実行する部分を受け持ちます。
+
+### Claude Code から使う（MCPサーバー）
+
+CLIに加えて、`re-roadie mcp` でMCPサーバー（stdio）としても起動できます。Claude Codeで本プロジェクトを開くと、`.mcp.json` に登録済みの `session-roadie` サーバーと、`.claude/skills/re-roadie/SKILL.md`（MCPツールをどの順番で呼ぶかという手順書）が自動的に使えます。
+
+```
+Claude Code → スキル/コマンド（手順だけ） → re:Roadie（ロジックは全部ここ） → AWS Events REST API
+```
+
+- ロジック（差分計算・冪等な再照合・移動時間計算・クォータ制御・代替判定）はすべて re:Roadie 側にあり、スキルは「どの順番で呼ぶか」だけを定義します。
+- MCPツールの失敗は、`{kind, status, operation, message, hint, body}` のJSONと `isError: true` で返ります。`schedule_apply` は予約・お気に入り・取消・解除を独立に実行し、ある工程が失敗しても残りを続けて、工程ごとの結果（`ok`/`error`/`skipped`）を返します。認証切れ（401）のときだけ、残りを未実行にして中断します。
+- 書き込み系ツール（`schedule_apply`/`travel_blocks_apply`/`notes_reminders_apply`）は確認プロンプトを持たず、呼ばれたら即実行します。確認は `*_plan` ツールで事前に差分を見せたうえで、呼び出し側（スキル経由のClaude）が担います。
+
+#### 社内ネットワーク（プロキシ経由）で使う場合
+
+プロキシ経由でしか外へ出られない環境では、MCPサーバーの通信がプロキシを通らず、接続に失敗します。Node.js の `fetch` は、既定ではプロキシの環境変数を見ないためです。`.mcp.json` の `env` に、次のように設定します（`proxy.example.com:8080` は、社内のプロキシに置き換えてください）。
+
+```json
+{
+  "mcpServers": {
+    "session-roadie": {
+      "command": "node",
+      "args": ["dist/cli.js", "mcp"],
+      "env": {
+        "NODE_USE_ENV_PROXY": "1",
+        "HTTPS_PROXY": "http://proxy.example.com:8080",
+        "HTTP_PROXY": "http://proxy.example.com:8080",
+        "NO_PROXY": "localhost,127.0.0.1"
+      }
+    }
+  }
+}
+```
+
+- `NODE_USE_ENV_PROXY=1` が、`HTTPS_PROXY` / `HTTP_PROXY` / `NO_PROXY` を `fetch` に読ませる設定です。Node.js 24 以降と、22 系の新しい版（22.21 以降）で使えます。古い 22 系では、Node.js を更新してください。
+- `NO_PROXY` に `localhost,127.0.0.1` を入れておきます。Builder ID のサインインは、手元の `127.0.0.1`（ポート 8484〜8489）で結果を受け取るためです。
+- プロキシがユーザー認証を求める場合は、URL に `http://ユーザー名:パスワード@proxy.example.com:8080` の形で書けます。パスワードを `.mcp.json` に書いたままコミットしないでください。
+- 社内プロキシが独自の証明書で通信を検査していて、証明書のエラーが出る場合は、`env` に `"NODE_EXTRA_CA_CERTS": "/path/to/company-ca.pem"` を足します。
+- CLI（`re-roadie sync` など）を直接使うときは、同じ環境変数をシェルに設定します（macOS は `export`、PowerShell は `$env:` を使います）。
+
+#### MCPツール一覧（[src/mcp/server.ts](src/mcp/server.ts)、27個）
+
+| ツール | 内容 |
+| --- | --- |
+| `auth_status` | Builder IDのサインイン状態を確認する。アクセストークンが切れていても refresh token で更新できればサインイン済み（`refreshed: true`）として返す |
+| `auth_login` | ブラウザを開いてBuilder IDにサインインする（完了までブラウザでの操作を待つ） |
+| `auth_logout` | サインアウトする（refresh tokenを失効させ、ローカルのトークンを削除し、Builder IDのブラウザセッションも終了する） |
+| `catalog_sync` | カタログを全件取得し、ローカルスナップショットとの差分（新規・変更・キャンセル）を返す。`since`指定で任意の過去日との比較もできる |
+| `catalog_watch` | カタログを取得し、前回の確認からの変化（満席だったお気に入りと再演の空席表示・プロフィールに合う新着・予約とお気に入りの変更と取消）を1回だけ返す。初回は基準の保存のみ。予約は実行しない |
+| `sessions_now` | いまから間に合うセッション（`items`）と、満席表示で現地の列に並ぶ候補（`queue`）を返す（CLI の `now` と同じ。`at`・`venue`・`withinMinutes`・`limit` を指定できる）。予約は実行しない |
+| `seat_forecast` | 空席表示の履歴から、近いうちに埋まりそうなもの（`urgent`）、穴場（`hidden`）、空きが増えているもの（`freeing`）を返す。見積もりで、残席数ではない。予約は実行しない |
+| `detour_suggest` | 予約の合間に収まる寄り道を日ごとに返す（`dates`・`perDay` を指定できる）。予約は実行しない |
+| `catalog_trends` | カタログの傾向を返す（CLI の `trends` と同じ。`since`・`keywords`・`limit` を指定できる）。件数は掲載数で、注力を表すとは限らない |
+| `catalog_search` | ローカルスナップショットからセッションを絞り込む（キーワード・トピック・形式・レベル・日付・会場・サービス）。他の回（再演）のIDも返す。日付・`maxLevel`・`excludeSponsored` を省略するとプロフィールの値（参加日・希望レベル・スポンサー除外）で絞る。適用した値は `appliedProfileDefaults` で返す |
+| `profile_get` | 保存済みのプロフィール・意図と、そこから導かれる `schedule_optimize` の既定値を返す |
+| `schedule_optimize` | 候補セッションから、再演への差し替え・個人予定・会場間の移動時間・プロフィール（1日の上限本数・最低空き時間・優先形式・参加日・最も早い開始時刻・固定の予定。昼休みは警告のみ）を考慮して、重ならない最大の組み合わせを選ぶ（実行はしない）。入らなかった候補は衝突相手つきで返す |
+| `schedule_get` | 現在のスケジュール（予約・お気に入り・個人予定）を取得する |
+| `schedule_view` | 上記 `re-roadie view` と同じHTMLを `data/schedule.html` に書き出す（参照専用。出力先は固定。`date`・`newSince`・`lang`（`ja`/`en`）を指定できる） |
+| `schedule_ics` | 予約したセッションを、カレンダーアプリに取り込める `.ics`（`data/schedule.ics`）に書き出す（CLI の `ics` と同じ。参照専用。出力先は固定。`favorites: true` で未予約のお気に入りも仮の予定として含める）。取り消した予約は、取り込み済みのカレンダーから自動では消えない |
+| `day_brief` | 1日分の予約の要約を返す（CLI の `brief` と同じ）。時刻順の予約、会場間の移動と空き時間（移動時間は概算）、合計時間、警告（移動が間に合わない・時間が重なる）。`date`（会場現地の日付）を省略すると、今日以降で予約のある最初の日。参照専用 |
+| `schedule_plan` | あるべき状態（予約・お気に入りにしたいセッションID）と実スケジュールの差分を計算する（実行はしない）。省略した側は現状維持 |
+| `schedule_apply` | あるべき状態を実際に実行する。実行後は自動で`GetSchedule`を取り直し、残っている差分も一緒に返す |
+| `conflicts_get` | 予約済みセッションの時間重複を検出し、再演・類似セッションの有無という事実に基づく根拠つきで諦める優先順位を提案する。個人予定（基調講演など）と重なる予約も返す |
+| `travel_blocks_plan` | 予約済みセッション間の移動時間を計算する（実行はしない）。間に合わない場合は警告として返す |
+| `travel_blocks_apply` | 移動時間が確保できるブロックを`CreatePersonalTime`で実際に公式スケジュールへ書き込む（ブロックの長さは必要な移動時間だけで、前のセッションの終了直後に置く） |
+| `notes_list` | 保存済みのメモを一覧で返す |
+| `notes_add` | セッションにメモを追加する（既存のメモは上書きする） |
+| `notes_report` | メモをテーマ別に整理した帰国後報告をMarkdownで返す |
+| `notes_reminders_plan` | メモがあるセッションの直前に表示するリマインダー候補を計算する（実行はしない） |
+| `notes_reminders_apply` | メモのリマインダーを`CreatePersonalTime`で実際に公式スケジュールへ書き込む |
+| `onboarding_save` | 初めての参加者向け。質問（普段の仕事/今回の目的/体力は必須、参加日/関心テーマ/希望レベル/スポンサーセッション/最も早い開始時刻/昼休み/固定の予定は任意）の回答から初期プロフィールと意図を保存する |
+
+#### スキル（[.claude/skills/re-roadie/SKILL.md](.claude/skills/re-roadie/SKILL.md)）
+
+- **name**: `re-roadie`
+- **トリガー文例**: 「re:Invent の予定を整えて」「今日の予定を組んで」「移動時間を確保して」「メモをリマインダーにして」
+- 上記27個のMCPツールをどの順番で呼ぶかという手順だけを定義し、ロジックは一切持たない。書き込み系は必ず`*_plan`で差分を見せてからユーザーに確認し、`*_apply`を呼ぶ、という大原則を記述している。
+- カタログのセッション情報（タイトル・abstract等）は英語のみのため、ユーザーに提示するときは日本語訳・簡潔な説明を併記するルールもここに含まれる。
+
+#### どう問いかければいいか（やりたいこと別の文例）
+
+| やりたいこと | 問いかけ方の例 |
+| --- | --- |
+| 初めての参加でどう過ごせばいいか分からない | 「初めて参加するので、どう過ごせばいいか分からない」「オンボーディングして」 |
+| 予定を組む・セッションを予約する | 「今日の予定を組んで」「セッションを予約して」「〇〇（関心テーマ）中心に予定を組んで」 |
+| 競合（時間重複）を解消したい | 「競合を解消したい」「どれを諦めればいい？」 |
+| 移動時間を確保したい | 「移動時間を確保して」 |
+| セッションにメモを残したい・当日リマインダーにしたい | 「メモを残して」「当日リマインダーにして」 |
+| 帰国後の報告を作りたい | 「帰国後の報告を作って」 |
+| 空席・新着・変更を知りたい | 「満席のものが空いたら教えて」「新しいセッションは？」「予定が変わっていない？」 |
+| いま現地で、間に合うセッションを知りたい | 「いまから行けるセッションは？」「次の予定まで1時間あるけど、何か聞ける？」 |
+| 埋まりそうなものを先に押さえたい | 「満席になりそうなセッションは？」「穴場はある？」 |
+| 予定の合間に、いつもと違うものを入れたい | 「寄り道できるセッションを探して」 |
+| 全体の流れを知りたい | 「今年は何が多い？」「前より増えた話題は？」「AgentCore と Kiro は何件ある？」「自分の関心は全体と比べてどう？」 |
+
+いずれも自由文でよく、具体的なセッションIDやツール名を指定する必要はない（意図の解釈はClaude側が担い、`*_plan`での差分提示→確認→`*_apply`の順で進む）。これ以外の文例は、[付録: よく使うフレーズ](#付録-よく使うフレーズ) を参照。
+
+## 利用例: 準備から当日まで
+
+「Lambda と serverless を中心に回りたい」参加者が、Claude Code に話しかけて進める例です。Claude の返答はイメージで、実際の出力そのものではありません。セッション名と ID は、実際のカタログにあるものです。
+
+### 準備（初回）
+
+> **あなた**: 初めて参加します。serverless 中心に回りたいです。オンボーディングして
+>
+> **Claude**: 参加日、希望レベル、スポンサーセッションを除くか、を聞きます。答えると、プロフィールを保存します。
+
+> **あなた**: Lambda で Web アプリを動かす話はある？
+>
+> **Claude**: 「Build interactive web apps with AWS Lambda」（SVS327-R1、12/2 09:00、Chalk talk）と、同じ内容の SVS327-R（12/3 13:30）が見つかりました。
+
+### 予定を組む
+
+> **あなた**: serverless 中心で、12/2 の予定を組んで
+>
+> **Claude**: 候補から案を作り、実行前に差分（新しく予約するもの、取り消すもの）を見せて、確認を取ります。案は `{ "reserve": [...], "favorite": [...] }` の形です。
+
+> **あなた**: OK、実行して
+>
+> **Claude**: 予約します。失敗したもの（例: 満席の `sessionFull`）は、理由と一緒に報告します。実行後に実際の予定を取り直して、差分が残っていないか確認します。
+
+### 予定を整える
+
+> **あなた**: 時間が重なっているものはある？
+>
+> **Claude**: 重なっている予約を示し、再演や類似セッションなど、どれを諦めるかの判断材料を出します。
+
+> **あなた**: 移動時間を確保して
+>
+> **Claude**: 会場が違うセッションの間に、必要な分数だけの個人予定を、前のセッションの終了直後に入れます。
+
+> **あなた**: 12/1 の 11〜12時に Expo 会場めぐりを入れて
+>
+> **Claude**: 個人予定として登録します。
+
+> **あなた**: 見せて
+>
+> **Claude**: 予定、セッション一覧、全体像を `data/schedule.html` に書き出します（参照専用）。
+
+### 毎日: 空席・新着・変更を見張る
+
+`re-roadie watch` を毎日実行すると、次の変化を知らせます。
+- 満席だったお気に入り（とその再演）の空席表示の変化
+- プロフィールに合う新着
+- 予約・お気に入りの会場や時間の変更、取消
+
+知らせを見たら、次のように頼みます。
+
+> **あなた**: SVS327-R1 を予約して
+>
+> **Claude**: 差分を見せ、確認すると予約します。満席なら `sessionFull` と報告します。
+
+空席表示が変わっても、予約できるとは限りません。`watch` は予約を実行しません。
+
+OS によって、通知と毎日の自動実行の方法が違います。
+
+| OS | 通知 | 毎日の自動実行 |
+| --- | --- | --- |
+| macOS | `--notify` でデスクトップ通知を出す | launchd |
+| Windows | `--notify` でトースト通知を出す（`powershell.exe`＝Windows PowerShell 5.1 を使う） | タスク スケジューラ |
+
+#### macOS（launchd）
+
+`~/Library/LaunchAgents/com.example.session-roadie-watch.plist` に次を置きます。`node` と `dist/cli.js` のパス、`WorkingDirectory` は自分の環境に合わせます。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.example.session-roadie-watch</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/homebrew/bin/node</string>
+        <string>/path/to/session-roadie/dist/cli.js</string>
+        <string>watch</string>
+        <string>--notify</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/path/to/session-roadie</string>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/<ユーザー名>/Library/Logs/session-roadie-watch.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/<ユーザー名>/Library/Logs/session-roadie-watch.log</string>
+</dict>
+</plist>
+```
+
+`launchctl load ~/Library/LaunchAgents/com.example.session-roadie-watch.plist` で登録します。9:00 に Mac がスリープ中だと、復帰後に実行されます。電源が落ちていると実行されません。
+
+#### Windows（タスク スケジューラ）
+
+PowerShell で、リポジトリのルートのパスを自分の環境に合わせて実行します。
+
+```powershell
+$root = 'C:\path\to\session-roadie'
+$node = (Get-Command node).Source
+$action = New-ScheduledTaskAction -Execute $node -Argument 'dist\cli.js watch' -WorkingDirectory $root
+$trigger = New-ScheduledTaskTrigger -Daily -At 9:00
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable
+Register-ScheduledTask -TaskName 'session-roadie-watch' -Action $action -Trigger $trigger -Settings $settings
+```
+
+- `-StartWhenAvailable` で、9:00 に PC が起きていなかったときも、起きたあとに実行します。
+- 通知も出すときは、`-Argument` を `'dist\cli.js watch --notify'` にします。通知は `powershell.exe`（Windows PowerShell 5.1）のトースト通知です。
+- 通知が出ないときは、Windows の「集中モード」と、設定の「通知」でオフになっていないかを確認します。通知に失敗しても `watch` は止まらず、「通知に失敗しました」と出力します。
+- 通知を使わない場合は、`data/digest.html` を開くか、`node dist/cli.js watch` を手で実行して確認します。
+
+### 現地（12月）
+
+> **あなた**: 今日の予定を教えて
+>
+> **Claude**: 予約、移動の予定、メモを時系列で並べます。
+
+会期中の朝に、その日の予定の要約（最初のセッション、会場移動、警告の件数）を通知で受け取るには、毎朝の `watch --notify` に `--brief` を足します（`'dist\cli.js watch --notify --brief'` のように）。会場と同じタイムゾーンの端末で実行する使い方を想定しています。コンソールで見るだけなら `re-roadie brief` です。
+
+> **あなた**: 「SVS327-R1 に、Hono のアダプタを試す」とメモして
+>
+> **あなた**: 帰国後の報告を作って
+>
+> **Claude**: メモと参加したセッションから、報告をまとめます。
+
+予約や予定の書き換えは、いずれも差分を見せて確認を取ってから実行します。頼み方の文例は、種類別に [付録: よく使うフレーズ](#付録-よく使うフレーズ) にまとめています。
+
+## 現状の制約
+
+- **空席表示は予約の可否を保証しません。** `seatAvailability` が `limited` などでも満席のことがあり、満席は `failed[].code` の `sessionFull` で返ります。`watch` は表示の変化を知らせるだけで、予約はしません。
+- **会場間の移動時間テーブル（[src/schedule/travelTime.ts](src/schedule/travelTime.ts)）は実測値ではありません**。公式のキャンパスマップ（縮尺なしの模式図）上の位置から読み取った距離をもとにした推測値です（縮尺は MGM Grand〜Caesars Palace を約1.2マイルと仮定）。0.7マイル未満は徒歩（時速3マイル＋一律8分。ただし Venetian・Wynn/Encore・Forum の3会場間は指定により15分）、以上はシャトル（1.2マイル以下は20分、1.2マイル超は30分）としています。シャトルの運行時刻・停留所は確認していません。Caesars Palace と Caesars Forum は別会場として持ち、`Wynn/Encore` は Encore 側を見込んだ距離で求めています。未知の会場は40分として扱います。
+- **PersonalTimeの日時はPST固定（UTC-8）で計算**します。
+- **PersonalTime の日時は、UTC ではなく会場の現地時刻（PST）のまま書きます。** 公式アプリは保存値をそのまま表示します。移動ブロック・メモのリマインダーの書き込みと、個人予定との重なり判定、`re-roadie view` の描画は、すべてこの形式にそろえています。API ドキュメント上の「UTC」という表記とは異なるため、他のクライアントが UTC で書いた個人予定があると、時刻がずれて見える可能性があります。
+- **`CreatePersonalTime`で書き込んだ内容が公式アプリ（スマートフォン）のカレンダーに反映されるまで、数分〜十数分のラグがあります。** サーバー側のデータ（`GetSchedule`で取得できる内容）は即座に更新されますが、アプリのクライアント側キャッシュへの反映はすぐではありません。
+- **更新履歴（`digest` と `view` の「更新履歴」タブ）は、日別スナップショットがある日どうしの差分です。** スナップショットは `sync` と `watch` の実行日だけ保存されるため、保存のない日をまたぐ期間は「N日分をまとめた差分」になり、その間に追加されて消えたセッションは出ません。
+- **`ics` が書き出すのは、その時点の予約です。** 取り込み済みのカレンダーから、あとで取り消した予約は自動では消えません（同じセッションは同じ UID で更新されます）。個人予定は含みません。
+- **Windows では、`data/token.json` と `data/schedule-backup-*.json` のファイル権限（0600）が効きません。** macOS では所有者だけが読める権限で保存しますが、Windows ではフォルダの権限（ACL）がそのまま使われます。リポジトリを共有フォルダや同期フォルダに置かないでください。
+
+## テスト
+
+```bash
+npm test
+```
+
+## アーキテクチャ概要
+
+```
+src/
+  api/        AWS Events APIの型定義・クォータ管理・HTTPクライアント
+  auth/       Builder ID OAuth(PKCE)サインイン・トークンの自動更新とローカル保存
+  profile/    プロフィール・意図・メモのローカルストア
+  catalog/    セッション全件取得・スナップショット保存・差分検知・絞り込み検索
+  schedule/   再照合ロジック・書き込みラッパー・移動時間ブロック・個人予定の重複判定
+  planning/   代替判定（再演・類似セッション）・重ならない最大の組み合わせの選定
+  reporting/  帰国後報告の生成、予定表のHTML出力（scheduleHtml.ts: 組み立て、catalogRecords.ts: カタログのレコード化、catalogClient.ts: ブラウザ側のスクリプト、jaLabels.ts: タグの日本語辞書。参照専用）
+  onboarding/ 初参加者向け対話ウィザードのロジック
+  commands/   CLI/MCP共通の実処理（テスト可能な純粋関数として分離）
+  mcp/        MCPサーバー（tools.tsがハンドラ、server.tsがMcpServerへの登録）
+  runtimeContext.ts  CLI/MCP共通の設定（データディレクトリ、ApiClient生成）
+  cli.ts      commanderによるCLIエントリポイント（実行コマンド名: `re-roadie`。`re-roadie mcp` でMCPサーバーとして起動）
+```
+
+## 付録: よく使うフレーズ
+
+Claude Code に話しかけるときの文例です。いずれも自由文でよく、セッションIDやツール名の指定は不要です。予約・取消・お気に入りの変更は、必ず差分を見せてから、確認のうえで実行されます。
+
+### 状況を確認する
+
+- 「最新のセッション情報を取って」（`catalog_sync`。新規・変更・削除の差分を返す）
+- 「11/30 の午前で予約しているセッションは？」
+- 「予約が取れているか確認して」
+- 「競合している予定はある？ どれを諦めればいい？」
+
+### 探す・おすすめを聞く
+
+- 「Agentic AI の Workshop で、満席でないものを探して」
+- 「11/30 の午前で、おすすめはある？」（空席・予約・移動時間を考慮する）
+- 「セキュリティ系で、新しく出たセッションは？」
+- 「満席だったので、他にない？」
+- 「おすすめの基準を教えて」（トピックの重みの出どころを説明する）
+
+### 予定を組む・予約する
+
+- 「今日の予定を組んで」「セッションを予約して」
+- 「余裕を持った予定で、セキュリティ中心に組んで」
+- 「候補の中から、重ならない組み合わせを選んで」（`schedule_optimize`）
+- 「この1件を予約して」（差分を見せてから、確認を取る）
+
+### 移動・メモ
+
+- 「移動時間を確保して」
+- 「このセッションにメモを残して」「メモを当日のリマインダーにして」
+- 「帰国後の報告を作って」
+
+### HTMLで見る（参照専用）
+
+- 「予定を HTML で出して」「今日の予定を PC で見たい」（`schedule_view`）
+- 「今日の予定を教えて」「12/2 の予定と移動は？」（`day_brief`。移動が間に合わない回や重なりも出る）
+- 「予約をカレンダーに取り込める形にして」（`schedule_ics`。取り込みは自分のカレンダーアプリで行う）
+- 「新着を HTML で確認したい」（`newSince` で比較元の日付を指定できる）
+
+### プロフィールを直す
+
+- 「関心テーマの優先順位を、セキュリティ、AI、移行の順にして」（おすすめの重みが変わる）
+- 「スポンサーセッションは避けたい」「レベルは 300 までにして」
+- 「朝 9 時より前は避けたい」「昼にかかる回は警告して」
+- 「12/1 の 18:00〜20:00 は会食で空けて」
+
+### コマンドで直接実行する（Claude を介さない）
+
+| コマンド | 内容 |
+| --- | --- |
+| `re-roadie sync` | カタログの差分を取る |
+| `re-roadie view` | 予定とカタログを1枚のHTMLに書き出す（`--date`、`--new-since`、`--out` を指定できる） |
+| `re-roadie schedule` | 予約・お気に入り・個人予定の一覧を表示する |
+| `re-roadie ics` | 予約したセッションを、カレンダーアプリに取り込める `.ics` に書き出す（`--favorites`、`-o` を指定できる） |
+| `re-roadie brief` | 予約のある日の予定・会場移動・警告を、朝に見られる形で出す（`--date` を指定できる） |
+| `re-roadie watch` | 満席だったお気に入りの空席表示・プロフィールに合う新着・予約とお気に入りの変更と取消を知らせる（`--interval 10` で繰り返し、`--notify` でデスクトップ通知、`--brief` で今日の予定も） |
+| `re-roadie conflicts` | 予約済みセッションの重複を検出する |
+| `re-roadie init` | プロフィールの質問（初回セットアップ。優先順位を含む） |
+
+### 使い方のコツ
+
+- 予約や取消の前には、必ず差分が出る。「実行して」と答えたときだけ実行される。
+- HTML は自動では作り直されない。`catalog_sync` や予約の反映のあと、最新にしたいときは「予定を HTML で出して」と頼む（生成した瞬間の内容で固定される）。
+- `schedule_view`・`schedule_ics`・`day_brief` や優先順位の追加は、実行中のMCPサーバーが古い版のままだと使えない。Claude Code を再起動してから試す。
+
+## ライセンス
+
+MIT License。詳細は [LICENSE](LICENSE) を参照してください。
