@@ -120,6 +120,7 @@
       .severity.high { background: #3d1a1c; color: #ff8177; }
       .severity.medium { background: #3a3013; color: #e3b341; }
       .severity.low { background: #17351f; color: #6fdc8c; }
+      .report-link { color: var(--accent); text-decoration: none; font-weight: 650; border-bottom: 1px solid var(--accent); }
       .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
       .chip {
         background: var(--panel-2);
@@ -441,6 +442,15 @@
                 : "GitHub is rate-limited; showing the recorded snapshot of this repository.";
           setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}. ${origin}`, false);
           render(data);
+          // The report lives behind its own route, so it can be opened, printed
+          // or mailed without the site.
+          output.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="card"><h2>Take it with you</h2>
+              <p class="note">The same plan as one self-contained page. Print it, save it, send it to your team.</p>
+              <p><a class="report-link" href="/report?repo=${encodeURIComponent(repo)}" target="_blank" rel="noopener">Open the full report →</a></p>
+            </div>`,
+          );
         } catch (error) {
           setStatus(`Could not reach the scanner: ${error instanceof Error ? error.message : "unknown error"}`, true);
         } finally {

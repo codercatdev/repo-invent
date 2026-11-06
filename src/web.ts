@@ -10,7 +10,7 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
-import type { ArchitecturalGap, Catalog, StackFingerprint } from "./types.js";
+import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types.js";
 
 // The last successful snapshot of the demo repo, so a repeat view during a
 // rate limit shows the same data rather than the recorded copy.
@@ -50,6 +50,55 @@ export interface ScanResponse {
  * Setting REPO_INVENT_LIVE_CATALOG=1 plans against the signed-in live catalog
  * instead, which needs a token on this machine.
  */
+/**
+ * Scan a repository and render the take-home report as one HTML page.
+ *
+ * Sharing the scan with `scanForWeb` is what keeps the report and the site
+ * showing the same answer for the same repository.
+ */
+export async function renderReportFor(repo: string): Promise<string> {
+  const result = await scanForPrescription(repo);
+  const { renderReportHtml } = await import("./report.js");
+  return renderReportHtml(result);
+}
+
+async function scanForPrescription(repo: string): Promise<PrescriptionPlan> {
+  const config = loadConfig();
+  const result = await fetchRepo(
+    repo,
+    config.githubToken === undefined ? {} : { token: config.githubToken },
+  );
+  let snapshot;
+  if (!result.ok) {
+    if (result.error.kind === "rate_limited" && isDemoRepo(repo)) {
+      snapshot = demoSnapshotCache ?? DEMO_REPO.snapshot;
+    } else {
+      throw new Error(`${result.error.message}`);
+    }
+  } else {
+    snapshot = result.snapshot;
+    if (isDemoRepo(repo)) demoSnapshotCache = result.snapshot;
+  }
+
+  const manifestScan = scanManifests(snapshot);
+  const iacScan = scanIac(snapshot);
+  const fingerprint = buildFingerprint({ snapshot, manifestScan, iacScan });
+  const gaps = diagnose({
+    fingerprint,
+    iacScan,
+    snapshot,
+    wildcardIam: hasWildcardIam(snapshot),
+    hasWebFramework: fingerprint.frameworks.some((name) => WEB_FRAMEWORKS.has(name)),
+  });
+  const useLive = process.env["REPO_INVENT_LIVE_CATALOG"] === "1";
+  const client = new AwsEventsClient({
+    eventId: config.eventId,
+    ...(useLive ? {} : { fixture: loadFixture() as unknown as Catalog }),
+  });
+  const catalog = await client.listSessions({ includeAbstracts: false });
+  return prescribe(catalog, fingerprint, gaps);
+}
+
 export async function scanForWeb(repo: string): Promise<ScanResponse> {
   const config = loadConfig();
   const result = await fetchRepo(

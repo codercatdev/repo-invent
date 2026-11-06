@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { scanForWeb } from "./web.js";
+import { renderReportFor, scanForWeb } from "./web.js";
 
 interface LambdaEvent {
   rawPath?: string;
@@ -88,6 +88,20 @@ export async function handler(event: LambdaEvent): Promise<LambdaResult> {
       return json(200, await scanForWeb(repo.trim()));
     } catch (error) {
       return json(400, { error: error instanceof Error ? error.message : "the scan failed" });
+    }
+  }
+
+  // The take-home report: one self-contained page a reader can save or print.
+  if (method === "GET" && path === "/report") {
+    const repo = new URLSearchParams(event.rawQueryString ?? "").get("repo");
+    if (!repo) return html("<p>Provide ?repo=&lt;github-url&gt;</p>", 400);
+    try {
+      return html(await renderReportFor(repo));
+    } catch (error) {
+      return html(
+        `<p>${error instanceof Error ? error.message : "the scan failed"}</p>`,
+        400,
+      );
     }
   }
 
