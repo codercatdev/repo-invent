@@ -81,13 +81,13 @@ It is a mobile-first four-tab app, the shape of the official re:Invent app.
 | Tab | What it shows |
 |---|---|
 | **Home** | Your week, an **Ask AWS** box, and the repo check |
-| **Catalog** | Every session, with search and filters by type, level and venue |
+| **Catalog** | Every session, with search and filters by type, level, venue and track |
 | **Calendar** | Your reservations and favourites, by day, read back from the API |
-| **Parties** | 171 vendor and community parties, with RSVP and map links |
+| **Parties** | 171 vendor and community parties, searchable, with RSVP and map links |
 
 The repo check sits directly under the Ask box. Scan a repository and Home shows the gaps, the planned week, and the tickets. Tap any session for its detail and a Save button.
 
-The original single-page scan stays at **`/scan`**, with the full result: the availability heatmap, the progress panel where rating a session closes its gaps, and a link to **`/report`**, the same plan as one printable page.
+Each tab also answers on its own path: `/home`, `/catalog`, `/calendar`, `/parties`. The original single-page scan stays at **`/scan`**, with the full result: the availability heatmap, the progress panel where rating a session closes its gaps, and a link to **`/report`**, the same plan as one printable page.
 
 The catalog is served from a disk cache under `~/.repo-invent`, refreshed every six hours. A read that falls back to the bundled fixture says so on the page; nothing synthetic is passed off as live. Set `REPO_INVENT_LIVE_CATALOG=0` to stay offline.
 
