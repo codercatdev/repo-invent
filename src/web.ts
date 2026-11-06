@@ -472,7 +472,12 @@ export function createWebServer(): ReturnType<typeof createServer> {
         const bodyText = result.content
           .map((part) => (part as { text?: string }).text ?? "")
           .join("");
-        const failure = /"httpStatus"\s*:\s*(4\d\d|5\d\d)/u.test(bodyText);
+        // A batch write answers 200 with per-id failures inside `result`, so a
+        // refusal like `insufficientAccess` arrives in a successful-looking
+        // body. Both shapes count as a failure here.
+        const failure =
+          /"httpStatus"\s*:\s*(4\d\d|5\d\d)/u.test(bodyText) ||
+          /"failed"\s*:\s*\[\s*\{/u.test(bodyText);
         json(response, result.isError || failure ? 422 : 200, {
           ...result,
           ...(failure ? { failure: true } : {}),
