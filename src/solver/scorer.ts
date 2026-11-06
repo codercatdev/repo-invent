@@ -111,6 +111,12 @@ export function scoreSession(
     score += 8;
     reasons.push("hands-on and reservable");
   }
+  if (!session.availability.reservable) {
+    // A walk-up has no guaranteed seat, so it is worth less than a room you can
+    // hold. It still gets planned, but a reservable alternative wins a tie.
+    score -= 10;
+    reasons.push("no reservable seat, walk-up only");
+  }
 
   return { session, score, matchedGaps: matchedGaps.map((gap) => gap.id), reasons };
 }
@@ -131,9 +137,21 @@ function overlaps(slot: BusySlot, start: string, end: string): boolean {
   return startStamp < slot.end && endStamp > slot.start;
 }
 
+/**
+ * Pick what the plan does with a session.
+ *
+ * `isReservable` is authoritative in the live catalog and applies to every
+ * format, not only the interactive ones: a lecture that cannot be reserved must
+ * never be planned as a reservation. Unreservable talks go to the walk-up
+ * queue; a recording goes to the watchlist instead, because watching it later
+ * beats crossing the Strip.
+ */
 function actionFor(session: ReinventSession): ScheduleItem["action"] {
-  if (isInteractive(session) && !session.availability.reservable) return "favorite-walk-up";
-  if (isInteractive(session) && session.availability.fullness === "full") return "favorite-walk-up";
+  const full = session.availability.fullness === "full";
+  if (!session.availability.reservable) {
+    return isRecordedLecture(session) ? "favorite-watchlist" : "favorite-walk-up";
+  }
+  if (isInteractive(session) && full) return "favorite-walk-up";
   if (isRecordedLecture(session)) return "favorite-watchlist";
   return "reserve";
 }
@@ -201,6 +219,12 @@ export function buildPlan(
 
   const days: PlannedDay[] = [];
   const warnings: string[] = [];
+  // A repeated session is a re-run: attending the same talk twice is wasted
+  // time. The live catalog lists 488 titles more than once under different
+  // session ids, so the de-duplication key is the title, not the id.
+  const alreadyPlanned = new Set<string>();
+  const dedupeKey = (session: ReinventSession): string =>
+    `${session.title.trim().toLowerCase()}|${session.type.toLowerCase()}`;
 
   for (const date of [...byDate.keys()].sort()) {
     const taken: BusySlot[] = [...anchored];
@@ -211,6 +235,7 @@ export function buildPlan(
       const start = session.start;
       const end = session.end;
       if (!start || !end) continue;
+      if (alreadyPlanned.has(dedupeKey(session))) continue;
       const conflicting = taken.some((slot) => overlaps(slot, start, end));
       if (conflicting) continue;
 
@@ -255,11 +280,12 @@ export function buildPlan(
       const scoredEntry = scored.find((entry) => entry.session.sessionId === session.sessionId);
       const action = actionFor(session);
       items.push(buildItem(session, action, scoredEntry?.matchedGaps ?? []));
+      alreadyPlanned.add(dedupeKey(session));
       taken.push({ start: toMinutes(start), end: toMinutes(end) });
     }
 
     if (options.synthesisPerDay !== false) {
-      const slot = findSynthesisSlot(items, taken, date);
+      const slot = findSynthesisSlot(items, taken, date, transit, "The Venetian");
       if (slot !== null) {
         items.push({
           action: "personal-time",
@@ -316,38 +342,68 @@ function localStamp(date: string, hours: number, minutes: number): string {
   return `${date}T${hh}:${mm}:00`;
 }
 
+function addMinutesToStamp(stamp: string, minutes: number): string {
+  const base = toMinutes(stamp);
+  const next = new Date(base + minutes * 60_000);
+  const pad = (value: number): string => (value < 10 ? `0${value}` : String(value));
+  return (
+    `${next.getFullYear()}-${pad(next.getMonth() + 1)}-${pad(next.getDate())}` +
+    `T${pad(next.getHours())}:${pad(next.getMinutes())}:00`
+  );
+}
+
 /**
- * Find a 30-minute block that touches nothing and sits inside the working day.
+ * Find a 30-minute block that touches nothing and clears the same travel rule
+ * every session does.
  *
- * The afternoon gap is tried first, because synthesis is more useful once the
- * day's sessions have landed.
+ * A room that is free is not enough: a block placed flush against a session in
+ * another venue is a transfer nobody can make, so the neighbours are checked
+ * with the ten-minute rule exactly as a session would be.
  */
 function findSynthesisSlot(
   items: ScheduleItem[],
   taken: BusySlot[],
   date: string,
+  transit: VenueTransit,
+  homeVenue: string,
 ): { start: string; end: string } | null {
   const preferred: Array<[number, number]> = [
+    [12, 0],
     [16, 0],
     [15, 30],
     [17, 0],
-    [12, 0],
-    [11, 30],
+    [11, 0],
     [18, 0],
     [9, 0],
+    [13, 0],
   ];
   for (const [hour, minute] of preferred) {
     const start = localStamp(date, hour, minute);
-    const end = localStamp(date, hour, minute + SYNTHESIS_MINUTES >= 60 ? minute : minute + SYNTHESIS_MINUTES)
-      .replace(/T(\d{2}):(\d{2})/u, (_all, hh: string, mm: string) => {
-        const total = Number(hh) * 60 + Number(mm) + SYNTHESIS_MINUTES;
-        const nextHour = Math.floor(total / 60) % 24;
-        const nextMinute = total % 60;
-        return `T${nextHour < 10 ? "0" : ""}${nextHour}:${nextMinute < 10 ? "0" : ""}${nextMinute}`;
-      });
+    const end = addMinutesToStamp(start, SYNTHESIS_MINUTES);
     if (taken.some((slot) => overlaps(slot, start, end))) continue;
-    const clashWithSession = items.some((item) => overlaps({ start: toMinutes(item.start), end: toMinutes(item.end) }, start, end));
-    if (clashWithSession) continue;
+    if (items.some((item) => overlaps({ start: toMinutes(item.start), end: toMinutes(item.end) }, start, end))) {
+      continue;
+    }
+    const before = items
+      .filter((item) => toMinutes(item.end) <= toMinutes(start))
+      .sort((left, right) => toMinutes(right.end) - toMinutes(left.end))[0];
+    const after = items
+      .filter((item) => toMinutes(item.start) >= toMinutes(end))
+      .sort((left, right) => toMinutes(left.start) - toMinutes(right.start))[0];
+    if (before) {
+      const check = transit.checkTravel(
+        { title: before.title, venue: before.venue, end: before.end },
+        { title: "synthesis", venue: homeVenue, start },
+      );
+      if (check.forfeitureRisk) continue;
+    }
+    if (after) {
+      const check = transit.checkTravel(
+        { title: "synthesis", venue: homeVenue, end },
+        { title: after.title, venue: after.venue, start: after.start },
+      );
+      if (check.forfeitureRisk) continue;
+    }
     return { start, end };
   }
   return null;

@@ -113,22 +113,27 @@ interface RawSession {
   sessionId?: unknown;
   title?: unknown;
   abstract?: unknown;
+  abbreviation?: unknown;
   code?: unknown;
   type?: unknown;
   level?: unknown;
   venue?: unknown;
   room?: unknown;
+  sessionTime?: unknown;
   startDateTime?: unknown;
   endDateTime?: unknown;
   start?: unknown;
   end?: unknown;
+  isAllDaySession?: unknown;
   allDay?: unknown;
+  isReservable?: unknown;
+  reservable?: unknown;
+  features?: unknown;
   tracks?: unknown;
   topics?: unknown;
   services?: unknown;
   speakers?: unknown;
   recorded?: unknown;
-  reservable?: unknown;
   availability?: unknown;
   [key: string]: unknown;
 }
@@ -168,45 +173,189 @@ function normaliseFullness(value: unknown): ReinventSession["availability"]["ful
 }
 
 /**
+ * Read a level the API writes as prose ("300 – Advanced").
+ *
+ * The catalog carries no bare number, so the numeric part is taken from the
+ * leading digits and the rest is ignored.
+ */
+export function parseLevel(value: unknown): number | undefined {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value !== "string") return undefined;
+  const match = /^\s*(\d{3})/u.exec(value);
+  return match?.[1] === undefined ? undefined : Number(match[1]);
+}
+
+function addMinutes(date: string, time: string, minutes: number): string {
+  const [hoursText, minutesText] = time.split(":");
+  const hours = Number(hoursText);
+  const mins = Number(minutesText);
+  if (!Number.isFinite(hours) || !Number.isFinite(mins)) return `${date}T${time}:00`;
+  const total = hours * 60 + mins + minutes;
+  const nextHours = Math.floor(total / 60) % 24;
+  const nextMinutes = total % 60;
+  const pad = (value: number): string => (value < 10 ? `0${value}` : String(value));
+  return `${date}T${pad(nextHours)}:${pad(nextMinutes)}:00`;
+}
+
+/**
+ * Turn the catalog's `sessionTime` ({date, time, length}) into a start and end.
+ *
+ * The catalog gives a start and a duration in minutes, never an end, so the end
+ * is computed here. An absent block yields empty strings rather than a crash.
+ */
+export function parseSessionTime(value: unknown): { start: string; end: string } {
+  if (!value || typeof value !== "object") return { start: "", end: "" };
+  const block = value as { date?: unknown; time?: unknown; length?: unknown };
+  const date = typeof block.date === "string" ? block.date : "";
+  const time = typeof block.time === "string" ? block.time : "";
+  const length = Number(block.length);
+  if (date.length === 0 || time.length === 0) return { start: "", end: "" };
+  const start = `${date}T${time}:00`;
+  const end = Number.isFinite(length) && length > 0 ? addMinutes(date, time, length) : start;
+  return { start, end };
+}
+
+/**
+ * Map the catalog's prose session type onto the shared format names.
+ *
+ * Checked against the live catalog: it writes "Chalk talk" and "Builders'
+ * session" in lower case, and carries several types that are not talks at all
+ * ("Event service", "Featured experience", "Expo", "Exam prep").
+ */
+export function normaliseType(value: unknown): string {
+  if (typeof value !== "string" || value.length === 0) return "Breakout";
+  const lowered = value.toLowerCase();
+  if (lowered.includes("workshop")) return "Workshop";
+  if (lowered.includes("chalk talk")) return "Chalk Talk";
+  if (lowered.includes("builder")) return "Builders' Session";
+  if (lowered.includes("launch")) return "Launch Session";
+  if (lowered.includes("code talk")) return "Code Talk";
+  if (lowered.includes("lightning")) return "Lightning Talk";
+  if (lowered.includes("bootcamp")) return "Bootcamp";
+  if (lowered.includes("boot camp")) return "Bootcamp";
+  if (lowered.includes("lab")) return "Lab";
+  if (lowered.includes("mainstage")) return "Mainstage";
+  if (lowered.includes("keynote")) return "Keynote";
+  if (lowered.includes("breakout")) return "Breakout";
+  return value;
+}
+
+/**
+ * Types that are places, services or parties rather than talks.
+ *
+ * The live catalog lists "Lactation room", "Game Night" and "re:Play" in the
+ * same array as the sessions, so scheduling by score alone would book a
+ * nursing room and call it a talk.
+ */
+const NON_SESSION_TYPES = new Set([
+  "featured experience",
+  "event service",
+  "expo",
+  "exam prep",
+  "gamified learning",
+]);
+
+export function isSessionLike(value: unknown): boolean {
+  if (typeof value !== "string") return true;
+  return !NON_SESSION_TYPES.has(value.trim().toLowerCase());
+}
+
+/**
+ * Strip the vendor prefix the catalog puts on every service name.
+ *
+ * The live data says "Amazon DynamoDB" and "Amazon Elastic Container Service",
+ * while a repository's manifest says "@aws-sdk/client-dynamodb". Matching the
+ * bare name is what lets a gap find its session.
+ */
+export function normaliseServiceName(value: string): string {
+  let name = value.trim();
+  const prefixes = ["Amazon ", "AWS ", "Amazon Web Services "];
+  for (const prefix of prefixes) {
+    if (name.startsWith(prefix)) {
+      name = name.slice(prefix.length);
+      break;
+    }
+  }
+  const aliases: Record<string, string> = {
+    "Simple Storage Service (S3)": "S3",
+    "Elastic Compute Cloud (EC2)": "EC2",
+    "Simple Queue Service (SQS)": "SQS",
+    "Simple Notification Service (SNS)": "SNS",
+    "Step Functions": "Step Functions",
+    "Elastic Kubernetes Service": "EKS",
+    "Elastic Container Service": "ECS",
+    "Relational Database Service (RDS)": "RDS",
+  };
+  return aliases[value.trim()] ?? name;
+}
+
+/** Canonical venue spelling for the transit matrix. */export function normaliseVenueName(value: unknown): string {
+  if (typeof value !== "string") return "";
+  const lowered = value.toLowerCase();
+  if (lowered.includes("venetian")) return "The Venetian";
+  if (lowered.includes("wynn") || lowered.includes("encore")) return "Wynn | Encore";
+  if (lowered.includes("caesars forum")) return "Caesars Forum";
+  if (lowered.includes("caesars palace")) return "Caesars Palace";
+  if (lowered.includes("mgm")) return "MGM Grand";
+  if (lowered.includes("mandalay")) return "Mandalay Bay";
+  return value;
+}
+
+/**
  * Project one raw API session onto the shared shape.
  *
  * Every field is optional in the real catalog, so each is read defensively: an
  * absent field becomes an empty list or an `unknown` availability rather than a
- * thrown error.
+ * thrown error. The shape below was checked against 250 live sessions, which
+ * use `sessionTime` rather than start/end and write the level as prose.
  */
 export function normalizeSession(raw: RawSession): ReinventSession {
   const availabilityRaw =
     raw.availability && typeof raw.availability === "object"
       ? (raw.availability as Record<string, unknown>)
       : {};
-  const level = Number(raw.level);
+  const level = parseLevel(raw.level);
   const explicitReservable =
-    typeof raw.reservable === "boolean"
-      ? raw.reservable
-      : availabilityRaw["reservable"];
+    typeof raw.isReservable === "boolean"
+      ? raw.isReservable
+      : typeof raw.reservable === "boolean"
+        ? raw.reservable
+        : availabilityRaw["reservable"];
   const reservable = typeof explicitReservable === "boolean" ? explicitReservable : true;
   const fullness = normaliseFullness(
     availabilityRaw["fullness"] ?? availabilityRaw["status"] ?? raw.availability,
   );
+  const timing = parseSessionTime(raw.sessionTime);
+  const start = String(raw.startDateTime ?? raw.start ?? timing.start);
+  const end = String(raw.endDateTime ?? raw.end ?? timing.end);
+  const features = asStringArray(raw.features);
+  // The live catalog reports no fullness at all; `isReservable` is the only
+  // signal. A session that cannot be reserved is a walk-up, which is what the
+  // planner routes to the favourite queue.
+  const effectiveFullness: ReinventSession["availability"]["fullness"] =
+    fullness !== "unknown" ? fullness : reservable ? "open" : "walk-up-up";
   const session: ReinventSession = {
     sessionId: String(raw.sessionId ?? ""),
     title: String(raw.title ?? ""),
     abstract: String(raw.abstract ?? ""),
-    type: String(raw.type ?? "Breakout"),
-    level: (Number.isFinite(level) ? level : 200) as SessionLevel,
-    venue: String(raw.venue ?? ""),
-    start: String(raw.startDateTime ?? raw.start ?? ""),
-    end: String(raw.endDateTime ?? raw.end ?? ""),
-    availability: { reservable, fullness },
-    tracks: asStringArray(raw.tracks),
+    type: normaliseType(raw.type),
+    level: (level ?? 200) as SessionLevel,
+    venue: normaliseVenueName(raw.venue),
+    start,
+    end,
+    availability: { reservable, fullness: effectiveFullness },
+    tracks: asStringArray(raw.tracks ?? features),
     topics: asStringArray(raw.topics),
-    services: asStringArray(raw.services),
+    services: asStringArray(raw.services).map(normaliseServiceName),
     speakers: asSpeakerNames(raw.speakers),
   };
-  if (typeof raw.code === "string") session.code = raw.code;
+  const code = raw.abbreviation ?? raw.code;
+  if (typeof code === "string") session.code = code;
   if (typeof raw.room === "string") session.room = raw.room;
-  if (typeof raw.allDay === "boolean") session.allDay = raw.allDay;
+  const allDay = raw.isAllDaySession ?? raw.allDay;
+  if (typeof allDay === "boolean") session.allDay = allDay;
   if (typeof raw.recorded === "boolean") session.recorded = raw.recorded;
+  else if (features.some((feature) => /record/i.test(feature))) session.recorded = true;
   return session;
 }
 
@@ -444,7 +593,12 @@ export class AwsEventsClient {
         }),
       );
       for (const raw of Array.isArray(body.items) ? body.items : []) {
-        collected.push(normalizeSession(raw));
+        // The catalog mixes real talks with rooms, parties and exams. Keeping
+        // those would let the planner book a lactation room as a session.
+        if (!isSessionLike(raw.type)) continue;
+        const session = normalizeSession(raw);
+        if (session.start.length === 0) continue;
+        collected.push(session);
       }
       nextToken =
         typeof body.nextToken === "string" && body.nextToken.length > 0 ? body.nextToken : undefined;

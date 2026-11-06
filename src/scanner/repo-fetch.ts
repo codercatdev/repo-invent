@@ -136,6 +136,11 @@ function isDoc(path: string): boolean {
  * Manifests and IaC describe the architecture; documentation describes nothing
  * the scanner can diagnose, so a README must never outrank a package.json just
  * because it is smaller.
+ *
+ * A file name that repeats across directories is collapsed to one representative
+ * first: a service-per-folder repo has twenty `requirements.txt` files that say
+ * the same thing, and reading all twenty fills the cap before the single
+ * `template.yaml` that describes the whole system.
  */
 export function rankCandidates(files: RepoFile[]): RepoFile[] {
   const scored = files
@@ -150,19 +155,37 @@ export function rankCandidates(files: RepoFile[]): RepoFile[] {
         // The dependency manifest leads: it names the SDK clients, which is the
         // strongest signal the scanner gets.
         score = 0;
+      } else if (name === "template.yaml" || name === "template.yml" || name === "cdk.json") {
+        // SAM and CDK describe the whole topology in one file.
+        score = 1;
       } else if (isManifest(file.path)) score = 2;
       else if (isDoc(file.path)) score = 90;
       else if (depth <= 2) score = 10;
       else if (depth === 3) score = 30;
       if (file.path.includes("/src/")) score -= 5;
-      return { file, score };
+      return { file, score, name };
     });
+
   scored.sort((left, right) => {
     if (left.score !== right.score) return left.score - right.score;
-    if (left.file.size !== right.file.size) return left.file.size - right.file.size;
+    // Shallower wins first, so the representative of a repeated file name is
+    // the one nearest the root.
+    const leftDepth = left.file.path.split("/").length;
+    const rightDepth = right.file.path.split("/").length;
+    if (leftDepth !== rightDepth) return leftDepth - rightDepth;
     return left.file.path.localeCompare(right.file.path);
   });
-  return scored.map((entry) => entry.file);
+
+  const seenNames = new Set<string>();
+  const ordered: RepoFile[] = [];
+  for (const entry of scored) {
+    // One of each file name, except manifests that genuinely differ per module
+    // (package.json) and IaC, which is read once anyway.
+    if (entry.score > 2 && seenNames.has(entry.name)) continue;
+    seenNames.add(entry.name);
+    ordered.push(entry.file);
+  }
+  return ordered;
 }
 
 function headersFor(token?: string): Record<string, string> {
