@@ -59,6 +59,25 @@ const CDK_RESOURCES: ResourcePattern[] = [
   { service: "Bedrock", needles: ["bedrock"] },
 ];
 
+// CDK with Python or Java writes the same classes with a language idiom:
+// `s3.Bucket(self, ...)` in Python, `new Bucket(...)` after an import in
+// TypeScript. The resource names are what matter, so the needles are the
+// service module and class dotted once.
+const CDK_PY_RESOURCES: ResourcePattern[] = [
+  { service: "Lambda", needles: ["lambda_.Function", "lambda.Function", "aws_lambda.Function"] },
+  { service: "DynamoDB", needles: ["dynamodb.Table", "aws_dynamodb.Table"] },
+  { service: "Step Functions", needles: ["stepfunctions.StateMachine", "aws_stepfunctions.StateMachine"] },
+  { service: "SQS", needles: ["sqs.Queue", "aws_sqs.Queue"] },
+  { service: "SNS", needles: ["sns.Topic", "aws_sns.Topic"] },
+  { service: "API Gateway", needles: ["apigateway.RestApi", "apigatewayv2.HttpApi", "aws_apigateway.RestApi"] },
+  { service: "ECS", needles: ["ecs.FargateService", "ecs.Cluster", "aws_ecs.FargateService"] },
+  { service: "EKS", needles: ["eks.Cluster", "aws_eks.Cluster"] },
+  { service: "WAF", needles: ["wafv2.CfnWebACL", "aws_wafv2.CfnWebACL"] },
+  { service: "IAM", needles: ["iam.Role", "iam.PolicyStatement", "aws_iam.Role"] },
+  { service: "CloudWatch", needles: ["cloudwatch.Alarm", "aws_cloudwatch.Alarm"] },
+  { service: "S3", needles: ["s3.Bucket", "aws_s3.Bucket"] },
+];
+
 const SST_RESOURCES: ResourcePattern[] = [
   { service: "Lambda", needles: ["new sst.aws.Function", "sst.aws.Function"] },
   { service: "DynamoDB", needles: ["new sst.aws.Dynamo"] },
@@ -187,6 +206,16 @@ export function scanIac(snapshot: RepoSnapshot): IacScan {
 
     if (lowerName === "cdk.json" || (lowerName.endsWith(".ts") && body.includes("from \"aws-cdk-lib\""))) {
       for (const pattern of CDK_RESOURCES) collect(found, pattern, body, path);
+    }
+
+    // CDK in Python: a stack file imports `aws_cdk` and builds resources from
+    // `aws_cdk.aws_*`. Without this a Python CDK repo scanned as "no services".
+    if (
+      lowerName.endsWith(".py") &&
+      (body.includes("aws_cdk") || body.includes("from aws_cdk"))
+    ) {
+      iac.add("cdk");
+      for (const pattern of CDK_PY_RESOURCES) collect(found, pattern, body, path);
     }
 
     if (lowerName === "serverless.yml" || lowerName === "serverless.yaml") {

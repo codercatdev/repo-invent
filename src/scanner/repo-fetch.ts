@@ -24,7 +24,10 @@ const MANIFEST_NAMES = new Set([
   "terraform.tfvars", "Pipfile",
 ]);
 
-const MANIFEST_EXTENSIONS = [".tf", ".tfvars"];
+// `.py` is read because CDK with Python declares the stack in Python: the
+// resources live in the code, not in any dependency file. It scores below the
+// manifests so a large repo cannot spend the cap on application code first.
+const MANIFEST_EXTENSIONS = [".tf", ".tfvars", ".py"];
 
 // Files that describe code rather than being it. Reading ten of them burns the
 // cap without telling the scanner anything about the architecture.
@@ -158,11 +161,16 @@ export function rankCandidates(files: RepoFile[]): RepoFile[] {
       } else if (name === "template.yaml" || name === "template.yml" || name === "cdk.json") {
         // SAM and CDK describe the whole topology in one file.
         score = 1;
-      } else if (isManifest(file.path)) score = 2;
-      else if (isDoc(file.path)) score = 90;
+      } else if (isManifest(file.path)) {
+        // A Python file is code, not a manifest, so it ranks below one: the
+        // stack file is worth reading, the other two hundred are not.
+        score = name.endsWith(".py") ? 4 : 2;
+      } else if (isDoc(file.path)) score = 90;
       else if (depth <= 2) score = 10;
       else if (depth === 3) score = 30;
       if (file.path.includes("/src/")) score -= 5;
+      // A stack file is the one Python file worth reading first.
+      if (name.endsWith(".py") && /stack|app\.py$/u.test(name)) score -= 3;
       return { file, score, name };
     });
 
