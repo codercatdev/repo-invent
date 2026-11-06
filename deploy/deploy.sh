@@ -40,10 +40,17 @@ npm run build >/dev/null
 
 echo "==> packaging"
 rm -f "$ZIP_PATH"
-# The compiled output, its runtime dependencies, the static page, and the
-# bundled data files. Never the sources or the tests.
-zip -qr "$ZIP_PATH" dist node_modules package.json web data demo-sample \
-  -x "node_modules/.bin/*" "node_modules/**/test/*" "node_modules/**/*.md"
+# The compiled output, the static page, and the bundled data. Runtime
+# dependencies come from a production-only install: the build tools
+# (typescript, vite, rollup, vitest) are about 100 MB and none of them run in
+# Lambda, so they never travel.
+STAGE="$(mktemp -d)"
+trap 'rm -rf "$STAGE"' EXIT
+cp package.json package-lock.json "$STAGE"/
+( cd "$STAGE" && npm ci --omit=dev --ignore-scripts --no-audit --no-fund >/dev/null )
+rm -rf "$STAGE/node_modules/.bin"
+cp -r dist web data demo-sample "$STAGE"/
+( cd "$STAGE" && zip -qr "$OLDPWD/$ZIP_PATH" . -x "**/*.md" -x "**/*.map" )
 
 ACCOUNT_ID="$(aws sts get-caller-identity "${PROFILE_ARG[@]}" --query Account --output text)"
 
