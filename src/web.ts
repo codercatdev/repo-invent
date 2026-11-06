@@ -46,6 +46,7 @@ const WEB_FRAMEWORKS = new Set([
   "Axum",
 ]);
 
+const MAX_MCP_BYTES = 256 * 1024;
 const MAX_BODY_BYTES = 4096;
 
 export interface ScanResponse {
@@ -450,6 +451,19 @@ export function createWebServer(): ReturnType<typeof createServer> {
           : {};
       try {
         const result = await new RemoteMcpBridge().callTool(parsed.tool, args);
+        // `ListSessions` answers with the whole catalog, about 316 KB of JSON.
+        // An agent waiting on this route needs a bound, so a big payload is
+        // reported by size with the advice that actually shrinks it, rather
+        // than arriving whole.
+        const text = JSON.stringify(result.content ?? [], null, 0);
+        if (text.length > MAX_MCP_BYTES) {
+          json(response, 413, {
+            error: "the tool returned more than this route will pass on",
+            bytes: text.length,
+            advice: "call ListSessions with includeAbstracts=false, or page it with nextToken",
+          });
+          return;
+        }
         json(response, result.isError ? 422 : 200, result);
       } catch (error) {
         const message = error instanceof Error ? error.message : "tool call failed";
