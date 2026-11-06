@@ -54,8 +54,19 @@ export class PkceError extends Error {
   }
 }
 
+/**
+ * Where the sign-in tokens live.
+ *
+ * `REPO_INVENT_HOME` is honoured here, the same as everywhere else, so a test
+ * run or a scoped server cannot read or overwrite the developer's own tokens.
+ */
 export function tokensPath(): string {
-  return join(homedir(), ".repo-invent", "tokens.json");
+  const override = process.env["REPO_INVENT_HOME"];
+  const home =
+    override !== undefined && override.length > 0
+      ? override
+      : join(homedir(), ".repo-invent");
+  return join(home, "tokens.json");
 }
 
 export function base64Url(buffer: Buffer): string {
