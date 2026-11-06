@@ -261,6 +261,14 @@
 
       <section class="tabview" id="view-calendar" data-tab="calendar" hidden>
         <div class="hero"><p>Your reserved week.</p><p class="note" id="cal-summary"></p></div>
+        <div class="scanbar"><button class="btn btn-ghost" type="button" id="block-toggle">Block time</button></div>
+        <form id="block-form" class="scanbar" hidden>
+          <input id="block-title" type="text" placeholder="What for? e.g. Walk to the Venetian" aria-label="Block title" required />
+          <input id="block-start" type="datetime-local" aria-label="Start" required />
+          <input id="block-end" type="datetime-local" aria-label="End" required />
+          <p class="note" id="block-note"></p>
+          <button class="btn btn-primary" type="submit">Block this time</button>
+        </form>
         <div class="daybar" id="cal-days"></div>
         <div id="calendar-list"></div>
       </section>
@@ -850,6 +858,58 @@
 
       // Before anyone signs in, the calendar is not empty: it shows the week the
       // last scan proposed. That plan is a suggestion, and it is labelled as one.
+      $("block-toggle").addEventListener("click", () => {
+        const form = $("block-form");
+        form.hidden = !form.hidden;
+        if (!form.hidden && $("block-start").value === "") {
+          const first = (state.schedule && state.schedule.reservations && state.schedule.reservations[0]) || null;
+          const day = first && first.start ? String(first.start).slice(0, 10) : "2026-12-01";
+          $("block-start").value = day + "T19:00";
+          $("block-end").value = day + "T21:00";
+        }
+      });
+
+      // The API wants local time, whole five minutes, and a non-empty
+      // description, so the fields are shaped here before sending.
+      $("block-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const note = $("block-note");
+        const start = $("block-start").value;
+        const end = $("block-end").value;
+        if (start.length < 16 || end.length < 16) {
+          note.textContent = "Pick a start and an end.";
+          return;
+        }
+        if (end <= start) {
+          note.textContent = "The end must be after the start.";
+          return;
+        }
+        note.textContent = "Blocking...";
+        try {
+          const response = await fetch("/api/personal-time", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: $("block-title").value.trim(),
+              start: start + ":00",
+              end: end + ":00",
+            }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            note.textContent = data.error === "not signed in" ? "Sign in first." : data.error;
+            return;
+          }
+          note.textContent = data.ok ? "Blocked." : "Not saved.";
+          if (data.ok) {
+            $("block-form").hidden = true;
+            $("block-title").value = "";
+          }
+        } catch {
+          note.textContent = "Could not reach the server.";
+        }
+      });
+
       async function removeFavorite(sessionId, button) {
         button.disabled = true;
         button.textContent = "Removing...";
