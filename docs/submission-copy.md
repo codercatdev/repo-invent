@@ -26,9 +26,11 @@ Then it plans the week. All twelve AWS Events API operations are implemented aga
 
 The part that outlives the conference is the export. Each gap becomes a ticket with a concrete acceptance test, a Markdown plan, and GitHub issue payloads. The week ends December 4; the tickets start the Monday after.
 
+Around that, the app is built for a phone, in the shape of the official re:Invent app: four tabs. **Home** holds the Ask box, with the repository check directly beneath it; after a scan the same screen shows the gaps, the week day by day with walking time between venues, and the tickets. **Catalog** searches all 2,279 sessions, with filters for type, level and venue. **Calendar** shows what you booked, read back from `GetSchedule`. **Parties** lists 171 community and vendor parties with times, venues, the organizer's own RSVP link and a map, because the day does not end when the sessions do.
+
 The site needs no sign-in. The live catalog, seat reservations and favourites use OAuth 2.0 PKCE against AWS Builder ID, and every write is verified by reading `GetSchedule` back, because the API reports per-session failures and a `200` is not a success.
 
-Built with TypeScript, Node 20, zod, the MCP SDK, and the AWS Events REST and MCP surfaces. 48 tests, none of them touching the network.
+Built with TypeScript, Node 20, zod, the MCP SDK, and the AWS Events REST and MCP surfaces. 49 tests, none of them touching the network.
 
 Tags: reinvent, aws-events-api, mcp, agentic-ai, developer-tools, static-analysis, serverless, productivity
 
