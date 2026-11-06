@@ -234,6 +234,12 @@ export function createWebServer(): ReturnType<typeof createServer> {
       "/app": "app.html",
       "/app/": "app.html",
       "/app.html": "app.html",
+      // Each tab has a plain path too, so a bookmark or a typed URL lands on
+      // the tab instead of a 404. The page reads the path on load.
+      "/home": "app.html",
+      "/catalog": "app.html",
+      "/calendar": "app.html",
+      "/parties": "app.html",
       "/scan": "index.html",
       "/scan.html": "index.html",
     };

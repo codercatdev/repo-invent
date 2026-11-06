@@ -1057,7 +1057,12 @@
         renderCalendar();
       }
 
-      const initial = (location.hash || "#home").slice(1);
+      // A plain path (/catalog, /parties) wins over the hash, so a bookmark or
+      // a typed URL opens the tab it names.
+      const pathTab = (location.pathname || "/").replace(/^\/+|\/+$/g, "");
+      const initial = ["home", "catalog", "calendar", "parties"].includes(pathTab)
+        ? pathTab
+        : (location.hash || "#home").slice(1);
       showTab(["home", "catalog", "calendar", "parties"].includes(initial) ? initial : "home");
       load();
     </script>
