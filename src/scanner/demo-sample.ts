@@ -9,7 +9,7 @@ const SAMPLE_FILES = ["package.json", "infra/main.tf", "src/orders.js", "src/ser
 
 function sampleDir(): string {
   const here = import.meta.url.startsWith("file:")
-    ? fileURLToPath(new URL(".", import.meta.url))
+    ? dirname(fileURLToPath(import.meta.url))
     : dirname(import.meta.url);
   // src/scanner/demo-sample.ts -> ../../demo-sample; dist/scanner -> ../../demo-sample
   return join(here, "..", "..", "demo-sample");

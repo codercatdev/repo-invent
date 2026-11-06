@@ -42,7 +42,7 @@ function json(status: number, body: unknown): LambdaResult {
 
 function webDir(): string {
   const here = import.meta.url.startsWith("file:")
-    ? fileURLToPath(new URL(".", import.meta.url))
+    ? dirname(fileURLToPath(import.meta.url))
     : dirname(import.meta.url);
   // dist/lambda.js -> ../web in the packaged bundle.
   return join(here, "..", "web");

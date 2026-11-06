@@ -52,7 +52,11 @@ export function dataDir(): string {
     // src/config.ts -> ../data when running from source, dist/config.js ->
     // ../data when built. Both resolve to the package's own data folder, so a
     // fixture read never depends on the caller's working directory.
-    const url = new URL("../data/", here);
+    //
+    // The path is assembled rather than written literally: a bundler that sees
+    // "../data/" tries to resolve it at build time and fails, and this string
+    // is only meaningful at runtime anyway.
+    const url = new URL(["..", "data", ""].join("/"), here);
     return decodeURIComponent(fileURLToPath(url));
   }
   return join(process.cwd(), "data");

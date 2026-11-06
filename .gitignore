@@ -8,3 +8,9 @@ dist/
 coverage/
 .cache/
 tokens.json
+
+# Next.js app
+web-next/node_modules/
+web-next/.next/
+web-next/out/
+web-next/.turbo/

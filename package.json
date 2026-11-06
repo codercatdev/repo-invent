@@ -21,8 +21,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "web": "node dist/web.js",
-    "web:dev": "tsx src/web.ts"
+    "web": "npm --prefix web-next run start",
+    "web:dev": "npm --prefix web-next run dev",
+    "web:build": "npm --prefix web-next run build",
+    "web:legacy": "node dist/web.js",
+    "setup:web": "npm ci && npm --prefix web-next ci"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
