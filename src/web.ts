@@ -10,6 +10,7 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
+import { mySchedule, sessionStatus } from "./session.js";
 import { sampleSnapshot } from "./scanner/demo-sample.js";
 
 /** True for the bundled sample repository, whose files ship with the app. */
@@ -253,6 +254,33 @@ export function createWebServer(): ReturnType<typeof createServer> {
         const message = error instanceof Error ? error.message : "the scan failed";
         response.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
         response.end(`<p>${escapeReportText(message)}</p>`);
+      }
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/session") {
+      try {
+        json(response, 200, await sessionStatus());
+      } catch (error) {
+        json(response, 500, { error: error instanceof Error ? error.message : "status failed" });
+      }
+      return;
+    }
+
+    // Sign-in runs on this machine because AWS only accepts a loopback
+    // redirect. The CLI does the browser dance; this route reports whether a
+    // live token is already on disk.
+    if (request.method === "GET" && url.pathname === "/api/schedule") {
+      try {
+        json(response, 200, await mySchedule());
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "schedule failed";
+        // "not signed in" is a normal state the page renders, not a fault.
+        if (/not signed in|no_tokens|sign in again|refresh token/i.test(message)) {
+          json(response, 401, { error: "not signed in" });
+        } else {
+          json(response, 400, { error: message });
+        }
       }
       return;
     }
