@@ -55,6 +55,30 @@ node dist/cli.js login      # opens AWS Builder ID in your browser
 node dist/cli.js plan https://github.com/your/repo --out ./out
 ```
 
+## Try it in a browser
+
+The demo page needs no account and no AWS setup:
+
+```bash
+npm run build
+npm run web                 # http://127.0.0.1:8080
+```
+
+Paste any public GitHub repository. The page scans it, shows the stack, the gaps with their evidence, a planned week, and the tickets. It listens on `127.0.0.1` only.
+
+If GitHub is rate-limiting anonymous calls, the demo repository falls back to a recorded snapshot and the page says so. It never passes a substitute off as a live read.
+
+### Deploy it publicly
+
+`deploy/deploy.sh` ships the same page to AWS Lambda behind a Function URL:
+
+```bash
+aws configure               # or: aws sso login
+./deploy/deploy.sh us-east-1
+```
+
+It creates one function, one public URL, and a log group with 7-day retention, then prints the URL. `deploy/teardown.sh` removes all of it. This costs a few cents a month on demo traffic and runs in your own account.
+
 ## Commands
 
 | Command | What it does |
@@ -175,7 +199,14 @@ src/
   solver/scorer.ts          scoring, week planning, tickets
   export/                   Markdown plan, issue payloads, plan diff
   mcp-server.ts             local MCP server, five tools
+  web.ts                    the browser demo server
+  lambda.ts                 the same page behind a Lambda Function URL
   cli.ts                    the `repo-invent` command
+web/
+  index.html                the demo page, no build step
+deploy/
+  deploy.sh                 one-command deploy to Lambda
+  teardown.sh               removes everything it created
 data/
   venues-transit.json       venue walk and shuttle matrix
   mock-reinvent2026.json    synthetic test fixture, never presented as live
