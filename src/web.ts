@@ -10,6 +10,12 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
+import { sampleSnapshot } from "./scanner/demo-sample.js";
+
+/** True for the bundled sample repository, whose files ship with the app. */
+function isSampleRepo(url: string): boolean {
+  return /reinvent-demo-shop/iu.test(url);
+}
 import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types.js";
 
 // The last successful snapshot of the demo repo, so a repeat view during a
@@ -118,6 +124,13 @@ export async function scanForWeb(repo: string): Promise<ScanResponse> {
     if (result.error.kind === "rate_limited" && isDemoRepo(repo)) {
       snapshot = demoSnapshotCache ?? DEMO_REPO.snapshot;
       servedFrom = demoSnapshotCache ? "cached" : "recorded";
+    } else if (isSampleRepo(repo)) {
+      // The bundled sample is shipped with the app, so it never needs the
+      // network at all: a judge can always see the full story.
+      const bundled = sampleSnapshot();
+      if (bundled === null) throw new Error(`${result.error.message}`);
+      snapshot = bundled;
+      servedFrom = "recorded";
     } else {
       throw new Error(`${result.error.message}`);
     }
