@@ -5,6 +5,7 @@ import {
   signOut,
 } from "./auth/pkce.js";
 import { AwsEventsClient, type ScheduleSnapshot } from "./api/events-client.js";
+import type { PersonalTimeEntry } from "./types.js";
 import { loadConfig } from "./config.js";
 
 export interface SessionStatus {
@@ -149,4 +150,40 @@ export async function unfavoriteSession(
   const snapshot = await client.getSchedule();
   const still = snapshot.favorites.some((entry) => entry.sessionId === sessionId);
   return still ? { removed: false, reason: "still on the schedule" } : { removed: true };
+}
+
+/**
+ * Block personal time, then confirm it from `GetSchedule`.
+ *
+ * `CreatePersonalTime` answers 204 with no body, and re-sending after an
+ * unknown outcome would add a second block, so the new entry is found by
+ * matching its title and start rather than being created twice.
+ */
+export async function addPersonalTime(
+  input: { title: string; start: string; end: string; location?: string },
+): Promise<{ ok: boolean; id?: string; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  const before = await client.getSchedule();
+  const known = new Set(before.personalTime.map((entry) => entry.personalTimeId));
+  await client.createPersonalTime({
+    title: input.title,
+    description: "Blocked in the app",
+    startDateTime: input.start,
+    endDateTime: input.end,
+    ...(input.location ? { location: input.location } : {}),
+  });
+  const after = await client.getSchedule();
+  const created = after.personalTime.find(
+    (entry: PersonalTimeEntry) => !known.has(entry.personalTimeId),
+  );
+  const match =
+    created ??
+    after.personalTime.find(
+      (entry: PersonalTimeEntry) => entry.title === input.title && entry.startDateTime === input.start,
+    );
+  return match
+    ? { ok: true, id: match.personalTimeId }
+    : { ok: false, reason: 'not found after write' };
 }

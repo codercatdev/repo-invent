@@ -11,7 +11,7 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
-import { favoriteSession, mySchedule, sessionStatus, unfavoriteSession } from "./session.js";
+import { addPersonalTime, favoriteSession, mySchedule, sessionStatus, unfavoriteSession } from "./session.js";
 import { sampleSnapshot } from "./scanner/demo-sample.js";
 
 /** True for the bundled sample repository, whose files ship with the app. */
@@ -328,6 +328,45 @@ export function createWebServer(): ReturnType<typeof createServer> {
         json(response, 200, await unfavoriteSession(sessionId));
       } catch (error) {
         const message = error instanceof Error ? error.message : "remove failed";
+        json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 400, {
+          error: /not signed in|no_tokens|sign in again/i.test(message) ? "not signed in" : message,
+        });
+      }
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/personal-time") {
+      let body: string;
+      try {
+        body = await readBody(request);
+      } catch (error) {
+        json(response, 413, { error: error instanceof Error ? error.message : "body too large" });
+        return;
+      }
+      let input: { title?: unknown; start?: unknown; end?: unknown; location?: unknown };
+      try {
+        input = JSON.parse(body) as typeof input;
+      } catch {
+        json(response, 400, { error: "body must be JSON" });
+        return;
+      }
+      if (typeof input.title !== "string" || typeof input.start !== "string" || typeof input.end !== "string") {
+        json(response, 400, { error: "title, start and end are required" });
+        return;
+      }
+      try {
+        json(
+          response,
+          200,
+          await addPersonalTime({
+            title: input.title,
+            start: input.start,
+            end: input.end,
+            ...(typeof input.location === "string" ? { location: input.location } : {}),
+          }),
+        );
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "could not block time";
         json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 400, {
           error: /not signed in|no_tokens|sign in again/i.test(message) ? "not signed in" : message,
         });
