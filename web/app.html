@@ -265,6 +265,7 @@
 
       <section class="tabview" id="view-parties" data-tab="parties" hidden>
         <div class="hero"><p>Vendor and community parties, by night.</p><p class="note" id="party-summary"></p></div>
+        <div class="scanbar"><input id="party-q" type="search" placeholder="Search a party, sponsor or place" aria-label="Search parties" /></div>
         <div class="daybar" id="party-days"></div>
         <div id="party-list"></div>
       </section>
@@ -296,7 +297,7 @@
       const $ = (id) => document.getElementById(id);
       const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", level: "All", venue: "All", q: "" };
+      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", level: "All", venue: "All", q: "", partyQ: "" };
 
       function showTab(name) {
         state.tab = name;
@@ -722,25 +723,62 @@
         </div>`;
       }
 
+      function partyMatches(party) {
+        const q = state.partyQ.trim().toLowerCase();
+        if (q.length === 0) return true;
+        return [party.title, party.venue, party.location, ...(party.sponsors || [])]
+          .join(" ")
+          .toLowerCase()
+          .includes(q);
+      }
+
+      function renderPartyList(day) {
+        const rows = state.parties.filter(partyMatches);
+        const chosen = day ?? groupsFirstDay(rows);
+        const visible = chosen === undefined ? rows : rows.filter((party) => (party.start || party.date).slice(0, 10) === chosen);
+        $("party-list").innerHTML = visible.length
+          ? visible.map(partyCard).join("")
+          : '<p class="empty">No party matches that.</p>';
+      }
+
+      function groupsFirstDay(rows) {
+        const days = [...new Set(rows.map((party) => (party.start || party.date).slice(0, 10)))].sort();
+        return days[0];
+      }
+
       function renderParties() {
-        const dateOf = (p) => p.start || p.date;
-        const groups = dayGroups(state.parties, dateOf, partyCard);
-        $("party-days").innerHTML = groups.bar;
-        $("party-list").innerHTML = groups.list;
-        $("party-summary").textContent = `${state.parties.length} parties, ${groups.days?.length ?? 0} nights`;
+        const rows = state.parties.filter(partyMatches);
+        const days = [...new Set(rows.map((party) => (party.start || party.date).slice(0, 10)))].sort();
+        $("party-summary").textContent = state.partyQ.trim()
+          ? `${rows.length} of ${state.parties.length} parties`
+          : `${state.parties.length} parties, ${days.length} nights`;
+
+        if (days.length === 0) {
+          $("party-days").innerHTML = "";
+          $("party-list").innerHTML = '<p class="empty">No party matches that.</p>';
+          return;
+        }
+
+        $("party-days").innerHTML = days
+          .map((d) => `<button type="button" data-day="${esc(d)}" aria-pressed="${String(d === days[0])}">${esc(
+            new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" }),
+          )}</button>`)
+          .join("");
+        renderPartyList(days[0]);
         for (const chip of $("party-days").querySelectorAll("button")) {
           chip.addEventListener("click", () => {
             for (const other of $("party-days").querySelectorAll("button")) {
               other.setAttribute("aria-pressed", String(other === chip));
             }
-            const d = chip.dataset.day;
-            $("party-list").innerHTML = state.parties
-              .filter((p) => dateOf(p).slice(0, 10) === d)
-              .map(partyCard)
-              .join("");
+            renderPartyList(chip.dataset.day);
           });
         }
       }
+
+      $("party-q").addEventListener("input", (event) => {
+        state.partyQ = event.target.value;
+        renderParties();
+      });
 
       function renderCalendar() {
         const s = state.schedule;
