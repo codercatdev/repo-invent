@@ -6,6 +6,10 @@ Point it at a public GitHub repository. It reads the manifests and infrastructur
 
 The schedule ends on December 4. The tickets start the week after.
 
+**Live demo:** https://7t254hlko26vjs3tlyv7f2u26y0jbree.lambda-url.us-east-1.on.aws/
+
+Built for the **AWS re:Invent 2026 Event Catalog API Hackathon**. The submission article is in `docs/builder-center-article.md`, and the comparison against the other public entries is in `docs/competitive-analysis.md`.
+
 ## The idea
 
 Everybody ships a session planner. The catalog already has thousands of sessions and plenty of apps that rank them.
@@ -64,7 +68,16 @@ npm run build
 npm run web                 # http://127.0.0.1:8080
 ```
 
-Paste any public GitHub repository. The page scans it, shows the stack, the gaps with their evidence, a planned week, and the tickets. It listens on `127.0.0.1` only.
+Paste any public GitHub repository. The page shows:
+
+- the detected stack and the gaps with file evidence
+- an **availability heatmap** of the catalog by venue and day
+- a planned week you can walk
+- a **progress panel**: rate a session 3 or more and the gaps it covered close
+- the tickets, each with an acceptance test
+- a link to **`/report`**, the same plan as one page you can print or mail
+
+Reflections stay in your browser; nothing is uploaded. The server listens on `127.0.0.1` only.
 
 If GitHub is rate-limiting anonymous calls, the demo repository falls back to a recorded snapshot and the page says so. It never passes a substitute off as a live read.
 
