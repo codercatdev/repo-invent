@@ -257,7 +257,14 @@ export function hasWildcardIam(snapshot: RepoSnapshot): { wildcard: boolean; fil
       lower.endsWith(".yaml") ||
       lower.endsWith(".ts");
     if (!relevant) continue;
-    if (/["']Action["']\s*:\s*["']\*["']/u.test(body) || /actions\s*=\s*\[\s*"\*"\s*\]/u.test(body)) {
+    // HCL writes `Action = "*"` while JSON writes `"Action": "*"`; both are a
+    // wildcard grant, and a detector that only knew the JSON spelling silently
+    // missed every Terraform policy using jsonencode.
+    if (
+      /["']?Action["']?\s*[:=]\s*["']\*["']/u.test(body) ||
+      /["']Action["']\s*:\s*\[\s*["']\*["']\s*\]/u.test(body) ||
+      /actions\s*=\s*\[\s*"\*"\s*\]/u.test(body)
+    ) {
       files.push(path);
     }
   }

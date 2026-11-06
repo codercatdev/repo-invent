@@ -186,9 +186,28 @@ export function diagnose(context: GapContext): ArchitecturalGap[] {
   }
 
   if (fingerprint.services.some((service) => service.service === "DynamoDB")) {
-    const hasStreams = manifestMentions(context.snapshot, ["Stream", "stream_view_type", "streamSpecification", "dynamodb-streams"]);
-    const hasDax = manifestMentions(context.snapshot, ["dax", "DAX", "aws-dax"]);
-    const hasDlq = manifestMentions(context.snapshot, ["deadLetter", "dead_letter", "DeadLetterConfig", "dlq", "DLQ"]);
+    // Configuration keys, not prose: a comment saying "no Streams consumer"
+    // must not count as proof that Streams exist. The earlier bare "Stream"
+    // needle matched exactly that and hid a real gap.
+    const hasStreams = manifestMentions(context.snapshot, [
+      "stream_view_type",
+      "streamViewType",
+      "streamSpecification",
+      "streamEnabled",
+      "dynamodb-streams",
+      "dynamodbv2.Stream",
+      "StreamViewType",
+    ]);
+    const hasDax = manifestMentions(context.snapshot, ["aws_dax_cluster", "AmazonDaxClient", "aws-dax", "@aws-sdk/client-dax"]);
+    const hasDlq = manifestMentions(context.snapshot, [
+      "dead_letter_config",
+      "deadLetterConfig",
+      "DeadLetterConfig",
+      "dead_letter_target_arn",
+      "deadLetterTargetArn",
+      "aws_sqs_queue_policy",
+      "redrive_policy",
+    ]);
     if (!hasStreams && !hasDax && !hasDlq) {
       gaps.push({
         id: "dynamodb-without-resilience",
