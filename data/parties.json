@@ -1,0 +1,2686 @@
+{
+  "_notice": "Scraped from conferenceparties.com/reinvent2026/. Unofficial listing of vendor and community parties. Always confirm with the sponsor's own RSVP page.",
+  "source": "https://conferenceparties.com/reinvent2026/",
+  "scrapedAt": "2026-11-06T23:01:02.799Z",
+  "count": 171,
+  "days": [
+    "2026-11-29",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04"
+  ],
+  "parties": [
+    {
+      "date": "2026-11-29",
+      "day": "Sunday",
+      "timeLabel": "2:30-7PM",
+      "start": "2026-11-29T14:30:00",
+      "end": "2026-11-29T19:00:00",
+      "sponsors": [
+        "KubeAuto Day"
+      ],
+      "title": "Kubernetes Automation Day in Rockhouse",
+      "url": "https://kubeauto.day/las-vegas",
+      "location": "Rockhouse Grand Canal Shoppes The Venetian",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-29",
+      "day": "Sunday",
+      "timeLabel": "5:30-8PM",
+      "start": "2026-11-29T17:30:00",
+      "end": "2026-11-29T20:00:00",
+      "sponsors": [
+        "ProsperOps",
+        "Flexera"
+      ],
+      "title": "2026 FinOps Leaders Dinner",
+      "url": "https://www.prosperops.com/event/aws-reinvent-finops-leaders-dinner/?utm_source=conferenceparties",
+      "location": "Delmonico Steakhouse The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-29",
+      "day": "Sunday",
+      "timeLabel": "6-10PM",
+      "start": "2026-11-29T18:00:00",
+      "end": "2026-11-29T22:00:00",
+      "sponsors": [
+        "Pier Cloud"
+      ],
+      "title": "Pier Racing 2026",
+      "url": "https://marketing.piercloud.com/pier-racing?utm_source=awsparties&utm_medium=site&utm_campaign=pierracing",
+      "location": "SpeedVegas 14200 S Las Vegas Blvd",
+      "added": "10/18",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-29",
+      "day": "Sunday",
+      "timeLabel": "7PM-1AM",
+      "start": "2026-11-29T19:00:00",
+      "end": "2026-11-29T01:00:00",
+      "sponsors": [
+        "HabileLabs"
+      ],
+      "title": "AWS re:Invent Kickoff Night with HabileLabs",
+      "url": "https://luma.com/y4zpryyh",
+      "location": "Register to See Address",
+      "added": "9/11",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-29",
+      "day": "Sunday",
+      "timeLabel": "9PM-2AM",
+      "start": "2026-11-29T21:00:00",
+      "end": "2026-11-29T02:00:00",
+      "sponsors": [
+        "UndrGrnd.Social"
+      ],
+      "title": "UndrGrnd.Social Vegas Edition",
+      "url": "https://luma.com/bbmjig1j",
+      "location": "Penthouse Suite The Cosmopolitan",
+      "added": "10/18",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-9AM",
+      "start": "2026-11-30T08:00:00",
+      "end": "2026-11-30T09:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Breakfast - Meet & Greet Informal Executive Introductions",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-10AM",
+      "start": "2026-11-30T08:00:00",
+      "end": "2026-11-30T10:00:00",
+      "sponsors": [
+        "Stripe"
+      ],
+      "title": "Stripe Developer Breakfast",
+      "url": "https://www.meetup.com/stripe-at-re-invent/events/317090451",
+      "location": "Mon Ami Gabi Paris Hotel",
+      "added": "10//22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8AM-2PM",
+      "start": "2026-11-30T08:00:00",
+      "end": "2026-11-30T14:00:00",
+      "sponsors": [
+        "Stripe"
+      ],
+      "title": "Stripe Day Party",
+      "url": "https://stripe.events/stripe-at-reinvent2026",
+      "location": "Mon Ami Gabi Paris Hotel",
+      "added": "10/14",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8:30-10:30AM",
+      "start": "2026-11-30T08:30:00",
+      "end": "2026-11-30T10:30:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Monday Breakfast",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "10AM-",
+      "start": "2026-11-30T10:00:00",
+      "end": null,
+      "sponsors": [
+        "Basis"
+      ],
+      "title": "Take the Wheel in Las Vegas",
+      "url": "https://app.basisworldwide.com/supercar-experience?utm_source=cp&utm_medium=lstng&utm_campaign=svtxt&utm_id=svtxt",
+      "location": "SpeedVegas 14200 S Las Vegas Blvd",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "11AM-1:30PM",
+      "start": "2026-11-30T11:00:00",
+      "end": "2026-11-30T13:30:00",
+      "sponsors": [
+        "Britive",
+        "AWS"
+      ],
+      "title": "Securing AI Agents in Production: Private Sessions with AWS & Britive",
+      "url": "https://www.britive.com/resource/events/aws-reinvent-2026-britive",
+      "location": "Tower Suite Caesars Palace",
+      "added": "11/3",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "11:30AM-1:30PM",
+      "start": "2026-11-30T11:30:00",
+      "end": "2026-11-30T13:30:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Monday Lunch",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "12-1:30PM",
+      "start": "2026-11-30T12:00:00",
+      "end": "2026-11-30T13:30:00",
+      "sponsors": [
+        "Cloudgov.ai"
+      ],
+      "title": "AI, FinOps & Observability Leaders Lunch",
+      "url": "https://luma.com/0wxyztme",
+      "location": "Chéri Rooftop Paris",
+      "added": "",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "12:30-1:30PM",
+      "start": "2026-11-30T12:30:00",
+      "end": "2026-11-30T13:30:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Customer Executive Roundtable",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "1-4PM",
+      "start": "2026-11-30T13:00:00",
+      "end": "2026-11-30T16:00:00",
+      "sponsors": [
+        "New Relic"
+      ],
+      "title": "New Relic Jet Lag Drinks & Darts",
+      "url": "https://newrelic.com/events/2026-11-30/happyhour",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "10/28",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "1-4PM",
+      "start": "2026-11-30T13:00:00",
+      "end": "2026-11-30T16:00:00",
+      "sponsors": [
+        "ResolveAI"
+      ],
+      "title": "Monday Afternoon Mixer: Engineering pre:Invent Party",
+      "url": "https://luma.com/sqqi6khx?utm_source=conference-parties&utm_medium=site-listing&utm_campaign=monday-eng-mixer&utm_id=re-invent-2026-sushisamba",
+      "location": "SushiSAMBA The Venetian",
+      "added": "9/28",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "1:30-3PM",
+      "start": "2026-11-30T13:30:00",
+      "end": "2026-11-30T15:00:00",
+      "sponsors": [
+        "Excelien",
+        "Datafy"
+      ],
+      "title": "Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-excelien/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "3-5PM",
+      "start": "2026-11-30T15:00:00",
+      "end": "2026-11-30T17:00:00",
+      "sponsors": [
+        "PCAN.cloud",
+        "Archera",
+        "Labra.io",
+        "PeerSpot"
+      ],
+      "title": "PCAN.cloud re:Invent Networking Kickoff!",
+      "url": "https://luma.com/ol8iv9zc?utm_source=conferenceparties&utm_medium=directory&utm_campaign=reinvent2026",
+      "location": "Register to See Address Near The Venetian & Caesars Palace",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "4-6:30PM",
+      "start": "2026-11-30T16:00:00",
+      "end": "2026-11-30T18:30:00",
+      "sponsors": [
+        "Partnership Leaders"
+      ],
+      "title": "Catalyst Pre-Party at AWS re:Invent",
+      "url": "https://www.joincatalyst.com/catalyst-pre-party-at-aws-reinvent",
+      "location": "Register to See Address",
+      "added": "10/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "4-7PM",
+      "start": "2026-11-30T16:00:00",
+      "end": "2026-11-30T19:00:00",
+      "sponsors": [
+        "AWS",
+        "Partners"
+      ],
+      "title": "Welcome Reception",
+      "url": null,
+      "location": "Expo Hall The Venetian",
+      "added": "8/10",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-7:30PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T19:30:00",
+      "sponsors": [
+        "AWS"
+      ],
+      "title": "Golden Jackets: re:Invent 2026 Happy Hour (Jacket Required)",
+      "url": "https://docs.google.com/forms/d/1FDy7jze78eGROSi0CwZoitpXQWh9y84cBhxdsNc-8MM/edit",
+      "location": "Happy Camper Fashion Show LV",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-8PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T20:00:00",
+      "sponsors": [
+        "NiCE"
+      ],
+      "title": "The CX & AI Social at AWS re:Invent",
+      "url": "https://events.cdmmedia.com/event/da77ecec-d140-4e8a-ac91-a3f3c06ca1f2/summary/?refid=mktg-a-cp-nice-awsreinvent2026",
+      "location": "SushiSAMBA The Venetian",
+      "added": "10/27",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-8PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T20:00:00",
+      "sponsors": [
+        "The New Stack",
+        "Hydrolix"
+      ],
+      "title": "re:Invent Kickoff Reception @ Delmonico",
+      "url": "https://www.eventbrite.com/e/reinvent-reception-with-the-new-stack-hydrolix-tickets-2003796176304",
+      "location": "Delmonico Steakhouse The Venetian",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-8:30PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T20:30:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Datadog Welcome Happy Hour",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-welcome-happy-hour/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-9PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T21:00:00",
+      "sponsors": [
+        "Rootly AI"
+      ],
+      "title": "AWS re:Invent 2026 Kickoff Party",
+      "url": "https://luma.com/r87odmij",
+      "location": "Rockhouse The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-9PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T21:00:00",
+      "sponsors": [
+        "Commvault"
+      ],
+      "title": "Executive Mastermind Dinner",
+      "url": "https://luma.com/dgbkfdrf",
+      "location": "Upscale Restaurant Cosmopolitan",
+      "added": "9/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6-10PM",
+      "start": "2026-11-30T18:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Monday Reception: Celebrate the $1B Club",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "6:30-9:30PM",
+      "start": "2026-11-30T18:30:00",
+      "end": "2026-11-30T21:30:00",
+      "sponsors": [
+        "Vercel",
+        "Slack",
+        "Exa"
+      ],
+      "title": "(Eve)nings with Vercel",
+      "url": "https://luma.com/evenings?utm_source=CP",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7-9PM",
+      "start": "2026-11-30T19:00:00",
+      "end": "2026-11-30T21:00:00",
+      "sponsors": [
+        "Darktrace"
+      ],
+      "title": "Darktrace After Dark",
+      "url": "https://www.darktrace.com/event-registration/darktrace-after-dark-at-aws-re-invent",
+      "location": "Clique Bar The Cosmopolitan",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7-9PM",
+      "start": "2026-11-30T19:00:00",
+      "end": "2026-11-30T21:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Welcome Dinner - Executive Reception",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7-10PM",
+      "start": "2026-11-30T19:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "Trellix"
+      ],
+      "title": "Access Granted: From Ice to Incognito with Trellix",
+      "url": "https://events.Trellix.com/AccessGrantedreInvent2026/ConferenceParties",
+      "location": "Minus5 Ice Bar & 1923 Prohibition Lounge Venetian Shoppes",
+      "added": "10/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7PM-1AM",
+      "start": "2026-11-30T19:00:00",
+      "end": "2026-11-30T01:00:00",
+      "sponsors": [
+        "Platform Engineering",
+        "Tailscale",
+        "Plural Labs",
+        "Qudo.ai"
+      ],
+      "title": "House of Kube @ AWS re:Invent",
+      "url": "https://luma.com/platform-wsip",
+      "location": "INDUSTRIAL event space 2330 S Industrial Rd",
+      "added": "9/9",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7PM-1AM",
+      "start": "2026-11-30T19:00:00",
+      "end": "2026-11-30T01:00:00",
+      "sponsors": [
+        "Qodo"
+      ],
+      "title": "Go VIP with Qodo at House of Kube",
+      "url": "https://www.qodo.ai/reinvent/#vip-night",
+      "location": "INDUSTRIAL event space 2330 S Industrial Rd",
+      "added": "10/29",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7:30-8:30PM",
+      "start": "2026-11-30T19:30:00",
+      "end": "2026-11-30T20:30:00",
+      "sponsors": [
+        "Maze"
+      ],
+      "title": "Ferris Wheel Bar at re:Invent 2026",
+      "url": "https://mazehq.com/event/ferris-wheel-bar-at-reinvent-2026/?utm_source=conferenceparties&utm_term=reinvent",
+      "location": "High Roller The LINQ Promenade 3545 S Las Vegas Blvd",
+      "added": "9/23",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "7:30-9:30PM",
+      "start": "2026-11-30T19:30:00",
+      "end": "2026-11-30T21:30:00",
+      "sponsors": [
+        "Cloudgov.ai"
+      ],
+      "title": "AI, FinOps & Observability Leaders Dinner",
+      "url": "https://luma.com/cnk2r17n",
+      "location": "Carmine's The Forum Shops Caesars Palace",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-10PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "Aurasell",
+        "Chainguard",
+        "Parallel",
+        "Harness",
+        "TopShelf"
+      ],
+      "title": "Hunters & Unicorns Happy Hour at the Vesper Bar",
+      "url": "https://www.eventbrite.co.uk/e/hunters-unicorns-happy-hour-at-the-vesper-bar-the-cosmo-tickets-2003467972638",
+      "location": "Vesper Bar Cosmopolitan",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-10PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "Scanner"
+      ],
+      "title": "The AWS re:Invent Security Dinner",
+      "url": "https://luma.com/scanner-wiv2",
+      "location": "Carbone Riviera Bellagio",
+      "added": "10/27",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-10PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "Redis"
+      ],
+      "title": "Redis Welcome Party at AWS re:Invent 2026",
+      "url": "https://redis.io/events/redis-welcome-party-at-aws-reinvent-2026/",
+      "location": "Cañonita The Venetian Shoppes",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-10PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T22:00:00",
+      "sponsors": [
+        "Skyflow",
+        "Descope"
+      ],
+      "title": "Executive Dinner: The AI Enterprise: Securing Data & Identity at Runtime",
+      "url": "https://www.skyflow.com/dinners/the-ai-enterprise-securing-data-identity-at-runtime",
+      "location": "Delmonico Steakhouse The Venetian",
+      "added": "10/9",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-11PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T23:00:00",
+      "sponsors": [
+        "Dreeze"
+      ],
+      "title": "Sorry. At Capacity Join Dreeze for Dinner",
+      "url": null,
+      "location": "Register to See Address",
+      "added": "10/26",
+      "atCapacity": true
+    },
+    {
+      "date": "2026-11-30",
+      "day": "Monday",
+      "timeLabel": "8-11PM",
+      "start": "2026-11-30T20:00:00",
+      "end": "2026-11-30T23:00:00",
+      "sponsors": [
+        "Harness"
+      ],
+      "title": "Harness After-Hours Party",
+      "url": "https://www.harness.io/event/aws-re-invent-2026?&utm_medium=advertising&utm_term=confparties&utm_content=tradeshow",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "10/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-8:25AM",
+      "start": "2026-12-01T07:00:00",
+      "end": "2026-12-01T08:25:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Breakfast: Move AI Agents at Scale with Datadog, Anthropic & AWS",
+      "url": "https://events.datadoghq.com/aws-reinvent/scaling-your-ai-agents-with-datadog-and-our-partners/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-8:25AM",
+      "start": "2026-12-01T07:00:00",
+      "end": "2026-12-01T08:25:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Breakfast: With Datadog's EMEA Community",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-datadogs-emea-breakfast/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7:30-11:30AM",
+      "start": "2026-12-01T07:30:00",
+      "end": "2026-12-01T11:30:00",
+      "sponsors": [
+        "BairesDev"
+      ],
+      "title": "Fairway to the Cloud - CTOs Only Please",
+      "url": "https://luma.com/FairwaytotheCloud",
+      "location": "Bali Hai Golf Club 5160 S Las Vegas Blvd",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8-9AM",
+      "start": "2026-12-01T08:00:00",
+      "end": "2026-12-01T09:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Breakfast - From Ambition to Governed Adoption",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8:30AM-",
+      "start": "2026-12-01T08:30:00",
+      "end": null,
+      "sponsors": [
+        "Observe by Snowflake"
+      ],
+      "title": "Watch the Opening Keynote with Us at Wakuda",
+      "url": "https://www.snowflake.com/event/watch-the-opening-keynote-with-us-at-wakuda-20261201/",
+      "location": "Wakuda Palazzo, The Venetian",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "9:30AM-12PM",
+      "start": "2026-12-01T09:30:00",
+      "end": "2026-12-01T12:00:00",
+      "sponsors": [
+        "Cartesia"
+      ],
+      "title": "Super Car-tesia",
+      "url": "https://luma.com/dztqp1c4",
+      "location": "Speed Vegas 14200 S Las Vegas Blvd",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "10-11:30AM",
+      "start": "2026-12-01T10:00:00",
+      "end": "2026-12-01T11:30:00",
+      "sponsors": [
+        "Upwind"
+      ],
+      "title": "Women in Cyber: The Le Labo Experience",
+      "url": "https://luma.com/le-labo-women-in-cyber",
+      "location": "Le Labo The Wynn",
+      "added": "10/18",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "10:30AM-2PM",
+      "start": "2026-12-01T10:30:00",
+      "end": "2026-12-01T14:00:00",
+      "sponsors": [
+        "Plerion",
+        "C-Vision Intl",
+        "AWS",
+        "XBOW",
+        "Geordie AI"
+      ],
+      "title": "Shift Gears at re:Invent: Racing Event with Plerion",
+      "url": "https://luma.com/83ji8ar9",
+      "location": "Register to See Address",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "11AM-12PM",
+      "start": "2026-12-01T11:00:00",
+      "end": "2026-12-01T12:00:00",
+      "sponsors": [
+        "Intel"
+      ],
+      "title": "Unlock Legacy Database Budgets to Accelerate Modernization & AI Innovation",
+      "url": "https://web.cvent.com/event/11908510-ab2c-4e0f-b348-02f3adf933e3/register",
+      "location": "Fogo de Chão The Venetian",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "11AM-1:30PM",
+      "start": "2026-12-01T11:00:00",
+      "end": "2026-12-01T13:30:00",
+      "sponsors": [
+        "Britive",
+        "AWS"
+      ],
+      "title": "Securing AI Agents in Production: Private Sessions with AWS & Britive",
+      "url": "https://www.britive.com/resource/events/aws-reinvent-2026-britive",
+      "location": "Tower Suite Caesars Palace",
+      "added": "11/3",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "12-1:30 PM",
+      "start": "2026-12-01T12:00:00",
+      "end": "2026-12-01T13:30:00",
+      "sponsors": [
+        "Cloudgov.ai"
+      ],
+      "title": "AI, FinOps & Observability Leaders Lunch",
+      "url": "https://luma.com/9iccjhyt",
+      "location": "Carmine's The Forum Shops Caesars Palace",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "12:30PM-",
+      "start": "2026-12-01T12:30:00",
+      "end": null,
+      "sponsors": [
+        "Datafy",
+        "BigData Boutique"
+      ],
+      "title": "Eat Your DB - Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-bigdata-boutique/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "12:30-1:30PM",
+      "start": "2026-12-01T12:30:00",
+      "end": "2026-12-01T13:30:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "HCLS & BFSI Executive Lunch",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "12:30-2PM",
+      "start": "2026-12-01T12:30:00",
+      "end": "2026-12-01T14:00:00",
+      "sponsors": [
+        "Excelien",
+        "Datafy"
+      ],
+      "title": "Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-excelien/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "1-2:30PM",
+      "start": "2026-12-01T13:00:00",
+      "end": "2026-12-01T14:30:00",
+      "sponsors": [
+        "HydraDB"
+      ],
+      "title": "CTO Lunch Reinvent",
+      "url": "https://luma.com/nfv9qtqp",
+      "location": "Register to See Address Caesars Palace",
+      "added": "10/16",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "2-3:30PM",
+      "start": "2026-12-01T14:00:00",
+      "end": "2026-12-01T15:30:00",
+      "sponsors": [
+        "Directeam",
+        "Datafy"
+      ],
+      "title": "Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-directeam/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "4-6PM",
+      "start": "2026-12-01T16:00:00",
+      "end": "2026-12-01T18:00:00",
+      "sponsors": [
+        "Brooksource"
+      ],
+      "title": "Meet Brooksource at Stadia Bar",
+      "url": "https://www.brooksource.com/aws-reinvent",
+      "location": "Stadia Bar Caesars Palace",
+      "added": "10/28",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "4:30-6:30PM",
+      "start": "2026-12-01T16:30:00",
+      "end": "2026-12-01T18:30:00",
+      "sponsors": [
+        "Hydrolix",
+        "Monad"
+      ],
+      "title": "Pit Stop: Hydrolix & Monad at F1 Arcade",
+      "url": "https://luma.com/z0npkjtn",
+      "location": "F1 Arcade Caesars Palace",
+      "added": "10/27",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5-7PM",
+      "start": "2026-12-01T17:00:00",
+      "end": "2026-12-01T19:00:00",
+      "sponsors": [
+        "DualBird",
+        "Logz.io",
+        "Allot",
+        "NeverBlink AI"
+      ],
+      "title": "AWS re:Invent 2026 Data Leaders Cocktail Hour",
+      "url": "https://luma.com/data-reinvent",
+      "location": "North Show Terrace Wynn",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5-7PM",
+      "start": "2026-12-01T17:00:00",
+      "end": "2026-12-01T19:00:00",
+      "sponsors": [
+        "Apexon"
+      ],
+      "title": "Apexon Happy Hour",
+      "url": "https://www.apexon.com/aws-reinvent-2026/",
+      "location": "Bar Luca - The Venetian",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5-9PM",
+      "start": "2026-12-01T17:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Wiv Air",
+        "CloudTeam"
+      ],
+      "title": "Air Over Vegas: Take Al to New Heights",
+      "url": "https://wiv.ai/events/air-over-vegas-take-ai-to-new-heights",
+      "location": "Maverick Helicopters 6075 S Las Vegas Blvd",
+      "added": "10/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5:30-7:30PM",
+      "start": "2026-12-01T17:30:00",
+      "end": "2026-12-01T19:30:00",
+      "sponsors": [
+        "Cloudgov.ai"
+      ],
+      "title": "AssessShield Launch Party",
+      "url": "https://cloudgov.ai/ooa/",
+      "location": "TAO Asian Bistro The Venetian",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5:30-8PM",
+      "start": "2026-12-01T17:30:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "Cloudera",
+        "Powered by AWS"
+      ],
+      "title": "Sip & Scale: An Exclusive Evening with Cloudera and AWS",
+      "url": "https://attend.cloudera.com/sip-and-scale-danica-patrick-aws/aws-parties-site",
+      "location": "Register to See Address",
+      "added": "11/3",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5:30-8PM",
+      "start": "2026-12-01T17:30:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "1Password"
+      ],
+      "title": "Access, neat: An Evening of Whiskey, Champagne & Privileged Access",
+      "url": "https://events.1password.io/access-neat-evening-of-whiskey",
+      "location": "The Encore 3121 S Las Vegas Blvd",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "5:30-9PM",
+      "start": "2026-12-01T17:30:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "OpenObserve"
+      ],
+      "title": "Beyond re:Invent: Experience the Best of Las Vegas",
+      "url": "https://na2.hubs.ly/H08cw-K0",
+      "location": "Dinner Upscale Restaurant Caesars Palace VIP Helicopter Tour",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6PM-",
+      "start": "2026-12-01T18:00:00",
+      "end": null,
+      "sponsors": [
+        "ControlMonkey"
+      ],
+      "title": "Resilience, Served Rare: A Private Dinner",
+      "url": "https://lp.controlmonkey.io/reinvent-private-stk-dinner-2026?utm_source=conferenceparties&utm_medium=listing&utm_campaign=reinvent26",
+      "location": "STK Las Vegas The Cosmopolitan",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "Dash0",
+        "Business Insider"
+      ],
+      "title": "AI Insider: The Great Coding Reset (Reception)",
+      "url": "https://events.businessinsider.com/ai-insider-las-vegas/",
+      "location": "Catch ARIA",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "AMD"
+      ],
+      "title": "AMD Networking Reception",
+      "url": "https://web.cvent.com/event/47c6819a-ca55-4e8b-a04a-33fa0224ccce/summary",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "BairesDev"
+      ],
+      "title": "Taco Tuesday Tech Connect",
+      "url": "https://luma.com/a9duyd99",
+      "location": "Toca Madera Shops at Crystals 3720 S Las Vegas Blvd",
+      "added": "10/126",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "New Relic"
+      ],
+      "title": "Customer & Partner Appreciation Party",
+      "url": "https://newrelic.com/events/2026-12-01/happy-hour",
+      "location": "Vista Cocktail Lounge Caesars Palace",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "Arctic Wolf",
+        "AWS",
+        "Databricks",
+        "Anthropic"
+      ],
+      "title": "Arctic Wolf re:Invent 2026 CISO Happy Hour",
+      "url": "https://cybersecurity.arcticwolf.com/261201_RamsaysKitchenreInventCISOHappyHour.html",
+      "location": "Ramsay’s Kitchen Harrah’s",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "Lucid Software",
+        "Cortex",
+        "Crash Override",
+        "incident.io",
+        "Miggo",
+        "Tailscale"
+      ],
+      "title": "Cloud & Cocktails at PLAY",
+      "url": "https://www.eventbrite.com/e/cloud-cocktails-at-play-tickets-1997894868333",
+      "location": "Play Playground Luxor",
+      "added": "10/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T20:00:00",
+      "sponsors": [
+        "Thoughtworks"
+      ],
+      "title": "Shift into Happy Hour",
+      "url": "https://events.thoughtworks.com/twshiftintohappyhour/ConferenceParties",
+      "location": "Opium Room TAO Asian Bistro The Venetian",
+      "added": "9/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Finout"
+      ],
+      "title": "Finops After Dark @re:Invent",
+      "url": "https://luma.com/fad-rdl4",
+      "location": "Rockhouse The Venetian",
+      "added": "9/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Arrow"
+      ],
+      "title": "Race to Revenue: Arrow Evening Reception",
+      "url": "https://arrow.swoogo.com/awsreinventreception/rta",
+      "location": "F1 Arcade Caesars Palace",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Deepgram",
+        "Krisp",
+        "Twilio"
+      ],
+      "title": "Deepgram Speak Easy | Co-hosted by Krisp & Twilio",
+      "url": "https://luma.com/reinvent-speak-easy?utm_campaign=58045796-1226%20AWS%20re%3Ainvent&utm_source=Event&utm_medium=Conference%20parties%20tracking%20URL&utm_content=URL%20for%20conference%20parties",
+      "location": "Allē Lounge on 66 111 Resorts World Ave",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Concierto by Trianz"
+      ],
+      "title": "Full Throttle Happy Hour - Drift in a Shelby & Shift to What's Next",
+      "url": "https://bit.ly/4jci2hY",
+      "location": "Shelby Heritage Center 6405 Ensworth St",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Rootly",
+        "​Tailscale"
+      ],
+      "title": "AWS re:Invent 2026: After-Hours Social",
+      "url": "https://luma.com/x3ftka38",
+      "location": "The Oakroom Rockhouse The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Scanner"
+      ],
+      "title": "The AWS re:Invent Helicopter Tour",
+      "url": "https://luma.com/scanner-fmqq",
+      "location": "Maverick Helicopters 6075 S Las Vegas Blvd",
+      "added": "10/27",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "1Password"
+      ],
+      "title": "re:Mix at Spritz",
+      "url": "https://events.1password.io/remixatspritz",
+      "location": "Spritz The Venetian",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Trellix"
+      ],
+      "title": "Secure the Sizzle with Trellix",
+      "url": "https://events.Trellix.com/SecuretheSizzle2026/ConferenceParties",
+      "location": "Braseria by EDO 3900 Paradise Rd",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Render",
+        "Mastra"
+      ],
+      "title": "AWS re:Invent Pit Stop",
+      "url": "https://luma.com/ul0tgyw9",
+      "location": "F1 Arcade Caesars Palace",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Copperhelm"
+      ],
+      "title": "Executive Mastermind Dinner",
+      "url": "https://luma.com/5g7wzhbr",
+      "location": "Upscale Restaurant Cosmopolitan",
+      "added": "9/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-10PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Cartesia",
+        "Braintrust",
+        "LlamaIndex",
+        "Modal",
+        "Parallel",
+        "turbopuffer"
+      ],
+      "title": "Agents Soundcheck",
+      "url": "https://luma.com/agent-soundcheck?utm_source=conferenceparties",
+      "location": "On The Record Speakeasy Park MGM",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6-10PM",
+      "start": "2026-12-01T18:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Valkey"
+      ],
+      "title": "House of Valkey 2026: Family Reunion",
+      "url": "https://luma.com/qi5jgr7d?utm_source=conferenceparties",
+      "location": "HaSalon Palazzo, The Venetian",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6:30-8:30PM",
+      "start": "2026-12-01T18:30:00",
+      "end": "2026-12-01T20:30:00",
+      "sponsors": [
+        "Coder"
+      ],
+      "title": "SushiSAMBA: Coder After Dark",
+      "url": "https://luma.com/goslojhx",
+      "location": "SushiSAMBA The Venetian",
+      "added": "9/25",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6:30-9:30PM",
+      "start": "2026-12-01T18:30:00",
+      "end": "2026-12-01T21:30:00",
+      "sponsors": [
+        "Hud"
+      ],
+      "title": "Somewhere Over the PR: An AI SDLC Evening at Sphere",
+      "url": "https://luma.com/z7viu4b8",
+      "location": "Sphere 255 Sands Ave",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "6:30-9:30PM",
+      "start": "2026-12-01T18:30:00",
+      "end": "2026-12-01T21:30:00",
+      "sponsors": [
+        "CISO Ventures",
+        "Friends"
+      ],
+      "title": "Cybersecurity Leader Networking Dinner",
+      "url": "https://luma.com/434tayyl",
+      "location": "Four Seasons Hotel",
+      "added": "9/2",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Presidio"
+      ],
+      "title": "Steakhouse Social with Presidio",
+      "url": "https://invite.presidio.com/steakhousesocialpresidioreinvent2026",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/14",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T21:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Dinner - Healing at Machine Speed The New Bank Heist",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Labra",
+        "Archera"
+      ],
+      "title": "F1 Simulators with Archera & Labra",
+      "url": "https://luma.com/x6201711",
+      "location": "F1 Arcade Caesars Palace",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Sanity",
+        "Temporal",
+        "Mastra"
+      ],
+      "title": "AI Trivia Night by Sanity. Sponsored by Temporal & Mastra",
+      "url": "https://luma.com/TriviaDec26",
+      "location": "Register to See Address",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Vercel",
+        "Anthropic",
+        "Notio"
+      ],
+      "title": "Agents After Dark at AWS re:Invent",
+      "url": "https://luma.com/agents-after-dark",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Datadog Off Leash",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-appreciation-party/",
+      "location": "Brooklyn Bowl 3545 S Las Vegas Blvd",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Datadog Off Leash, Datadog Community Appreciation Party",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-appreciation-party/",
+      "location": "Brooklyn Bowl 3545 S Las Vegas Blvd",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-01T19:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Neo4j"
+      ],
+      "title": "Neo4j After Dark: VIP Backstage Pass",
+      "url": "https://events.neo4j.com/neo4jreceptionaws2026?utm_source=third-party&utm_medium=organic-social&utm_campaign=exec",
+      "location": "The Barbershop Cuts & Cocktails Cosmopolitan",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7:15-9:30PM",
+      "start": "2026-12-01T19:15:00",
+      "end": "2026-12-01T21:30:00",
+      "sponsors": [
+        "Hexaware"
+      ],
+      "title": "Sorry. At Capacity The Immersive Wizard of Oz Experience at Sphere with Drinks & Food",
+      "url": null,
+      "location": "Sphere 255 Sands Ave",
+      "added": "8/24",
+      "atCapacity": true
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "7:30PM-",
+      "start": "2026-12-01T19:30:00",
+      "end": null,
+      "sponsors": [
+        "Rubrik"
+      ],
+      "title": "The Rubrik Party at AWS re:Invent",
+      "url": "https://rubrik.registration.goldcast.io/events/609f6951-a243-44e0-88cf-705115b973c2",
+      "location": "Omnia Nightclub<Caesars Palace",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8-10PM",
+      "start": "2026-12-01T20:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Cloudgov.ai"
+      ],
+      "title": "AI, FinOps & Observability Leaders Dinner",
+      "url": "https://luma.com/o1pqx5yy",
+      "location": "TAO Asian Bistro & Nightclub The Venetian",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8-10PM",
+      "start": "2026-12-01T20:00:00",
+      "end": "2026-12-01T22:00:00",
+      "sponsors": [
+        "Devoteam",
+        "AWS",
+        "Wiz"
+      ],
+      "title": "Devoteam, AWS & Wiz Executive Reception",
+      "url": "https://www.devoteam.com/lets-connect-at-aws-reinvent/",
+      "location": "Brasserie B Caesars Palace",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8PM-12AM",
+      "start": "2026-12-01T20:00:00",
+      "end": "2026-12-01T00:00:00",
+      "sponsors": [
+        "DoiT"
+      ],
+      "title": "Attribute & DoiT à Paris: An Evening Above the Strip",
+      "url": "https://events.doit.com/event/AttributeinParis/summary",
+      "location": "Chéri Rooftop Paris LV",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8:45-10:45PM",
+      "start": "2026-12-01T20:45:00",
+      "end": "2026-12-01T22:45:00",
+      "sponsors": [
+        "The New Stack",
+        "Sourcegraph",
+        "OpsLevel"
+      ],
+      "title": "Seek & Score Social",
+      "url": "https://www.eventbrite.com/e/2004183502808",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "8:45-11:45PM",
+      "start": "2026-12-01T20:45:00",
+      "end": "2026-12-01T23:45:00",
+      "sponsors": [
+        "PlanetScale",
+        "Laravel",
+        "Sentry"
+      ],
+      "title": "Flight Club with PlanetScale, Laravel & Sentry",
+      "url": "https://luma.com/planet-1sbk",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-01",
+      "day": "Tuesday",
+      "timeLabel": "9PM-12AM",
+      "start": "2026-12-01T21:00:00",
+      "end": "2026-12-01T00:00:00",
+      "sponsors": [
+        "ClickHouse"
+      ],
+      "title": "House Party Featuring The Chainsmokers!",
+      "url": "https://clickhouse.com/houseparty/reinvent",
+      "location": "Intrigue Nightclub Wynn",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-8:25AM",
+      "start": "2026-12-02T07:00:00",
+      "end": "2026-12-02T08:25:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Breakfast: Datadog Public Sector Community",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-public-sector-breakfast/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-8:30AM",
+      "start": "2026-12-02T07:00:00",
+      "end": "2026-12-02T08:30:00",
+      "sponsors": [
+        "LangChain"
+      ],
+      "title": "Own Your Intelligence:  Breakfast Panel with LangChain, Factory & NVIDIA",
+      "url": "https://luma.com/3kjztmsw",
+      "location": "TAO Asian Bistro The Venetian",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "8-9AM",
+      "start": "2026-12-02T08:00:00",
+      "end": "2026-12-02T09:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Breakfast - Modernization Without the Multi-Year Risk",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "8-10AM",
+      "start": "2026-12-02T08:00:00",
+      "end": "2026-12-02T10:00:00",
+      "sponsors": [
+        "PCAN.cloud",
+        "Orion Innovation"
+      ],
+      "title": "SHE:can re:Invent Networking Coffee",
+      "url": "https://luma.com/1xw154pn?utm_source=conferenceparties&utm_medium=directory&utm_campaign=reinvent2026",
+      "location": "Register to See Address",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "8-10AM",
+      "start": "2026-12-02T08:00:00",
+      "end": "2026-12-02T10:00:00",
+      "sponsors": [
+        "Elastic",
+        "AWS"
+      ],
+      "title": "InnovatHERs Networking Breakfast",
+      "url": "hhttps://events.elastic.co/innovathersataws/ConferenceParties",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "10/7",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "10AM-",
+      "start": "2026-12-02T10:00:00",
+      "end": null,
+      "sponsors": [
+        "Basis"
+      ],
+      "title": "18 Holes with Basis",
+      "url": "https://app.basisworldwide.com/18-holes?utm_source=cp&utm_medium=txt&utm_campaign=18txt&utm_id=18txt",
+      "location": "Bali Hai Golf Club 5160 S Las Vegas Blvd",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "10AM-12PM",
+      "start": "2026-12-02T10:00:00",
+      "end": "2026-12-02T12:00:00",
+      "sponsors": [
+        "Avnet"
+      ],
+      "title": "Amazon Sidewalk & Edge AI Hands-on Technical Adventure + Jumanji 4D & 7D Experiences",
+      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=mycgiL7A3kuD7f5rb5ck1aA2qLvFH5lBtqWs1cOZjT1UQUU0TjVZT1pITFhWUlZaMU1YVDExU0pQSCQlQCN0PWcu&route=shorturl",
+      "location": "Madame Tussauds The Venetian",
+      "added": "10/8",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "12:30-1:30PM",
+      "start": "2026-12-02T12:30:00",
+      "end": "2026-12-02T13:30:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Energy & Resources Executive Lunch",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "1-2:30PM",
+      "start": "2026-12-02T13:00:00",
+      "end": "2026-12-02T14:30:00",
+      "sponsors": [
+        "Excelien",
+        "Datafy"
+      ],
+      "title": "Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-excelien/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "1-2:30PM",
+      "start": "2026-12-02T13:00:00",
+      "end": "2026-12-02T14:30:00",
+      "sponsors": [
+        "Archera"
+      ],
+      "title": "CTO Lunch Re:Invent, part of CTOLunches.com",
+      "url": "https://luma.com/94nhxjot",
+      "location": "Register to See Address In Caesars Palace",
+      "added": "8/25",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "4:30-6PM",
+      "start": "2026-12-02T16:30:00",
+      "end": "2026-12-02T18:00:00",
+      "sponsors": [
+        "AWS",
+        "Partners"
+      ],
+      "title": "Expo Happy Hour",
+      "url": null,
+      "location": "Expo Hall The Venetian",
+      "added": "8/24",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5-7PM",
+      "start": "2026-12-02T17:00:00",
+      "end": "2026-12-02T19:00:00",
+      "sponsors": [
+        "Tailscale"
+      ],
+      "title": "AWS re:Invent: Tailscale Happy Hour",
+      "url": "https://luma.com/n68xcyez",
+      "location": "Vista Cocktail Lounge Caesars Palace",
+      "added": "11/5",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5-8PM",
+      "start": "2026-12-02T17:00:00",
+      "end": "2026-12-02T20:00:00",
+      "sponsors": [
+        "Ramp",
+        "Clickhouse"
+      ],
+      "title": "45 RPM: Ramp & ClickHouse",
+      "url": "https://luma.com/mqv2uyje",
+      "location": "The Vinyl Room Mandalay Bay",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5-8PM",
+      "start": "2026-12-02T17:00:00",
+      "end": "2026-12-02T20:00:00",
+      "sponsors": [
+        "Cognition",
+        "Infosys"
+      ],
+      "title": "Cocktails, Conversation & the Future of Software Engineering",
+      "url": "https://cognition.com/events/reinvent-after-hours",
+      "location": "Zero Bond Wynn",
+      "added": "10/30",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5:30-7:30PM",
+      "start": "2026-12-02T17:30:00",
+      "end": "2026-12-02T19:30:00",
+      "sponsors": [
+        "LangChain",
+        "MongoDB"
+      ],
+      "title": "Context & Cocktails with LangChain & MongoDB",
+      "url": "https://luma.com/ffbk3mnc",
+      "location": "Sugarcane The Venetian",
+      "added": "11/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5:30-7:30PM",
+      "start": "2026-12-02T17:30:00",
+      "end": "2026-12-02T19:30:00",
+      "sponsors": [
+        "Kloia",
+        "Vfunction"
+      ],
+      "title": "Take a Break From re:Invent",
+      "url": "https://hi.kloia.com/reinvent-2026-happy-hour",
+      "location": "Chayo Mexican Kitchen & Tequila Bar - The LINQ",
+      "added": "11/3",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5:30-8:30PM",
+      "start": "2026-12-02T17:30:00",
+      "end": "2026-12-02T20:30:00",
+      "sponsors": [
+        "Commit",
+        "Wiz"
+      ],
+      "title": "Wine & Dine Executive Reception",
+      "url": "https://luma.com/kmqfz9et",
+      "location": "Terrace Pointe Café Wynn",
+      "added": "10/4",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5:30-9PM",
+      "start": "2026-12-02T17:30:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "OpenObserve"
+      ],
+      "title": "Beyond re:Invent: A VIP Evening in Las Vegas Dinner, Limo Tour & VIP Helicopter Tour Tech Execs Only",
+      "url": "https://na2.hubs.ly/H08n5tV0",
+      "location": "Dinner Upscale Restaurant Caesars Palace",
+      "added": "10/14",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "5:30-10:30PM",
+      "start": "2026-12-02T17:30:00",
+      "end": "2026-12-02T22:30:00",
+      "sponsors": [
+        "CISO Ventures",
+        "Friends"
+      ],
+      "title": "Seed to Speed: Cybersecurity Startup Showcase",
+      "url": "https://luma.com/uum4472x",
+      "location": "The Venetian",
+      "added": "9/2",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T20:00:00",
+      "sponsors": [
+        "Atos",
+        "BMC"
+      ],
+      "title": "AI in Motion: An Atos & BMC Networking Reception",
+      "url": "https://pages.atos.net/atos-bmc-networking-reception-atos",
+      "location": "Cañonita The Venetian Shoppes",
+      "added": "11/2",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-8PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T20:00:00",
+      "sponsors": [
+        "SPIKE by Directeam"
+      ],
+      "title": "Exclusive Cloud Dinner",
+      "url": "https://hubs.li/Q04CYMQ90",
+      "location": "Gordon Ramsay's Kitchen Harrah's",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-8:30PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T20:30:00",
+      "sponsors": [
+        "Stripe",
+        "Ramp"
+      ],
+      "title": "Supper Club at AWS re:Invent with Ramp & Stripe",
+      "url": "https://luma.com/StripexRamp",
+      "location": "Gymkhana ARIA",
+      "added": "11/3",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-8:30PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T20:30:00",
+      "sponsors": [
+        "Datadog",
+        "GitLab",
+        "Atlassian",
+        "Temporal",
+        "Supabase",
+        "HashiCorp"
+      ],
+      "title": "Every Layer of AWS. One Line of Sight.",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-partner-happy-hour/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Twingate",
+        "Rootly AI",
+        "Logz.io"
+      ],
+      "title": "AWS re:Invent 2026 Social Hour",
+      "url": "https://luma.com/i99nfjls?utm_source=conferenceparties&utm_medium=social&utm_campaign=banner",
+      "location": "INDUSTRIAL event space 2330 S Industrial Rd",
+      "added": "10/30",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Concierto by Trianz"
+      ],
+      "title": "Partner & AWS Appreciation Happy Hour",
+      "url": "https://bit.ly/479WTgY",
+      "location": "Hard Shake Waldorf Astoria",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Notion"
+      ],
+      "title": "Place Your Bets on the Future of AI",
+      "url": "https://luma.com/notion-eget",
+      "location": "Vanderpump Gardens The Venetian",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Elastic",
+        "AWS"
+      ],
+      "title": "A Cut Above The Rest Reception",
+      "url": "https://events.elastic.co/awsacutabovetherest/ConferenceParties",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "10/7",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-02T18:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Kai Security"
+      ],
+      "title": "Executive Mastermind Dinner",
+      "url": "https://luma.com/czcx4j10",
+      "location": "Upscale Restaurant Cosmopolitan",
+      "added": "9/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6:30-8:30PM",
+      "start": "2026-12-02T18:30:00",
+      "end": "2026-12-02T20:30:00",
+      "sponsors": [
+        "Antithesis",
+        "Lead Dev"
+      ],
+      "title": "Antithesis & LeadDev Engineering Leaders Reception",
+      "url": "https://luma.com/antith-tyid",
+      "location": "Register to See Address",
+      "added": "10/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "6:30-9:30PM",
+      "start": "2026-12-02T18:30:00",
+      "end": "2026-12-02T21:30:00",
+      "sponsors": [
+        "Hud",
+        "ClickHouse"
+      ],
+      "title": "The Modern Software Factory: An Executive Dinner at re:Invent",
+      "url": "https://luma.com/jbj2va14",
+      "location": "Gordon Ramsay Hell's Kitchen Caesars Palace",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Thoughtworks"
+      ],
+      "title": "The Next Level: Executive Dinner -  Connect, Exchange Ideas & Drive What's Next",
+      "url": "https://cdm.events/custom/thoughtworks2/?refid=mktg-a-cp-thought-awsreinvent2026",
+      "location": "Carbone Riviera Bellagio",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Scanner"
+      ],
+      "title": "Kick Your Feet Up in a Premium Suite with Scanner at The Sphere",
+      "url": "https://luma.com/scanner-ksg3",
+      "location": "Sphere 255 Sands Ave",
+      "added": "10/27",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Hud",
+        "GitKraken"
+      ],
+      "title": "Robots Pour, Agents Ship:  re:Invent Happy Hour with GitKraken & Hud",
+      "url": "https://luma.com/xec7trx4",
+      "location": "The Tipsy Robot Grand Canal Shoppes The Venetian",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T21:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Dinner - One Source of Truth",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T22:00:00",
+      "sponsors": [
+        "1Password"
+      ],
+      "title": "Agents After Dark Masquerade",
+      "url": "https://events.1password.io/agentsafterdarkmasquerade",
+      "location": "Grand Lux Café The Venetian",
+      "added": "10/23",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T22:00:00",
+      "sponsors": [
+        "Honeycomb.io",
+        "AWS",
+        "Checkly",
+        "Cloudelligent",
+        "Depot"
+      ],
+      "title": "1923 Prohibition Party",
+      "url": "https://www.honeycomb.io/events/the-1923-secret-social",
+      "location": "1923 Prohibition Bar Grand Canal Shoppes The Venetian",
+      "added": "10/18",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7PM-12AM",
+      "start": "2026-12-02T19:00:00",
+      "end": "2026-12-02T00:00:00",
+      "sponsors": [
+        "Duckbill/Last Week in AWS",
+        "Heavybit",
+        "RedMonk"
+      ],
+      "title": "Duckbill/Last Week in AWS + Heavybit + RedMonk at re:Invent 2026 Register Now",
+      "url": "https://luma.com/pre1zzw3",
+      "location": "Atomic Liquors 917 E Fremont St",
+      "added": "8/29",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7:30-10:30PM",
+      "start": "2026-12-02T19:30:00",
+      "end": "2026-12-02T22:30:00",
+      "sponsors": [
+        "NeuBird",
+        "FluidCloud",
+        "Tiger Data"
+      ],
+      "title": "AWS re:Invent After Hours with NeuBird",
+      "url": "https://na2.hubs.ly/H08wjYm0",
+      "location": "TAO Nightclub The Venetian",
+      "added": "10/20",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "7:30-10:30PM",
+      "start": "2026-12-02T19:30:00",
+      "end": "2026-12-02T22:30:00",
+      "sponsors": [
+        "Slalom"
+      ],
+      "title": "AI in Motion: After Hours",
+      "url": "https://go.slalom.com/ai-afterhours",
+      "location": "Ole Red 3627 S Las Vegas Blvd",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "8:30-11:30PM",
+      "start": "2026-12-02T20:30:00",
+      "end": "2026-12-02T23:30:00",
+      "sponsors": [
+        "Eon"
+      ],
+      "title": "Afterparty @ re:Invent",
+      "url": "https://luma.com/below-deck?utm_medium=third_party&utm_source=conference_parties&utm_campaign=26Q4_Event_AWS_reInvent_HappyHour_120326&utm_content=",
+      "location": "Juliet Cocktail Room The Venetian",
+      "added": "10/23",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "9PM-1AM",
+      "start": "2026-12-02T21:00:00",
+      "end": "2026-12-02T01:00:00",
+      "sponsors": [
+        "Mission Cloud",
+        "a CDW Company",
+        "AMD",
+        "Nutanix",
+        "Wiz"
+      ],
+      "title": "Mission Cloud Ignite'26 Special Performance by Nelly",
+      "url": "https://www.missioncloud.com/events/ignite-2026",
+      "location": "OMNIA Nightclub Caesars Palace",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-02",
+      "day": "Wednesday",
+      "timeLabel": "Evening",
+      "start": null,
+      "end": null,
+      "sponsors": [
+        "Intuitive.ai",
+        "Zepo",
+        "DevRev",
+        "QuilrAI"
+      ],
+      "title": "The re:Invent Happy Hour",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10//6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "8-9AM",
+      "start": "2026-12-03T08:00:00",
+      "end": "2026-12-03T09:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Breakfast - AI-Ready Operations",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "8-11AM",
+      "start": "2026-12-03T08:00:00",
+      "end": "2026-12-03T11:00:00",
+      "sponsors": [
+        "Snowflake"
+      ],
+      "title": "The GTM Game Changer: Data & Context",
+      "url": "https://luma.com/notion-pv77",
+      "location": "Caneletto The Venetian",
+      "added": "10/21",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "8:30-10:30AM",
+      "start": "2026-12-03T08:30:00",
+      "end": "2026-12-03T10:30:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Thursday Breakfast",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "10AM-12PM",
+      "start": "2026-12-03T10:00:00",
+      "end": "2026-12-03T12:00:00",
+      "sponsors": [
+        "Gruntwork"
+      ],
+      "title": "Gruntwork VIP Racing Experience",
+      "url": "https://www.gruntwork.io/lp/gruntwork-racing",
+      "location": "Las Vegas Speedway 7000 Las Vegas Blvd N",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "11:30AM-1:30PM",
+      "start": "2026-12-03T11:30:00",
+      "end": "2026-12-03T13:30:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Thursday Lunch",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "12-1:30PM",
+      "start": "2026-12-03T12:00:00",
+      "end": "2026-12-03T13:30:00",
+      "sponsors": [
+        "Elastic",
+        "AWS"
+      ],
+      "title": "Scaling Security: SPARK-ing Joint Growth Partners Only",
+      "url": "https://events.elastic.co/SPARKPartnerLunchwithAWS/ConferenceParties",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "12:30-1:30PM",
+      "start": "2026-12-03T12:30:00",
+      "end": "2026-12-03T13:30:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Manufacturing & Logistics Executive Lunch",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "12:30-2PM",
+      "start": "2026-12-03T12:30:00",
+      "end": "2026-12-03T14:00:00",
+      "sponsors": [
+        "Excelien",
+        "Datafy"
+      ],
+      "title": "Exclusive Lunch at SushiSAMBA",
+      "url": "https://datafy.io/sushisamba-reinvent-excelien/",
+      "location": "SushiSAMBA The Venetian",
+      "added": "11/1",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "1-2:30PM",
+      "start": "2026-12-03T13:00:00",
+      "end": "2026-12-03T14:30:00",
+      "sponsors": [
+        "TBA"
+      ],
+      "title": "Reinvent CTO Lunch",
+      "url": "https://luma.com/xu1fmw7v",
+      "location": "TBA Caesars Palace",
+      "added": "10/29",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "3:30-5PM",
+      "start": "2026-12-03T15:30:00",
+      "end": "2026-12-03T17:00:00",
+      "sponsors": [
+        "NetApp"
+      ],
+      "title": "NetApp Automotive & Semiconductor Roundtable",
+      "url": "https://luma.com/cb3abu8i",
+      "location": "Spritz The Venetian",
+      "added": "10/29",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "4-5:30PM",
+      "start": "2026-12-03T16:00:00",
+      "end": "2026-12-03T17:30:00",
+      "sponsors": [
+        "Elastic",
+        "AWS"
+      ],
+      "title": "pre:Play Happy Hour",
+      "url": "https://events.elastic.co/preplayhappyhourwithelasticata/ConferenceParties",
+      "location": "CUT by Wolfgang Puck The Venetian",
+      "added": "10/8",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "4-7PM",
+      "start": "2026-12-03T16:00:00",
+      "end": "2026-12-03T19:00:00",
+      "sponsors": [
+        "Redis",
+        "Baseten",
+        "Langchain"
+      ],
+      "title": "Redis Agent Arena Partner Happy Hour",
+      "url": "https://redis.io/events/agent-arena-at-aws-reinvent-2026/?utm_medium=referral-employee-sm&utm_source=employee&utm_campaign=sales-invite-aws-reinvent",
+      "location": "Juliet Cocktail Room The Venetian",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "4-7PM",
+      "start": "2026-12-03T16:00:00",
+      "end": "2026-12-03T19:00:00",
+      "sponsors": [
+        "TrendAI™"
+      ],
+      "title": "Thursday Happy Hour",
+      "url": "https://resources.trendaisecurity.com/aws-reinvent-26-events.html",
+      "location": "Fogo de Chão The Venetian",
+      "added": "10/12",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "5-6PM",
+      "start": "2026-12-03T17:00:00",
+      "end": "2026-12-03T18:00:00",
+      "sponsors": [
+        "Agentic Fabriq"
+      ],
+      "title": "Who Let the Agents In? -  A Private Dinner for Security Leaders",
+      "url": "https://www.agenticfabriq.com/reinvent/private-dinner",
+      "location": "Register to See Address",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "5:30-8PM",
+      "start": "2026-12-03T17:30:00",
+      "end": "2026-12-03T20:00:00",
+      "sponsors": [
+        "ControlMonkey"
+      ],
+      "title": "Recovery Cocktail: Private Happy Hour at Flight Club",
+      "url": "https://luma.com/3jy18etl?utm_source=conferenceparties&utm_medium=listing&utm_campaign=reinvent26",
+      "location": "Flight Club Palazzo, The Venetian",
+      "added": "10/15",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "6-7:30PM",
+      "start": "2026-12-03T18:00:00",
+      "end": "2026-12-03T19:30:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "APJ Community Happy Hour",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-apj-happy-hour/",
+      "location": "Bazaar Meat Palazzo, The Venetian",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "6-9PM",
+      "start": "2026-12-03T18:00:00",
+      "end": "2026-12-03T21:00:00",
+      "sponsors": [
+        "Datadog"
+      ],
+      "title": "Watchdog: Off Duty - Datadog Security Reception",
+      "url": "https://events.datadoghq.com/aws-reinvent/events-datadog-security-reception/",
+      "location": "La Cave Wynn",
+      "added": "10/31",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-03T19:00:00",
+      "end": "2026-12-03T21:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Dinner - Beyond the Pilot",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "7-10PM",
+      "start": "2026-12-03T19:00:00",
+      "end": "2026-12-03T22:00:00",
+      "sponsors": [
+        "North.cloud"
+      ],
+      "title": "North.cloud Private Suite: Golden Knights vs. Utah Mammoth",
+      "url": "https://luma.com/north-hbdj",
+      "location": "T-Mobile Arena 3780 S Las Vegas Blvd",
+      "added": "10/22",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "7:30PM-12AM Shuttles 7PM",
+      "start": "2026-12-03T19:30:00",
+      "end": null,
+      "sponsors": [
+        "AWS"
+      ],
+      "title": "re:Play Party",
+      "url": null,
+      "location": "Las Vegas Festival Grounds",
+      "added": "8/10",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-03",
+      "day": "Thursday",
+      "timeLabel": "8-10PM",
+      "start": "2026-12-03T20:00:00",
+      "end": "2026-12-03T22:00:00",
+      "sponsors": [
+        "Agentic Fabriq"
+      ],
+      "title": "Behind the Curtain: -  An Evening at Sphere for Security Leaders",
+      "url": "https://www.agenticfabriq.com/reinvent/sphere",
+      "location": "Sphere 255 Sands Ave",
+      "added": "10/26",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-04",
+      "day": "Friday",
+      "timeLabel": "8-9AM",
+      "start": "2026-12-04T08:00:00",
+      "end": "2026-12-04T09:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Breakfast - Final Connections",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-04",
+      "day": "Friday",
+      "timeLabel": "12:30-1:30PM",
+      "start": "2026-12-04T12:30:00",
+      "end": "2026-12-04T13:30:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Retail Executive Lunch",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    },
+    {
+      "date": "2026-12-04",
+      "day": "Friday",
+      "timeLabel": "7-9PM",
+      "start": "2026-12-04T19:00:00",
+      "end": "2026-12-04T21:00:00",
+      "sponsors": [
+        "Intuitive.ai"
+      ],
+      "title": "Dinner - The Next Move",
+      "url": "https://intuitive.ai/events/aws-reinvent-2026/#agenda",
+      "location": "Register to See Address",
+      "added": "10/6",
+      "atCapacity": false
+    }
+  ]
+}
