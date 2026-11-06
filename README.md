@@ -68,6 +68,14 @@ npm run build
 npm run web                 # http://127.0.0.1:8080
 ```
 
+It listens on loopback only. To open it from a phone or another machine on your
+network or Tailscale, bind explicitly:
+
+```bash
+REPO_INVENT_BIND=0.0.0.0 npm run web        # any interface
+REPO_INVENT_BIND=100.x.y.z npm run web      # one interface only
+```
+
 It is a mobile-first four-tab app, the shape of the official re:Invent app.
 
 | Tab | What it shows |
