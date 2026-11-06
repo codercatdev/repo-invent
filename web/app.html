@@ -373,6 +373,69 @@
         }
       }
 
+      // "Ask AWS" is a catalog search in plain words. It reads the question,
+      // drops the filler, and ranks sessions by how many words they share with
+      // the title, services and topics.
+      const FILLER = new Set([
+        "what", "which", "where", "when", "who", "how", "is", "are", "the", "a", "an",
+        "about", "for", "of", "to", "in", "on", "at", "do", "does", "can", "i", "we",
+        "should", "take", "attend", "session", "sessions", "talk", "talks", "class",
+        "tell", "me", "show", "find", "any", "there", "with", "and", "or", "my",
+      ]);
+
+      function words(text) {
+        return String(text || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9+#. ]+/g, " ")
+          .split(/\s+/)
+          .filter((word) => word.length > 1 && !FILLER.has(word));
+      }
+
+      function ask(query) {
+        const terms = words(query);
+        if (terms.length === 0) {
+          $("status").textContent = "Ask about a service or a topic, like \"agents\" or \"cost\".";
+          $("status").className = "note";
+          return;
+        }
+        const scored = state.catalog
+          .map((session) => {
+            const title = String(session.title || "").toLowerCase();
+            const rest = [...(session.services || []), ...(session.topics || []), String(session.code || "")]
+              .join(" ")
+              .toLowerCase();
+            let score = 0;
+            for (const term of terms) {
+              if (title.includes(term)) score += 3;
+              if (title.startsWith(term)) score += 2;
+              if (rest.includes(term)) score += 1;
+            }
+            return { session, score };
+          })
+          .filter((entry) => entry.score > 0)
+          .sort((a, b) => b.score - a.score || String(a.session.start).localeCompare(String(b.session.start)))
+          .slice(0, 8);
+
+        if (scored.length === 0) {
+          $("status").textContent = `No session mentions ${terms.join(", ")}.`;
+          $("status").className = "note";
+          $("output").innerHTML = "";
+          return;
+        }
+        $("status").textContent = `${scored.length} sessions match "${terms.join(" ")}".`;
+        $("status").className = "note";
+        $("output").innerHTML = scored.map((entry) => item(entry.session)).join("");
+        wireRows($("output"));
+      }
+
+      $("ask-go").addEventListener("click", () => ask($("ask").value));
+      $("ask").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          ask($("ask").value);
+        }
+      });
+
       $("scan-form").addEventListener("submit", (event) => {
         event.preventDefault();
         scan($("repo").value.trim());
