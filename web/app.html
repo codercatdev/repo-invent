@@ -254,6 +254,7 @@
         <div class="chips" id="type-chips"></div>
         <div class="chips" id="level-chips"></div>
         <div class="chips" id="venue-chips"></div>
+        <div class="chips" id="track-chips"></div>
         <p class="note" id="catalog-count"></p>
         <div id="catalog-list"></div>
       </section>
@@ -298,7 +299,7 @@
       const $ = (id) => document.getElementById(id);
       const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-      const state = { tab: "home", catalog: [], parties: [], schedule: null, lastScan: null, type: "All", level: "All", venue: "All", q: "", partyQ: "" };
+      const state = { tab: "home", catalog: [], parties: [], schedule: null, lastScan: null, type: "All", level: "All", venue: "All", track: "All", q: "", partyQ: "" };
 
       function showTab(name) {
         state.tab = name;
@@ -573,6 +574,7 @@
           if (state.type !== "All" && s.type !== state.type) return false;
           if (state.level !== "All" && String(levelOf(s) ?? "") !== state.level) return false;
           if (state.venue !== "All" && String(s.venue || "") !== state.venue) return false;
+          if (state.track !== "All" && !(s.tracks || []).includes(state.track)) return false;
           if (q.length === 0) return true;
           const hay = [s.title, ...(s.services || []), ...(s.topics || []), s.code].join(" ").toLowerCase();
           return hay.includes(q);
@@ -596,6 +598,15 @@
         });
         chips($("venue-chips"), venues, state.venue, (value) => {
           state.venue = value;
+          renderCatalog();
+        });
+        const tracks = ["All", ...new Set(state.catalog.flatMap((s) => s.tracks || []))].sort((a, b) => {
+          if (a === "All") return -1;
+          if (b === "All") return 1;
+          return a.localeCompare(b);
+        });
+        chips($("track-chips"), tracks, state.track, (value) => {
+          state.track = value;
           renderCatalog();
         });
 
