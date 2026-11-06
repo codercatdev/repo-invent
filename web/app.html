@@ -251,6 +251,8 @@
           <input id="q" type="search" placeholder="Search title, service, topic" aria-label="Search sessions" />
         </div>
         <div class="chips" id="type-chips"></div>
+        <div class="chips" id="level-chips"></div>
+        <div class="chips" id="venue-chips"></div>
         <p class="note" id="catalog-count"></p>
         <div id="catalog-list"></div>
       </section>
@@ -294,7 +296,7 @@
       const $ = (id) => document.getElementById(id);
       const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", q: "" };
+      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", level: "All", venue: "All", q: "" };
 
       function showTab(name) {
         state.tab = name;
@@ -534,28 +536,68 @@
         </button>`;
       }
 
-      function renderCatalog() {
-        const types = ["All", ...new Set(state.catalog.map((s) => s.type).filter(Boolean))];
-        $("type-chips").innerHTML = types
-          .map((t) => `<button type="button" data-type="${esc(t)}" aria-pressed="${t === state.type}">${esc(t)}</button>`)
+      function levelOf(session) {
+        const raw = session.level;
+        if (typeof raw === "number") return raw;
+        const match = /(\d{3})/.exec(String(raw || ""));
+        return match === null ? null : Number(match[1]);
+      }
+
+      function chips(target, values, current, onPick) {
+        target.innerHTML = values
+          .map((value) => `<button type="button" data-v="${esc(value)}" aria-pressed="${String(value === current)}">${esc(value)}</button>`)
           .join("");
-        for (const chip of $("type-chips").querySelectorAll("button")) {
-          chip.addEventListener("click", () => {
-            state.type = chip.dataset.type;
-            renderCatalog();
-          });
+        for (const chip of target.querySelectorAll("button")) {
+          chip.addEventListener("click", () => onPick(chip.dataset.v));
         }
+      }
+
+      const LEVELS = ["All", "100", "200", "300", "400", "500"];
+
+      function catalogRows() {
         const q = state.q.trim().toLowerCase();
-        const rows = state.catalog.filter((s) => {
+        return state.catalog.filter((s) => {
           if (state.type !== "All" && s.type !== state.type) return false;
+          if (state.level !== "All" && String(levelOf(s) ?? "") !== state.level) return false;
+          if (state.venue !== "All" && String(s.venue || "") !== state.venue) return false;
           if (q.length === 0) return true;
           const hay = [s.title, ...(s.services || []), ...(s.topics || []), s.code].join(" ").toLowerCase();
           return hay.includes(q);
         });
+      }
+
+      function renderCatalog() {
+        const types = ["All", ...new Set(state.catalog.map((s) => s.type).filter(Boolean))];
+        const venues = ["All", ...new Set(state.catalog.map((s) => String(s.venue || "")).filter(Boolean))].sort((a, b) => {
+          if (a === "All") return -1;
+          if (b === "All") return 1;
+          return a.localeCompare(b);
+        });
+        chips($("type-chips"), types, state.type, (value) => {
+          state.type = value;
+          renderCatalog();
+        });
+        chips($("level-chips"), LEVELS, state.level, (value) => {
+          state.level = value;
+          renderCatalog();
+        });
+        chips($("venue-chips"), venues, state.venue, (value) => {
+          state.venue = value;
+          renderCatalog();
+        });
+
+        const rows = catalogRows();
         $("catalog-count").textContent = `${rows.length} of ${state.catalog.length} sessions`;
         $("catalog-list").innerHTML = rows.length
-          ? state.catalog && rows.map(item).join("")
+          ? rows.slice(0, 60).map(item).join("")
           : '<p class="empty">Nothing matches that.</p>';
+        if (rows.length > 60) {
+          $("catalog-list").insertAdjacentHTML(
+            "beforeend",
+            `<p class="note">Showing the first 60. Type in the search to narrow it.</p>`,
+          );
+        }
+        wireRows($("catalog-list"));
       }
 
       function closeSheet() {
