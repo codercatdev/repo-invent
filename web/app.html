@@ -530,7 +530,8 @@
       }
 
       function when(session) {
-        const start = session.start || "";
+        const start = String(session.start || "");
+        if (start.length < 10) return "time unknown";
         const day = start.slice(0, 10);
         const time = start.slice(11, 16);
         return `${day} ${time}`.trim();
@@ -706,12 +707,13 @@
       }
 
       function partyCard(p) {
+        const sponsors = Array.isArray(p.sponsors) ? p.sponsors : [];
         const place = p.address ? `${p.venue} · ${p.address}` : p.venue || p.location || "";
         return `<div class="item">
           <h3>${esc(p.title)}</h3>
           <div class="meta">
             <span>${esc(p.timeLabel || "")}</span>
-            ${p.sponsors.length ? `<span>by ${esc(p.sponsors.join(", "))}</span>` : ""}
+            ${sponsors.length ? `<span>by ${esc(sponsors.join(", "))}</span>` : ""}
             ${p.atCapacity ? '<span class="pill full">at capacity</span>' : ""}
           </div>
           <div class="meta" style="margin-top:6px">
