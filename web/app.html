@@ -357,35 +357,44 @@
         const days = (data.schedule && data.schedule.days) || [];
         const plan = days
           .map((day) => {
-            const rows = (day.items || [])
-              .map((entry) => {
+            const items = day.items || [];
+            const legs = day.transit || [];
+            const rows = items
+              .map((entry, index) => {
                 const session = entry.sessionId
                   ? state.catalog.find((s) => s.sessionId === entry.sessionId)
                   : undefined;
                 const label = entry.title || (session && session.title) || entry.sessionId || "";
-                const time = String(entry.start || (session && session.start) || "").slice(11, 16);
                 const room = (session && [session.venue, session.room].filter(Boolean).join(" ")) || "";
                 const gapsClosed = (entry.gaps || []).length;
+                const leg = legs.find((candidate) => candidate.fromTitle === label) || legs[index];
+                const minutes = leg && leg.leg ? leg.leg.minutes : undefined;
+                const tight = leg ? leg.forfeitureRisk === true || leg.ok === false : false;
+                const hint =
+                  minutes == null
+                    ? ""
+                    : `<div class="meta" style="margin-top:6px"><span>↓ ${minutes} min ${esc(leg.leg.mode || "travel")} to next</span>${tight ? '<span class="pill full">too tight</span>' : ""}</div>`;
                 return `<button class="item item-btn" type="button" ${session ? `data-id="${esc(session.sessionId)}"` : ""}>
                   <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">
                     <strong style="font-size:14px">${esc(String(entry.start || "").slice(11, 16))}</strong>
                     ${actionTag(entry.action)}
                   </div>
                   <h3 style="margin-top:4px">${esc(label)}</h3>
-                  <div class="meta"><span>${esc(room || time)}</span><span>closes ${gapsClosed} gap${gapsClosed === 1 ? "" : "s"}</span></div>
+                  <div class="meta"><span>${esc(room)}</span><span>closes ${gapsClosed} gap${gapsClosed === 1 ? "" : "s"}</span></div>
+                  ${hint}
                 </button>`;
               })
               .join("");
             const date = String(day.date || "").slice(0, 10);
-            const nice = day.date
-              ? new Date(`${String(day.date).slice(0, 10)}T12:00:00Z`).toLocaleDateString("en-US", {
+            const nice = date
+              ? new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
                   weekday: "long",
                   month: "short",
                   day: "numeric",
                   timeZone: "UTC",
                 })
               : "";
-            return `<div class="section-head"><h2>${esc(nice)}</h2><span>${(day.items || []).length} sessions</span></div>${rows || '<p class="empty">Nothing fits this day.</p>'}`;
+            return `<div><div class="section-head"><h2>${esc(nice)}</h2><span>${items.length} sessions</span></div>${rows || '<p class="empty">Nothing fits this day.</p>'}</div>`;
           })
           .join("");
 
