@@ -27,8 +27,8 @@ repository scan as our differentiator on the home screen.
 
 - [x] `/api/catalog` route (`f809b7d`): 200, fixture source, 16 sessions
 - [x] `/api/parties` route (`f809b7d`): 200, 171 parties, 6 days
-3. New mobile shell: `web/app.html`, four tabs, bottom bar.
-4. Move the current scan page to `web/scan.html`, linked from Home.
+- [x] Mobile shell `web/app.html` at `/`: 4 tabs, bottom bar (`3bb5e65`)
+- [x] Scan page kept at `/scan`, opened by the Home button (`3bb5e65`)
 5. Session detail sheet with Reserve and Favourite.
 
 ## Rules the UI must keep
