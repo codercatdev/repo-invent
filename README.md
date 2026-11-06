@@ -61,23 +61,34 @@ node dist/cli.js plan https://github.com/your/repo --out ./out
 
 ## Try it in a browser
 
-The demo page needs no account and no AWS setup:
+The app needs no account and no AWS setup:
 
 ```bash
 npm run build
 npm run web                 # http://127.0.0.1:8080
 ```
 
-Paste any public GitHub repository. The page shows:
+It is a mobile-first four-tab app, the shape of the official re:Invent app.
 
-- the detected stack and the gaps with file evidence
-- an **availability heatmap** of the catalog by venue and day
-- a planned week you can walk
-- a **progress panel**: rate a session 3 or more and the gaps it covered close
-- the tickets, each with an acceptance test
-- a link to **`/report`**, the same plan as one page you can print or mail
+| Tab | What it shows |
+|---|---|
+| **Home** | Your week, an **Ask AWS** box, and the repo check |
+| **Catalog** | Every session, with search and filters by type, level and venue |
+| **Calendar** | Your reservations and favourites, by day, read back from the API |
+| **Parties** | 171 vendor and community parties, with RSVP and map links |
 
-Reflections stay in your browser; nothing is uploaded. The server listens on `127.0.0.1` only.
+The repo check sits directly under the Ask box. Scan a repository and Home shows the gaps, the planned week, and the tickets. Tap any session for its detail and a Save button.
+
+The original single-page scan stays at **`/scan`**, with the full result: the availability heatmap, the progress panel where rating a session closes its gaps, and a link to **`/report`**, the same plan as one printable page.
+
+The catalog is served from a disk cache under `~/.repo-invent`, refreshed every six hours. A read that falls back to the bundled fixture says so on the page; nothing synthetic is passed off as live. Set `REPO_INVENT_LIVE_CATALOG=0` to stay offline.
+
+The parties data comes from [conferenceparties.com](https://conferenceparties.com/reinvent2026/). It is unofficial; every card links to the sponsor's own RSVP page. Re-scrape with:
+
+```bash
+node scripts/parse-parties.mjs <saved-page.html> data/parties.json
+node scripts/enrich-parties.mjs data/parties.json
+```
 
 If GitHub is rate-limiting anonymous calls, the demo repository falls back to a recorded snapshot and the page says so. It never passes a substitute off as a live read.
 
