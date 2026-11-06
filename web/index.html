@@ -283,7 +283,14 @@
             setStatus(data.error || "The scan failed.", true);
             return;
           }
-          setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}.`, false);
+          const source = data.snapshotSource;
+          const origin =
+            source === "live"
+              ? "Live GitHub read."
+              : source === "cached"
+                ? "GitHub is rate-limited; showing a copy cached in this process."
+                : "GitHub is rate-limited; showing the recorded snapshot of this repository.";
+          setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}. ${origin}`, false);
           render(data);
         } catch (error) {
           setStatus(`Could not reach the scanner: ${error instanceof Error ? error.message : "unknown error"}`, true);

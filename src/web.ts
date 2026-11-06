@@ -9,7 +9,12 @@ import { scanManifests } from "./scanner/manifest-parser.js";
 import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
+import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
 import type { ArchitecturalGap, Catalog, StackFingerprint } from "./types.js";
+
+// The last successful snapshot of the demo repo, so a repeat view during a
+// rate limit shows the same data rather than the recorded copy.
+let demoSnapshotCache: import("./types.js").RepoSnapshot | undefined;
 
 const WEB_FRAMEWORKS = new Set([
   "Express",
@@ -31,6 +36,8 @@ export interface ScanResponse {
   schedule: { days: Array<{ date: string; items: unknown[] }> };
   plan: { remediation: { tickets: unknown[] } };
   catalogSource: "live" | "fixture";
+  /** Where the repository data came from: live GitHub, this process' cache, or the recorded demo copy. */
+  snapshotSource: "live" | "cached" | "recorded";
 }
 
 /**
@@ -47,9 +54,27 @@ export async function scanForWeb(repo: string): Promise<ScanResponse> {
     repo,
     config.githubToken === undefined ? {} : { token: config.githubToken },
   );
-  if (!result.ok) throw new Error(`${result.error.message}`);
 
-  const snapshot = result.snapshot;
+  // A rate limit on the demo repository falls back to the recorded snapshot,
+  // so a judge who lands during the hourly window still sees a real result. Any
+  // other failure is reported, because a silent substitute would be a lie.
+  // A rate limit on the demo repository falls back, first to a snapshot this
+  // process already fetched, then to the recorded one. Any other failure is
+  // reported: a silent substitute for an arbitrary repo would be a false result.
+  let snapshot;
+  let servedFrom: "live" | "cached" | "recorded" = "live";
+  if (!result.ok) {
+    if (result.error.kind === "rate_limited" && isDemoRepo(repo)) {
+      snapshot = demoSnapshotCache ?? DEMO_REPO.snapshot;
+      servedFrom = demoSnapshotCache ? "cached" : "recorded";
+    } else {
+      throw new Error(`${result.error.message}`);
+    }
+  } else {
+    snapshot = result.snapshot;
+
+    if (isDemoRepo(repo)) demoSnapshotCache = result.snapshot;
+  }
   const manifestScan = scanManifests(snapshot);
   const iacScan = scanIac(snapshot);
   const fingerprint = buildFingerprint({ snapshot, manifestScan, iacScan });
@@ -75,6 +100,7 @@ export async function scanForWeb(repo: string): Promise<ScanResponse> {
     schedule: { days: prescription.schedule.days },
     plan: { remediation: { tickets: prescription.remediation.tickets } },
     catalogSource: catalog.source,
+    snapshotSource: servedFrom,
   };
 }
 
