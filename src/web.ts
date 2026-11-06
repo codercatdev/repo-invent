@@ -216,9 +216,21 @@ export function createWebServer(): ReturnType<typeof createServer> {
   return createServer(async (request, response) => {
     const url = new URL(request.url ?? "/", "http://localhost");
 
-    if (request.method === "GET" && (url.pathname === "/" || url.pathname === "/index.html")) {
+    // `/` is the app: four tabs. `app.html` is the same page under a second
+    // name so a hash link survives a reload from any entry point.
+    const pages: Record<string, string> = {
+      "/": "app.html",
+      "/index.html": "app.html",
+      "/app": "app.html",
+      "/app/": "app.html",
+      "/app.html": "app.html",
+      "/scan": "index.html",
+      "/scan.html": "index.html",
+    };
+    const page = pages[url.pathname];
+    if (request.method === "GET" && page !== undefined) {
       try {
-        const html = await readFile(join(webDir(), "index.html"), "utf8");
+        const html = await readFile(join(webDir(), page), "utf8");
         response.writeHead(200, {
           "Content-Type": "text/html; charset=utf-8",
           "Content-Length": Buffer.byteLength(html),

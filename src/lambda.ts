@@ -1,7 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { AwsEventsClient } from "./api/events-client.js";
+import { dataDir, loadConfig, loadFixture } from "./config.js";
 import { renderReportFor, scanForWeb } from "./web.js";
+import type { Catalog } from "./types.js";
 
 interface LambdaEvent {
   rawPath?: string;
@@ -55,14 +58,53 @@ export async function handler(event: LambdaEvent): Promise<LambdaResult> {
   const path = event.rawPath ?? "/";
   const method = event.requestContext?.http?.method ?? "GET";
 
-  if (method === "GET" && (path === "/" || path === "/index.html" || path === "")) {
+  // `/` is the four-tab app; `/scan` keeps the original single-purpose page.
+  const page =
+    path === "/" || path === "/index.html" || path === "" || path === "/app" || path === "/app.html"
+      ? "app.html"
+      : path === "/scan" || path === "/scan.html"
+        ? "index.html"
+        : undefined;
+  if (method === "GET" && page !== undefined) {
     try {
-      return html(await readFile(join(webDir(), "index.html"), "utf8"));
+      return html(await readFile(join(webDir(), page), "utf8"));
     } catch (error) {
       return html(
         `page not found in the bundle: ${error instanceof Error ? error.message : "unknown"}`,
         500,
       );
+    }
+  }
+
+  if (method === "GET" && path === "/api/parties") {
+    try {
+      const raw = await readFile(join(dataDir(), "parties.json"), "utf8");
+      return {
+        statusCode: 200,
+        headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "public, max-age=3600" },
+        body: raw,
+      };
+    } catch (error) {
+      return json(500, { error: error instanceof Error ? error.message : "parties unavailable" });
+    }
+  }
+
+  if (method === "GET" && path === "/api/catalog") {
+    try {
+      const useLive = process.env["REPO_INVENT_LIVE_CATALOG"] === "1";
+      const client = new AwsEventsClient({
+        eventId: loadConfig().eventId,
+        ...(useLive ? {} : { fixture: loadFixture() as unknown as Catalog }),
+      });
+      const catalog = await client.listSessions({ includeAbstracts: false });
+      return json(200, {
+        source: catalog.source,
+        fetchedAt: catalog.fetchedAt,
+        count: catalog.sessions.length,
+        sessions: catalog.sessions,
+      });
+    } catch (error) {
+      return json(500, { error: error instanceof Error ? error.message : "catalog failed" });
     }
   }
 

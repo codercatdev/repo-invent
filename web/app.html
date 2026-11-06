@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>re:Invent 2026 — my week</title>
+    <meta name="description" content="Read a public GitHub repository, find its AWS architecture gaps, and get a re:Invent 2026 plan that becomes tickets." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b0d10;
+        --panel: #14181d;
+        --panel-2: #1b2027;
+        --line: #2a313a;
+        --text: #e8edf3;
+        --muted: #9aa6b4;
+        --accent: #ff9900;
+        --ok: #3fb950;
+        --warn: #d29922;
+        --bad: #f85149;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      header {
+        padding: 56px 24px 32px;
+        max-width: 940px;
+        margin: 0 auto;
+      }
+      h1 { font-size: 34px; line-height: 1.2; margin: 0 0 10px; letter-spacing: -0.5px; }
+      h1 span { color: var(--accent); }
+      .lede { color: var(--muted); font-size: 17px; margin: 0 0 6px; max-width: 62ch; }
+      main { max-width: 940px; margin: 0 auto; padding: 0 24px 80px; }
+      form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 26px 0 8px;
+      }
+      input[type="url"] {
+        flex: 1 1 380px;
+        min-width: 0;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 15px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      input[type="url"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+      button {
+        background: var(--accent);
+        color: #16181c;
+        border: 0;
+        border-radius: 10px;
+        padding: 14px 22px;
+        font-size: 15px;
+        font-weight: 650;
+        cursor: pointer;
+      }
+      button:disabled { opacity: 0.55; cursor: progress; }
+      .examples { color: var(--muted); font-size: 13px; margin: 0 0 28px; }
+      .examples a { color: var(--muted); }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 16px;
+      }
+      .card h2 { font-size: 15px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin: 0 0 14px; }
+      .banner {
+        background: linear-gradient(90deg, #1f2933, #14181d);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
+      }
+      .banner strong { color: var(--accent); font-size: 19px; }
+      .banner.done { border-left-color: var(--ok); }
+      .scroll { overflow-x: auto; }
+      table.heatmap { border-collapse: separate; border-spacing: 3px; font-size: 13px; }
+      table.heatmap th { border: 0; padding: 4px 8px; font-weight: 600; }
+      table.heatmap td.venue { border: 0; padding: 4px 10px 4px 0; white-space: nowrap; font-size: 13px; }
+      table.heatmap td.venue .slot { color: var(--muted); font-size: 11.5px; }
+      td.heat {
+        border: 0;
+        border-radius: 6px;
+        text-align: center;
+        padding: 8px 0;
+        min-width: 44px;
+        font-weight: 650;
+        font-variant-numeric: tabular-nums;
+      }
+      td.heat.empty { background: transparent; color: #3a424d; font-weight: 400; }
+      .avail-open { background: #17351f; color: #6fdc8c; }
+      .avail-filling { background: #3a3013; color: #e3b341; }
+      .avail-walkup { background: #3a2412; color: #ffab70; }
+      .avail-full { background: #3d1a1c; color: #ff8177; }
+      .avail-unknown { background: var(--panel-2); color: var(--muted); }
+      .legend-row { margin: 0 0 14px; font-size: 12.5px; color: var(--muted); }
+      .legend { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+      .legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+      .severity {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 5px;
+        margin-bottom: 8px;
+      }
+      .severity.high { background: #3d1a1c; color: #ff8177; }
+      .severity.medium { background: #3a3013; color: #e3b341; }
+      .severity.low { background: #17351f; color: #6fdc8c; }
+      .report-link { color: var(--accent); text-decoration: none; font-weight: 650; border-bottom: 1px solid var(--accent); }
+      .progress-summary { font-size: 15px; font-weight: 650; color: var(--text); margin: 0 0 6px; }
+      table.ratings td { border-bottom: 1px solid var(--line); padding: 7px 8px; font-size: 14px; }
+      td.stars { white-space: nowrap; }
+      .star {
+        background: none; border: 0; padding: 0 1px; cursor: pointer;
+        color: #3a424d; font-size: 18px; line-height: 1;
+      }
+      .star:hover, .star.on { color: var(--accent); }
+      .star:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .chip {
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 4px 11px;
+        font-size: 13px;
+      }
+      .gap { border-left: 3px solid var(--line); padding: 12px 0 12px 14px; margin-bottom: 10px; }
+      .gap.high { border-left-color: var(--bad); }
+      .gap.medium { border-left-color: var(--warn); }
+      .gap.low { border-left-color: var(--ok); }
+      .gap h3 { margin: 0 0 6px; font-size: 15px; }
+      .gap p { margin: 0 0 8px; color: var(--muted); font-size: 14px; }
+      .evidence { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--muted); }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+      th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.5px; }
+      td.time { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; color: var(--muted); }
+      .tag { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+      .tag.reserve { color: var(--ok); border-color: #26523a; }
+      .tag.walk-up { color: var(--warn); border-color: #5c4818; }
+      .tag.watchlist { color: #58a6ff; border-color: #1f3d5c; }
+      .tag.personal { color: var(--muted); }
+      .error { color: var(--bad); }
+      .note { color: var(--muted); font-size: 13px; }
+      .hidden { display: none; }
+      footer { color: var(--muted); font-size: 13px; max-width: 940px; margin: 0 auto; padding: 0 24px 60px; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--panel-2); padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+      .app { max-width: 560px; margin: 0 auto; padding: 0 16px 96px; }
+      .appbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+      .appbar-inner { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
+      .appbar h1 { font-size: 19px; margin: 0; }
+      .who { margin-left: auto; font-size: 12px; color: var(--muted); }
+      .tabview[hidden] { display: none; }
+      .hero { padding: 22px 0 8px; }
+      .hero p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+      .scanbar { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 6px; }
+      .scanbar input { width: 100%; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-size: 15px; }
+      .btn { appearance: none; border: 0; border-radius: 12px; padding: 13px 16px; font-size: 15px; font-weight: 650; cursor: pointer; }
+      .btn-primary { background: var(--accent); color: #1a1206; }
+      .btn-ghost { background: var(--panel); color: var(--text); border: 1px solid var(--line); }
+      .askbox { display: flex; gap: 8px; margin-top: 10px; }
+      .askbox input { flex: 1; padding: 13px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel-2); color: var(--text); font-size: 15px; }
+      .section-head { display: flex; align-items: baseline; gap: 8px; margin: 22px 0 10px; }
+      .section-head h2 { font-size: 16px; margin: 0; }
+      .section-head span { color: var(--muted); font-size: 12px; }
+      .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; }
+      .chips button { white-space: nowrap; background: var(--panel); border: 1px solid var(--line); color: var(--muted); padding: 8px 12px; border-radius: 999px; font-size: 13px; cursor: pointer; }
+      .chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 650; }
+      .item { display: block; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 9px; text-decoration: none; color: inherit; }
+      .item h3 { font-size: 14.5px; margin: 0 0 4px; line-height: 1.35; }
+      .item .meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+      .pill { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); }
+      .pill.open { color: var(--ok); border-color: #26523a; }
+      .pill.walkup { color: var(--warn); border-color: #5c4818; }
+      .pill.full { color: var(--bad); border-color: #5c3030; }
+      .daybar { position: sticky; top: 58px; z-index: 10; background: var(--bg); padding: 8px 0; }
+      .empty { color: var(--muted); font-size: 13.5px; padding: 18px 0; }
+      .tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 30; border-top: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 94%, transparent); backdrop-filter: blur(12px); }
+      .tabbar-inner { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+      .tabbar a { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 9px 0 12px; color: var(--muted); text-decoration: none; font-size: 11px; }
+      .tabbar a[aria-current="page"] { color: var(--accent); }
+      .tabbar svg { width: 22px; height: 22px; }
+      @media (max-width: 560px) { .app { padding: 0 14px 92px; } }
+  </head>
+  <body>
+    <div class="appbar">
+      <div class="appbar-inner">
+        <h1><span style="color:var(--accent)">re:</span>Invent 2026</h1>
+        <span class="who" id="who">not signed in</span>
+      </div>
+    </div>
+
+    <div class="app">
+      <section class="tabview" id="view-home" data-tab="home">
+        <div class="hero">
+          <p>Good week. Here is what to do.</p>
+        </div>
+
+        <div class="scanbar">
+          <button class="btn btn-ghost" id="scan-toggle" type="button">Check my repository</button>
+          <form id="scan-form" hidden>
+            <input id="repo" type="url" placeholder="https://github.com/owner/repository" aria-label="Public GitHub repository URL" required />
+            <button class="btn btn-primary" id="go" type="submit" style="width:100%;margin-top:8px">Scan repo</button>
+          </form>
+        </div>
+
+        <div class="askbox">
+          <input id="ask" type="text" placeholder="Ask AWS about re:Invent" aria-label="Ask AWS" />
+          <button class="btn btn-primary" id="ask-go" type="button">Ask</button>
+        </div>
+
+        <p id="status" class="note"></p>
+        <div id="output"></div>
+
+        <div class="section-head"><h2>Next up</h2><span id="next-count"></span></div>
+        <div id="home-next"></div>
+      </section>
+
+      <section class="tabview" id="view-catalog" data-tab="catalog" hidden>
+        <div class="hero"><p>Every session. Search it.</p></div>
+        <div class="scanbar">
+          <input id="q" type="search" placeholder="Search title, service, topic" aria-label="Search sessions" />
+        </div>
+        <div class="chips" id="type-chips"></div>
+        <p class="note" id="catalog-count"></p>
+        <div id="catalog-list"></div>
+      </section>
+
+      <section class="tabview" id="view-calendar" data-tab="calendar" hidden>
+        <div class="hero"><p>Your reserved week.</p></div>
+        <div class="daybar" id="cal-days"></div>
+        <div id="calendar-list"></div>
+      </section>
+
+      <section class="tabview" id="view-parties" data-tab="parties" hidden>
+        <div class="hero"><p>171 parties. Six nights.</p></div>
+        <div class="daybar" id="party-days"></div>
+        <div id="party-list"></div>
+      </section>
+    </div>
+
+    <nav class="tabbar" aria-label="Main">
+      <div class="tabbar-inner">
+        <a href="#home" data-tab-link="home" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg>
+          Home
+        </a>
+        <a href="#catalog" data-tab-link="catalog">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+          Catalog
+        </a>
+        <a href="#calendar" data-tab-link="calendar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+          Calendar
+        </a>
+        <a href="#parties" data-tab-link="parties">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.8 2.8M14.9 14.9l2.8 2.8M17.7 6.3l-2.8 2.8M9.1 14.9l-2.8 2.8"/></svg>
+          Parties
+        </a>
+      </div>
+    </nav>
+    <script>
+      "use strict";
+
+      const $ = (id) => document.getElementById(id);
+      const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", q: "" };
+
+      function showTab(name) {
+        state.tab = name;
+        for (const view of document.querySelectorAll(".tabview")) view.hidden = view.dataset.tab !== name;
+        for (const link of document.querySelectorAll("[data-tab-link]")) {
+          if (link.dataset.tabLink === name) link.setAttribute("aria-current", "page");
+          else link.removeAttribute("aria-current");
+        }
+        if (location.hash !== `#${name}`) history.replaceState(null, "", `#${name}`);
+      }
+
+      for (const link of document.querySelectorAll("[data-tab-link]")) {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          showTab(link.dataset.tabLink);
+        });
+      }
+
+      $("scan-toggle").addEventListener("click", () => {
+        const form = $("scan-form");
+        form.hidden = !form.hidden;
+        if (!form.hidden) $("repo").focus();
+      });
+
+      function availabilityPill(session) {
+        const a = session.availability || {};
+        if (a.reservable === false || a.fullness === "walk-up") return '<span class="pill walkup">walk-up</span>';
+        if (a.fullness === "full") return '<span class="pill full">full</span>';
+        return '<span class="pill open">reservable</span>';
+      }
+
+      function when(session) {
+        const start = session.start || "";
+        const day = start.slice(0, 10);
+        const time = start.slice(11, 16);
+        return `${day} ${time}`.trim();
+      }
+
+      function item(session) {
+        return `<a class="item" href="#catalog" data-id="${esc(session.sessionId)}">
+          <h3>${esc(session.title)}</h3>
+          <div class="meta">
+            <span>${esc(when(session))}</span>
+            <span>${esc(session.venue || "")} ${esc(session.room || "")}</span>
+            ${availabilityPill(session)}
+          </div>
+        </a>`;
+      }
+
+      function renderCatalog() {
+        const types = ["All", ...new Set(state.catalog.map((s) => s.type).filter(Boolean))];
+        $("type-chips").innerHTML = types
+          .map((t) => `<button type="button" data-type="${esc(t)}" aria-pressed="${t === state.type}">${esc(t)}</button>`)
+          .join("");
+        for (const chip of $("type-chips").querySelectorAll("button")) {
+          chip.addEventListener("click", () => {
+            state.type = chip.dataset.type;
+            renderCatalog();
+          });
+        }
+        const q = state.q.trim().toLowerCase();
+        const rows = state.catalog.filter((s) => {
+          if (state.type !== "All" && s.type !== state.type) return false;
+          if (q.length === 0) return true;
+          const hay = [s.title, ...(s.services || []), ...(s.topics || []), s.code].join(" ").toLowerCase();
+          return hay.includes(q);
+        });
+        $("catalog-count").textContent = `${rows.length} of ${state.catalog.length} sessions`;
+        $("catalog-list").innerHTML = rows.length
+          ? state.catalog && rows.map(item).join("")
+          : '<p class="empty">Nothing matches that.</p>';
+      }
+
+      $("q").addEventListener("input", (event) => {
+        state.q = event.target.value;
+        renderCatalog();
+      });
+
+      function dayGroups(entries, dateOf, render) {
+        const days = [...new Set(entries.map((e) => dateOf(e).slice(0, 10)))].sort();
+        if (days.length === 0) return { bar: "", list: '<p class="empty">Nothing yet.</p>' };
+        const active = days[0];
+        const bar = days
+          .map((d) => `<button type="button" data-day="${d}" aria-pressed="${d === active}">${esc(new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" }))}</button>`)
+          .join("");
+        const list = entries
+          .filter((e) => dateOf(e).slice(0, 10) === active)
+          .map(render)
+          .join("");
+        return { bar, list, days };
+      }
+
+      function renderParties() {
+        const dateOf = (p) => p.start || p.date;
+        const groups = dayGroups(state.parties, dateOf, (p) => `
+          <a class="item" href="${esc(p.url || "#")}" target="_blank" rel="noopener">
+            <h3>${esc(p.title)}</h3>
+            <div class="meta">
+              <span>${esc(p.timeLabel || "")}</span>
+              <span>${esc(p.location || "")}</span>
+              ${p.sponsors.length ? `<span>by ${esc(p.sponsors.join(", "))}</span>` : ""}
+              ${p.atCapacity ? '<span class="pill full">at capacity</span>' : ""}
+            </div>
+          </a>`);
+        $("party-days").innerHTML = groups.bar;
+        $("party-list").innerHTML = groups.list;
+        for (const chip of $("party-days").querySelectorAll("button")) {
+          chip.addEventListener("click", () => {
+            for (const other of $("party-days").querySelectorAll("button")) {
+              other.setAttribute("aria-pressed", String(other === chip));
+            }
+            const d = chip.dataset.day;
+            $("party-list").innerHTML = state.parties.filter((p) => dateOf(p).slice(0, 10) === d)
+              .map((p) => `<a class="item" href="${esc(p.url || "#")}" target="_blank" rel="noopener">
+                <h3>${esc(p.title)}</h3>
+                <div class="meta"><span>${esc(p.timeLabel || "")}</span><span>${esc(p.location || "")}</span></div>
+              </a>`).join("");
+          });
+        }
+      }
+
+      function renderCalendar() {
+        const s = state.schedule;
+        if (!s) {
+          $("calendar-list").innerHTML = '<p class="empty">Sign in from the CLI to see your reservations. Nothing is claimed that was not read back from the schedule.</p>';
+          return;
+        }
+        const items = [...(s.reserved || []), ...(s.favorites || [])];
+        const groups = dayGroups(items, (x) => x.start || "", item);
+        $("cal-days").innerHTML = groups.bar;
+        $("calendar-list").innerHTML = groups.list;
+      }
+
+      async function load() {
+        try {
+          const catalog = await (await fetch("/api/catalog")).json();
+          state.catalog = catalog.sessions || [];
+          renderCatalog();
+          const next = state.catalog.slice().sort((a, b) => String(a.start).localeCompare(String(b.start))).slice(0, 3);
+          $("next-count").textContent = `${state.catalog.length} in the catalog`;
+          $("home-next").innerHTML = next.map(item).join("");
+        } catch { $("catalog-count").textContent = "Catalog could not load."; }
+
+        try {
+          const parties = await (await fetch("/api/parties")).json();
+          state.parties = parties.parties || [];
+          renderParties();
+        } catch { $("party-list").innerHTML = '<p class="empty">Parties could not load.</p>'; }
+
+        try {
+          const res = await fetch("/api/schedule");
+          state.schedule = res.ok ? await res.json() : null;
+          if (res.ok) $("who").textContent = "signed in";
+        } catch { state.schedule = null; }
+        renderCalendar();
+      }
+
+      const initial = (location.hash || "#home").slice(1);
+      showTab(["home", "catalog", "calendar", "parties"].includes(initial) ? initial : "home");
+      load();
+    </script>
+
+    <script>
+      "use strict";
+
+      const status = document.getElementById("status");
+      const output = document.getElementById("output");
+      const form = document.getElementById("scan-form");
+      const input = document.getElementById("repo");
+      const go = document.getElementById("go");
+
+      for (const link of document.querySelectorAll("[data-repo]")) {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          input.value = link.dataset.repo;
+          input.focus();
+        });
+      }
+
+      function setStatus(text, isError) {
+        status.textContent = text;
+        status.className = isError ? "note error" : "note";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
+      const ACTION_LABEL = {
+        reserve: ["reserve", "Reserve"],
+        "favorite-walk-up": ["walk-up", "Walk-up queue"],
+        "favorite-watchlist": ["watchlist", "Watchlist"],
+        "personal-time": ["personal", "Personal time"],
+      };
+
+      function renderFingerprint(fingerprint) {
+        const services = fingerprint.services.length
+          ? fingerprint.services.map((entry) => `<span class="chip">${escapeHtml(entry.service)}</span>`).join(" ")
+          : '<span class="note">no AWS services detected</span>';
+        const facts = [
+          ["Level", String(fingerprint.recommendedLevel)],
+          ["IaC", fingerprint.iac.join(", ")],
+          ["Compute", fingerprint.compute.join(", ")],
+          ["MCP", fingerprint.hasMcpConfig ? "yes" : "no"],
+          ["Docker", fingerprint.hasDocker ? "yes" : "no"],
+        ];
+        return `
+          <div class="card">
+            <h2>Stack detected</h2>
+            <div class="row">${services}</div>
+            <div class="row" style="margin-top:14px">
+              ${facts.map(([name, value]) => `<span class="chip">${escapeHtml(name)}: ${escapeHtml(value)}</span>`).join(" ")}
+            </div>
+          </div>`;
+      }
+
+      function renderGaps(gaps) {
+        if (gaps.length === 0) {
+          return `<div class="card"><h2>Gaps</h2><p class="note">No architecture gaps were found in the files that were read. A repo too small to support a claim reports nothing rather than guessing.</p></div>`;
+        }
+        const items = gaps
+          .map((gap) => {
+            const paths = [...new Set(gap.evidence.flatMap((entry) => entry.paths))];
+            return `
+              <div class="gap ${escapeHtml(gap.severity)}">
+                <span class="severity ${escapeHtml(gap.severity)}">${escapeHtml(gap.severity)}</span>
+                <h3>${escapeHtml(gap.title)}</h3>
+                <p>${escapeHtml(gap.why)}</p>
+                <div class="evidence">${paths.map((path) => escapeHtml(path)).join("<br />")}</div>
+              </div>`;
+          })
+          .join("");
+        return `<div class="card"><h2>Gaps (${gaps.length})</h2>${items}</div>`;
+      }
+
+      // Reflections live in this browser only. Nothing is sent, because there is
+      // no account here and nothing to gain from holding someone's notes.
+      const STORE_KEY = "repo-invent:reflections";
+
+      function loadReflections() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "[]");
+          return Array.isArray(raw) ? raw : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function saveReflections(list) {
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(list.slice(0, 200)));
+        } catch {
+          /* storage full or blocked: the page still works */
+        }
+      }
+
+      function closingRating() {
+        return 3;
+      }
+
+      function progressFor(gaps, reflections) {
+        const covered = new Set();
+        for (const r of reflections) {
+          if (r.rating < closingRating()) continue;
+          for (const id of r.gapIds || []) covered.add(id);
+        }
+        const closed = gaps.filter((g) => covered.has(g.id));
+        const open = gaps.filter((g) => !covered.has(g.id));
+        const rated = reflections.length;
+        const summary = rated === 0
+          ? `${open.length} gap${open.length === 1 ? "" : "s"} open. Rate a session to start closing them.`
+          : `${closed.length} of ${gaps.length} gap${gaps.length === 1 ? "" : "s"} closed from ${rated} rated session${rated === 1 ? "" : "s"}.`;
+        return { closed, open, summary };
+      }
+
+      /**
+       * Progress panel plus a rating control per scheduled session.
+       *
+       * The rating is the only thing that closes a gap, so sitting in a room
+       * and being bored does not pretend the gap is gone.
+       */
+      function renderProgress(gaps, days) {
+        const reflections = loadReflections();
+        const progress = progressFor(gaps, reflections);
+        if (days.length === 0) return "";
+
+        const items = days.flatMap((day) => day.items.filter((i) => i.sessionId));
+        const bySession = new Map(reflections.map((r) => [r.sessionId, r]));
+
+        const rows = items
+          .map((item) => {
+            const saved = bySession.get(item.sessionId);
+            const stars = [1, 2, 3, 4, 5]
+              .map(
+                (n) =>
+                  `<button type="button" class="star ${saved && saved.rating >= n ? "on" : ""}"
+                     data-session="${escapeHtml(item.sessionId)}"
+                     data-title="${escapeHtml(item.title)}"
+                     data-gaps="${escapeHtml((item.gaps || []).join(","))}"
+                     data-rating="${n}"
+                     aria-label="Rate ${n} of 5">★</button>`,
+              )
+              .join("");
+            const note = saved && saved.note ? escapeHtml(saved.note) : "";
+            return `<tr>
+              <td>${escapeHtml(item.title)}</td>
+              <td class="stars">${stars}</td>
+              <td class="note">${note}</td>
+            </tr>`;
+          })
+          .join("");
+
+        return `<div class="card" id="progress-card">
+          <h2>What you learned</h2>
+          <p class="progress-summary">${escapeHtml(progress.summary)}</p>
+          <p class="note">Rate a session 3 or more to close the gaps it was planned for. Stored in this browser only.</p>
+          <table class="ratings"><tbody>${rows}</tbody></table>
+          <p style="margin-top:14px"><a class="report-link" href="#" id="learning-link">Download your learning notes →</a></p>
+        </div>`;
+      }
+
+      function learningMarkdown(gaps, days) {
+        const reflections = loadReflections();
+        const progress = progressFor(gaps, reflections);
+        const lines = ["# What I learned at re:Invent 2026", "", progress.summary, ""];
+        const sorted = [...reflections].sort((a, b) => b.rating - a.rating);
+        for (const r of sorted) {
+          lines.push(`## ${r.title}`, "", "★".repeat(r.rating) + "☆".repeat(5 - r.rating), "");
+          if (r.note) lines.push(r.note, "");
+          if ((r.gapIds || []).length > 0) lines.push(`Closes: ${r.gapIds.join(", ")}`, "");
+        }
+        if (progress.open.length > 0) {
+          lines.push("## Still open", "");
+          for (const gap of progress.open) lines.push(`- ${gap.title}`);
+          lines.push("");
+        }
+        void days;
+        void gaps;
+        return lines.join("\n");
+      }
+
+      function renderSchedule(days) {
+        const items = days.flatMap((day) => day.items.map((item) => ({ ...item, date: day.date })));
+        if (items.length === 0) {
+          return `<div class="card"><h2>Plan</h2><p class="note">Nothing could be scheduled from this catalog.</p></div>`;
+        }
+        const rows = items
+          .map((item) => {
+            const [css, label] = ACTION_LABEL[item.action] || ["personal", item.action];
+            const time = `${item.start.slice(11, 16)}–${item.end.slice(11, 16)}`;
+            return `<tr>
+              <td class="time">${escapeHtml(item.date)} ${escapeHtml(time)}</td>
+              <td>${escapeHtml(item.title)}</td>
+              <td class="note">${escapeHtml(item.venue)}</td>
+              <td><span class="tag ${css}">${escapeHtml(label)}</span></td>
+            </tr>`;
+          })
+          .join("");
+        return `<div class="card"><h2>Plan (${items.length} sessions)</h2>
+          <table><thead><tr><th>When</th><th>Session</th><th>Venue</th><th>Action</th></tr></thead>
+          <tbody>${rows}</tbody></table></div>`;
+      }
+
+      function renderTickets(plan) {
+        const tickets = plan.remediation.tickets;
+        if (tickets.length === 0) return "";
+        const body = tickets
+          .map(
+            (ticket) => `
+            <div class="gap medium">
+              <h3>${escapeHtml(ticket.id)} — ${escapeHtml(ticket.title)}</h3>
+              <p>${escapeHtml(ticket.why)}</p>
+              <div class="evidence">Acceptance: ${escapeHtml(ticket.acceptanceTest)}</div>
+            </div>`,
+          )
+          .join("");
+        return `<div class="card"><h2>Tickets (${tickets.length})</h2>${body}</div>`;
+      }
+
+      let current = null;
+
+      function render(result) {
+        current = result;
+        output.innerHTML = [
+          renderCountdown(result),
+          renderFingerprint(result.fingerprint),
+          renderGaps(result.gaps),
+          renderHeatmap(result.sessions || []),
+          renderSchedule(result.schedule.days),
+          renderProgress(result.gaps, result.schedule.days),
+          renderTickets(result.plan),
+        ].join("");
+        wireProgress();
+      }
+
+      function wireProgress() {
+        for (const button of output.querySelectorAll(".star")) {
+          button.addEventListener("click", () => {
+            const list = loadReflections();
+            const sessionId = button.dataset.session;
+            const rating = Number(button.dataset.rating);
+            const existing = list.find((r) => r.sessionId === sessionId);
+            const record = {
+              sessionId,
+              title: button.dataset.title || "",
+              rating,
+              note: existing ? existing.note || "" : "",
+              gapIds: (button.dataset.gaps || "").split(",").filter(Boolean),
+              at: new Date().toISOString(),
+            };
+            const next = list.filter((r) => r.sessionId !== sessionId);
+            next.push(record);
+            saveReflections(next);
+            if (current) render(current);
+          });
+        }
+        const link = document.getElementById("learning-link");
+        if (link && current) {
+          link.addEventListener("click", (event) => {
+            event.preventDefault();
+            const blob = new Blob([learningMarkdown(current.gaps, current.schedule.days)], {
+              type: "text/markdown",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "reinvent-learning-notes.md";
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        }
+      }
+
+      // The event window, from the live event record.
+      const EVENT_START = new Date("2026-11-30T05:30:00-08:00");
+      const EVENT_END = new Date("2026-12-04T23:59:00-08:00");
+
+      function renderBanner() {
+        const now = Date.now();
+        if (now > EVENT_END.getTime()) {
+          return `<div class="banner done">re:Invent 2026 has ended. This plan still applies to your repository.</div>`;
+        }
+        if (now >= EVENT_START.getTime()) {
+          return `<div class="card"><h2>It is re:Invent week</h2><p class="note">Use the plan below as-is. Reflect on what you heard, then file the tickets.</p></div>`;
+        }
+        const days = Math.ceil((EVENT_START.getTime() - now) / 86_400_000);
+        return `<div class="banner"><strong>${days} day${days === 1 ? "" : "s"}</strong> until re:Invent 2026 opens in Las Vegas.</div>`;
+      }
+
+      function renderCountdown() {
+        return renderBanner();
+      }
+
+      const FULLNESS_CSS = {
+        open: "avail-open",
+        filling: "avail-filling",
+        full: "avail-full",
+        "walk-up-up": "avail-walkup",
+        unknown: "avail-unknown",
+      };
+
+      const FULLNESS_LABEL = {
+        open: "Available",
+        filling: "Limited",
+        full: "Full",
+        "walk-up-up": "Walk-up only",
+        unknown: "Unknown",
+      };
+
+      function timeSlot(start) {
+        const hour = Number(start.slice(11, 13));
+        if (hour < 9) return "Early";
+        if (hour < 12) return "Morning";
+        if (hour < 14) return "Midday";
+        if (hour < 17) return "Afternoon";
+        return "Evening";
+      }
+
+      const SLOTS = ["Early", "Morning", "Midday", "Afternoon", "Evening"];
+
+      /**
+       * Availability grid: one row per venue, one cell per day for the slot the
+       * user is looking at. Counts hold, and colours by what the catalog says,
+       * so a judge can see at a glance what is even possible.
+       */
+      function renderHeatmap(sessions) {
+        if (sessions.length === 0) return "";
+        const days = [...new Set(sessions.map((s) => s.start.slice(0, 10)))].sort();
+        if (days.length === 0) return "";
+        const venues = [...new Set(sessions.map((s) => s.venue).filter(Boolean))].sort();
+
+        const counts = new Map();
+        for (const s of sessions) {
+          const key = `${s.venue}|${s.start.slice(0, 10)}|${timeSlot(s.start)}`;
+          const cell = counts.get(key) || { open: 0, filling: 0, full: 0, "walk-up-up": 0, unknown: 0 };
+          const f = s.availability && s.availability.fullness ? s.availability.fullness : "unknown";
+          cell[f] = (cell[f] || 0) + 1;
+          counts.set(key, cell);
+        }
+
+        const head = `<tr><th>Venue / slot</th>${days
+          .map((d) => `<th>${escapeHtml(d.slice(5))}</th>`)
+          .join("")}</tr>`;
+
+        const rows = [];
+        for (const venue of venues) {
+          for (const slot of SLOTS) {
+            const cells = days.map((day) => {
+              const cell = counts.get(`${venue}|${day}|${slot}`);
+              const total = cell ? Object.values(cell).reduce((a, b) => a + b, 0) : 0;
+              if (total === 0) return `<td class="heat empty">·</td>`;
+              const best = ["open", "filling", "walk-up-up", "full", "unknown"].find((k) => cell[k] > 0) || "unknown";
+              return `<td class="heat ${FULLNESS_CSS[best]}" title="${escapeHtml(FULLNESS_LABEL[best])}">
+                ${total}
+              </td>`;
+            });
+            rows.push(`<tr><td class="venue">${escapeHtml(venue)} <span class="slot">${slot}</span></td>${cells.join("")}</tr>`);
+          }
+        }
+
+        const legend = ["open", "filling", "walk-up-up", "full"]
+          .map((key) => `<span class="legend"><i class="${FULLNESS_CSS[key]}"></i>${FULLNESS_LABEL[key]}</span>`)
+          .join(" ");
+
+        return `<div class="card">
+          <h2>Availability by venue and slot</h2>
+          <p class="note">Sessions in the catalog for this event, coloured by what the API says about seats. A number is a count of sessions in that cell.</p>
+          <div class="legend-row">${legend}</div>
+          <div class="scroll"><table class="heatmap"><thead>${head}</thead><tbody>${rows.join("")}</tbody></table></div>
+        </div>`;
+      }
+
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        runScan(input.value.trim());
+      });
+
+      // The bundled sample needs no GitHub round trip: its files ship with the
+      // app, so it always produces the same result.
+      document.getElementById("try-sample")?.addEventListener("click", (event) => {
+        event.preventDefault();
+        input.value = "the bundled sample";
+        runScan("sample://reinvent-demo-shop");
+      });
+
+      async function runScan(repo) {
+        if (!repo) return;
+        go.disabled = true;
+        output.innerHTML = "";
+        setStatus("Reading the repository…", false);
+        try {
+          const response = await fetch("/api/scan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ repo }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            setStatus(data.error || "The scan failed.", true);
+            return;
+          }
+          const source = data.snapshotSource;
+          const origin =
+            repo.startsWith("sample://")
+              ? "The bundled sample. Its files ship with this app, so this result is identical every time."
+              : source === "live"
+                ? "Live GitHub read."
+                : source === "cached"
+                  ? "GitHub is rate-limited; showing a copy cached in this process."
+                  : "GitHub is rate-limited; showing the recorded snapshot of this repository.";
+          setStatus(`Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}. ${origin}`, false);
+          render(data);
+          // The report lives behind its own route, so it can be opened, printed
+          // or mailed without the site.
+          output.insertAdjacentHTML(
+            "afterbegin",
+            `<div class="card"><h2>Take it with you</h2>
+              <p class="note">The same plan as one self-contained page. Print it, save it, send it to your team.</p>
+              <p><a class="report-link" href="/report?repo=${encodeURIComponent(repo)}" target="_blank" rel="noopener">Open the full report →</a></p>
+            </div>`,
+          );
+        } catch (error) {
+          setStatus(`Could not reach the scanner: ${error instanceof Error ? error.message : "unknown error"}`, true);
+        } finally {
+          go.disabled = false;
+        }
+      }
+
+      if (location.search) {
+        const prefill = new URLSearchParams(location.search).get("repo");
+        if (prefill) {
+          input.value = prefill;
+          form.requestSubmit();
+        }
+      }
+    </script>
+  </body>
+</html>
