@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { AwsEventsClient } from "./api/events-client.js";
+import { servedCatalog } from "./catalog-cache.js";
 import { dataDir, loadConfig, loadFixture } from "./config.js";
 import { renderReportFor, scanForWeb } from "./web.js";
 import type { Catalog } from "./types.js";
@@ -91,12 +92,7 @@ export async function handler(event: LambdaEvent): Promise<LambdaResult> {
 
   if (method === "GET" && path === "/api/catalog") {
     try {
-      const useLive = process.env["REPO_INVENT_LIVE_CATALOG"] === "1";
-      const client = new AwsEventsClient({
-        eventId: loadConfig().eventId,
-        ...(useLive ? {} : { fixture: loadFixture() as unknown as Catalog }),
-      });
-      const catalog = await client.listSessions({ includeAbstracts: false });
+      const catalog = await servedCatalog();
       return json(200, {
         source: catalog.source,
         fetchedAt: catalog.fetchedAt,

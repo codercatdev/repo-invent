@@ -2,6 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { servedCatalog } from "./catalog-cache.js";
 import { dataDir, loadConfig, loadFixture } from "./config.js";
 import { AwsEventsClient } from "./api/events-client.js";
 import { fetchRepo } from "./scanner/repo-fetch.js";
@@ -291,13 +292,7 @@ export function createWebServer(): ReturnType<typeof createServer> {
     // account; REPO_INVENT_LIVE_CATALOG=1 reads the signed-in live catalog.
     if (request.method === "GET" && url.pathname === "/api/catalog") {
       try {
-        const liveConfig = loadConfig();
-        const useLive = process.env["REPO_INVENT_LIVE_CATALOG"] === "1";
-        const client = new AwsEventsClient({
-          eventId: liveConfig.eventId,
-          ...(useLive ? {} : { fixture: loadFixture() as unknown as Catalog }),
-        });
-        const catalog = await client.listSessions({ includeAbstracts: false });
+        const catalog = await servedCatalog();
         json(response, 200, {
           source: catalog.source,
           fetchedAt: catalog.fetchedAt,
