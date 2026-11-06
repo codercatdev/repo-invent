@@ -42,7 +42,7 @@ echo "==> packaging"
 rm -f "$ZIP_PATH"
 # dist and node_modules only: the Lambda needs the compiled output and its
 # runtime dependencies, never the sources or the tests.
-zip -qr "$ZIP_PATH" dist node_modules package.json \
+zip -qr "$ZIP_PATH" dist node_modules package.json web \
   -x "node_modules/.bin/*" "node_modules/**/test/*" "node_modules/**/*.md"
 
 ACCOUNT_ID="$(aws sts get-caller-identity "${PROFILE_ARG[@]}" --query Account --output text)"
