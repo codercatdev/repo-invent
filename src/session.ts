@@ -132,3 +132,21 @@ export async function favoriteSession(
   const saved = snapshot.favorites.some((entry) => entry.sessionId === sessionId);
   return saved ? { saved: true } : { saved: false, reason: "not read back from the schedule" };
 }
+
+/**
+ * Remove a favourite, then confirm it is gone from `GetSchedule`.
+ *
+ * A delete answers 204 with no body, so the only proof is a fresh read. This
+ * reports `removed` for a session the schedule no longer lists.
+ */
+export async function unfavoriteSession(
+  sessionId: string,
+): Promise<{ removed: boolean; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  await client.disassociateFavorite(sessionId);
+  const snapshot = await client.getSchedule();
+  const still = snapshot.favorites.some((entry) => entry.sessionId === sessionId);
+  return still ? { removed: false, reason: "still on the schedule" } : { removed: true };
+}

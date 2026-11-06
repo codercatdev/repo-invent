@@ -190,6 +190,7 @@
       .chips button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #1a1206; font-weight: 650; }
       .item { display: block; padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); margin-bottom: 9px; text-decoration: none; color: inherit; }
           .item a { color: var(--accent); font-size: 13px; font-weight: 600; text-decoration: none; }
+      .link-btn { background: none; border: 0; color: var(--bad); font-size: 12.5px; padding: 0; cursor: pointer; text-decoration: underline; }
       .item-btn { width: 100%; text-align: left; font: inherit; cursor: pointer; }
       .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 40; }
       .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 41; background: var(--panel); border-radius: 18px 18px 0 0; border-top: 1px solid var(--line); max-height: 82vh; overflow: auto; padding: 18px 18px 26px; max-width: 560px; margin: 0 auto; }
@@ -817,11 +818,15 @@
                   <span>${esc([entry.venue, entry.room].filter(Boolean).join(" "))}</span>
                   <span class="pill ${reservedTag ? "open" : ""}">${reservedTag ? "reserved" : "saved"}</span>
                 </div>
+                ${reservedTag ? "" : `<div class="meta" style="margin-top:8px"><button class="link-btn" type="button" data-remove="${esc(entry.sessionId)}">Remove</button></div>`}
               </div>`;
             })
             .join("");
         };
         draw(active);
+        for (const button of $("calendar-list").querySelectorAll("[data-remove]")) {
+          button.addEventListener("click", () => removeFavorite(button.dataset.remove, button));
+        }
         for (const chip of $("cal-days").querySelectorAll("button")) {
           chip.addEventListener("click", () => {
             for (const other of $("cal-days").querySelectorAll("button")) {
@@ -834,6 +839,30 @@
 
       // Before anyone signs in, the calendar is not empty: it shows the week the
       // last scan proposed. That plan is a suggestion, and it is labelled as one.
+      async function removeFavorite(sessionId, button) {
+        button.disabled = true;
+        button.textContent = "Removing...";
+        try {
+          const response = await fetch("/api/unfavorite", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ sessionId }),
+          });
+          const data = await response.json();
+          if (!response.ok || !data.removed) {
+            button.textContent = data.error === "not signed in" ? "Sign in first" : "Not removed";
+            button.disabled = false;
+            return;
+          }
+          const schedule = await fetch("/api/schedule");
+          state.schedule = schedule.ok ? await schedule.json() : state.schedule;
+          renderCalendar();
+        } catch {
+          button.textContent = "Not removed";
+          button.disabled = false;
+        }
+      }
+
       function renderSuggestedWeek(signedIn) {
         const scan = state.lastScan;
         const days = scan && scan.schedule && scan.schedule.days ? scan.schedule.days : [];

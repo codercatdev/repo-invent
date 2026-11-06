@@ -11,7 +11,7 @@ import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
 import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
 import { prescribe } from "./solver/scorer.js";
 import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
-import { favoriteSession, mySchedule, sessionStatus } from "./session.js";
+import { favoriteSession, mySchedule, sessionStatus, unfavoriteSession } from "./session.js";
 import { sampleSnapshot } from "./scanner/demo-sample.js";
 
 /** True for the bundled sample repository, whose files ship with the app. */
@@ -301,6 +301,36 @@ export function createWebServer(): ReturnType<typeof createServer> {
         });
       } catch (error) {
         json(response, 500, { error: error instanceof Error ? error.message : "catalog failed" });
+      }
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/unfavorite") {
+      let body: string;
+      try {
+        body = await readBody(request);
+      } catch (error) {
+        json(response, 413, { error: error instanceof Error ? error.message : "body too large" });
+        return;
+      }
+      let sessionId: unknown;
+      try {
+        sessionId = (JSON.parse(body) as { sessionId?: unknown }).sessionId;
+      } catch {
+        json(response, 400, { error: "body must be JSON" });
+        return;
+      }
+      if (typeof sessionId !== "string" || sessionId.length === 0) {
+        json(response, 400, { error: "sessionId is required" });
+        return;
+      }
+      try {
+        json(response, 200, await unfavoriteSession(sessionId));
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "remove failed";
+        json(response, /not signed in|no_tokens|sign in again/i.test(message) ? 401 : 400, {
+          error: /not signed in|no_tokens|sign in again/i.test(message) ? "not signed in" : message,
+        });
       }
       return;
     }
