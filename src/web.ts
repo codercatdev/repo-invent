@@ -2,7 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadConfig, loadFixture } from "./config.js";
+import { dataDir, loadConfig, loadFixture } from "./config.js";
 import { AwsEventsClient } from "./api/events-client.js";
 import { fetchRepo } from "./scanner/repo-fetch.js";
 import { scanManifests } from "./scanner/manifest-parser.js";
@@ -254,6 +254,46 @@ export function createWebServer(): ReturnType<typeof createServer> {
         const message = error instanceof Error ? error.message : "the scan failed";
         response.writeHead(400, { "Content-Type": "text/html; charset=utf-8" });
         response.end(`<p>${escapeReportText(message)}</p>`);
+      }
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/parties") {
+      try {
+        const raw = await readFile(join(dataDir(), "parties.json"), "utf8");
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        response.writeHead(200, {
+          "Content-Type": "application/json; charset=utf-8",
+          "Content-Length": Buffer.byteLength(raw),
+          "Cache-Control": "public, max-age=3600",
+        });
+        void parsed;
+        response.end(raw);
+      } catch (error) {
+        json(response, 500, { error: error instanceof Error ? error.message : "parties unavailable" });
+      }
+      return;
+    }
+
+    // The catalog the app browses. Fixture by default so the page needs no
+    // account; REPO_INVENT_LIVE_CATALOG=1 reads the signed-in live catalog.
+    if (request.method === "GET" && url.pathname === "/api/catalog") {
+      try {
+        const liveConfig = loadConfig();
+        const useLive = process.env["REPO_INVENT_LIVE_CATALOG"] === "1";
+        const client = new AwsEventsClient({
+          eventId: liveConfig.eventId,
+          ...(useLive ? {} : { fixture: loadFixture() as unknown as Catalog }),
+        });
+        const catalog = await client.listSessions({ includeAbstracts: false });
+        json(response, 200, {
+          source: catalog.source,
+          fetchedAt: catalog.fetchedAt,
+          count: catalog.sessions.length,
+          sessions: catalog.sessions,
+        });
+      } catch (error) {
+        json(response, 500, { error: error instanceof Error ? error.message : "catalog failed" });
       }
       return;
     }
