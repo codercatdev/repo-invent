@@ -297,7 +297,7 @@
       const $ = (id) => document.getElementById(id);
       const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-      const state = { tab: "home", catalog: [], parties: [], schedule: null, type: "All", level: "All", venue: "All", q: "", partyQ: "" };
+      const state = { tab: "home", catalog: [], parties: [], schedule: null, lastScan: null, type: "All", level: "All", venue: "All", q: "", partyQ: "" };
 
       function showTab(name) {
         state.tab = name;
@@ -439,6 +439,7 @@
             $("status").className = "note error";
             return;
           }
+          state.lastScan = data;
           renderGaps(data);
         } catch (error) {
           $("status").textContent = "Could not reach the scanner.";
@@ -787,11 +788,7 @@
         const all = reserved.concat(favorites).sort((a, b) => String(a.start || "").localeCompare(String(b.start || "")));
 
         if (reserved.length === 0 && favorites.length === 0) {
-          $("cal-days").innerHTML = "";
-          $("cal-summary").textContent = "";
-          $("calendar-list").innerHTML = s
-            ? '<p class="empty">No sessions on your account yet. Browse the catalog to find some.</p>'
-            : '<p class="empty">Sign in from the CLI to see your week. Nothing is shown that was not read back from the API.</p>';
+          renderSuggestedWeek(s !== null);
           return;
         }
 
@@ -831,6 +828,52 @@
             draw(chip.dataset.day);
           });
         }
+      }
+
+      // Before anyone signs in, the calendar is not empty: it shows the week the
+      // last scan proposed. That plan is a suggestion, and it is labelled as one.
+      function renderSuggestedWeek(signedIn) {
+        const scan = state.lastScan;
+        const days = scan && scan.schedule && scan.schedule.days ? scan.schedule.days : [];
+        if (days.length === 0) {
+          $("cal-days").innerHTML = "";
+          $("cal-summary").textContent = "";
+          $("calendar-list").innerHTML = signedIn
+            ? '<p class="empty">No sessions on your account yet. Check a repository or browse the catalog.</p>'
+            : '<p class="empty">Check a repository on Home to see a suggested week here. Nothing is claimed that was not read back from the API.</p>';
+          return;
+        }
+        $("cal-summary").textContent = "Suggested week, not booked";
+        $("cal-days").innerHTML = "";
+        const total = days.reduce((sum, day) => sum + (day.items || []).length, 0);
+        $("calendar-list").innerHTML =
+          `<p class="note">From the last repository you checked. Tap Home to rescan. ${total} sessions.</p>` +
+          days
+            .map((day) => {
+              const date = String(day.date || "").slice(0, 10);
+              const nice = date
+                ? new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "short",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })
+                : "";
+              const rows = (day.items || [])
+                .map((entry) => {
+                  const session = entry.sessionId ? state.catalog.find((s) => s.sessionId === entry.sessionId) : undefined;
+                  const title = entry.title || (session && session.title) || entry.sessionId || "";
+                  const room = (session && [session.venue, session.room].filter(Boolean).join(" ")) || "";
+                  return `<button class="item item-btn" type="button" ${session ? `data-id="${esc(session.sessionId)}"` : ""}>
+                    <h3>${esc(title)}</h3>
+                    <div class="meta"><span>${esc(String(entry.start || "").slice(11, 16))}</span><span>${esc(room)}</span>${actionTag(entry.action)}</div>
+                  </button>`;
+                })
+                .join("");
+              return `<div class="section-head"><h2>${esc(nice)}</h2><span>${(day.items || []).length}</span></div>${rows}`;
+            })
+            .join("");
+        wireRows($("calendar-list"));
       }
 
       async function load() {
