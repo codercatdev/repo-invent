@@ -163,7 +163,8 @@
       .appbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
       .appbar-inner { max-width: 560px; margin: 0 auto; display: flex; align-items: center; gap: 10px; padding: 14px 16px; }
       .appbar h1 { font-size: 19px; margin: 0; }
-      .who { margin-left: auto; font-size: 12px; color: var(--muted); }
+      .who { margin-left: auto; font-size: 12px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; cursor: pointer; }
+      .who[data-state="signed-in"] { color: var(--ok); border-color: #26523a; }
       .tabview[hidden] { display: none; }
       .hero { padding: 22px 0 8px; }
       .hero p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
@@ -218,7 +219,7 @@
     <div class="appbar">
       <div class="appbar-inner">
         <h1><span style="color:var(--accent)">re:</span>Invent 2026</h1>
-        <span class="who" id="who">not signed in</span>
+        <button class="who" id="who" type="button" title="Sign in from a terminal, then reload">local only</button>
       </div>
     </div>
 
@@ -871,6 +872,16 @@
 
       // Before anyone signs in, the calendar is not empty: it shows the week the
       // last scan proposed. That plan is a suggestion, and it is labelled as one.
+      // The app cannot start the sign-in itself: AWS only accepts a loopback
+      // redirect, which a page cannot serve. It says so instead of pretending.
+      $("who").addEventListener("click", () => {
+        const signedIn = state.schedule !== null;
+        $("status").className = "note";
+        $("status").textContent = signedIn
+          ? "Signed in. Saving and blocking write to your account."
+          : "Sign in from a terminal: run `repo-invent login`, then reload this page. AWS only accepts a localhost redirect, so a web page cannot start it.";
+      });
+
       $("block-toggle").addEventListener("click", () => {
         const form = $("block-form");
         form.hidden = !form.hidden;
@@ -1035,7 +1046,13 @@
         try {
           const res = await fetch("/api/schedule");
           state.schedule = res.ok ? await res.json() : null;
-          if (res.ok) $("who").textContent = "signed in";
+          if (res.ok && state.schedule && state.schedule.counts) {
+            $("who").textContent = "signed in";
+            $("who").dataset.state = "signed-in";
+          } else {
+            $("who").textContent = "not signed in";
+            $("who").dataset.state = "";
+          }
         } catch { state.schedule = null; }
         renderCalendar();
       }
