@@ -28,6 +28,11 @@ export const metadata: Metadata = {
   description:
     "Scan your GitHub repository, level up your AWS architecture, plan a walkable re:Invent 2026 week, explore 171 Vegas parties, and chat with the live AWS Events MCP agent.",
   applicationName: "repo:Invent",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export const viewport: Viewport = {
