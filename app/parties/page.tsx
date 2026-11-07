@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, PartyPopper, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PartyCard } from "@/components/party-card";
 import type { Party } from "@/lib/types";
@@ -66,112 +68,99 @@ export default function PartiesPage() {
   }, [parties, selectedDate, selectedHub, query]);
 
   return (
-    <div className="min-h-dvh bg-[#0b0d13] pb-10">
-      <header className="sticky top-0 z-20 border-b border-white/5 bg-[#0b0d13]/95 py-3.5 text-center backdrop-blur-md">
-        <h1 className="text-base font-bold text-white">re:Invent Parties</h1>
-      </header>
-
-      <div className="space-y-4 px-4 pt-4">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
-              <PartyPopper className="size-6 text-[#9b8afb]" />
-              <span>171 Vegas Parties</span>
-            </h2>
-            <p className="mt-1 text-xs leading-relaxed text-slate-300">
-              Scraped & enriched from conferenceparties.com/reinvent2026 across 6 nights.
-            </p>
-          </div>
-          <a
-            href="https://conferenceparties.com/reinvent2026/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-1 rounded-full border border-white/10 bg-[#181d27] px-3 py-1.5 text-[11px] font-medium text-[#2ea8ff] hover:underline"
-          >
-            Source <ExternalLink className="size-3" />
-          </a>
+    <div className="space-y-6 pb-10">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="font-heading flex items-center gap-2.5 text-3xl font-black tracking-tight">
+            <PartyPopper className="size-7 text-primary" />
+            <span>171 Vegas Parties</span>
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Scraped & enriched from conferenceparties.com/reinvent2026 across 6 nights.
+          </p>
         </div>
-
-        {/* Search Input */}
-        <div className="flex items-center gap-2.5 border-b border-slate-600 pb-2 pt-1 focus-within:border-white">
-          <Search className="size-5 text-slate-300" />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search sponsor, restaurant, club, or party name"
-            aria-label="Search parties"
-            className="w-full bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none"
-          />
-        </div>
-
-        {/* Day Selector Pills */}
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {PARTY_DAYS.map((d) => {
-            const active = selectedDate === d.date;
-            return (
-              <button
-                key={d.date}
-                type="button"
-                onClick={() => setSelectedDate(d.date)}
-                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${
-                  active
-                    ? "bg-[#0095ff] text-white"
-                    : "bg-[#1e232e] text-slate-300 hover:text-white"
-                }`}
-              >
-                {d.label}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Venue Hub Chips */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-          {VENUE_HUBS.map((hub) => {
-            const active = selectedHub === hub;
-            return (
-              <button
-                key={hub}
-                type="button"
-                onClick={() => setSelectedHub(hub)}
-                className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors ${
-                  active
-                    ? "border-[#9b8afb] bg-[#9b8afb]/20 text-white"
-                    : "border-white/10 bg-[#141822] text-slate-400 hover:text-white"
-                }`}
-              >
-                {hub}
-              </button>
-            );
-          })}
-        </div>
-
-        <p className="font-mono text-xs text-slate-400">
-          Displaying {filtered.length} of {parties?.length ?? 171} parties
-        </p>
-
-        {parties === null ? (
-          <div className="space-y-3">
-            {[0, 1, 2, 3].map((k) => (
-              <Skeleton key={k} className="h-36 rounded-2xl bg-[#1e232e]" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-[#1e232e] p-6 text-center text-sm text-slate-300">
-            No parties match that filter.
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {filtered.map((party) => (
-              <PartyCard
-                key={`${party.date}-${party.title}-${party.timeLabel}`}
-                party={party}
-              />
-            ))}
-          </div>
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            window.open("https://conferenceparties.com/reinvent2026/", "_blank", "noopener")
+          }
+        >
+          conferenceparties.com <ExternalLink className="size-3.5" />
+        </Button>
       </div>
+
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search sponsor, restaurant, club, or party name..."
+          aria-label="Search parties"
+          className="h-11 pl-10"
+        />
+      </div>
+
+      {/* Day Selector Pills */}
+      <div className="flex flex-wrap gap-2">
+        {PARTY_DAYS.map((d) => {
+          const active = selectedDate === d.date;
+          return (
+            <Button
+              key={d.date}
+              size="sm"
+              variant={active ? "default" : "outline"}
+              onClick={() => setSelectedDate(d.date)}
+            >
+              {d.label}
+            </Button>
+          );
+        })}
+      </div>
+
+      {/* Venue Hub Chips */}
+      <div className="flex flex-wrap gap-1.5">
+        {VENUE_HUBS.map((hub) => {
+          const active = selectedHub === hub;
+          return (
+            <Button
+              key={hub}
+              size="xs"
+              variant={active ? "secondary" : "ghost"}
+              onClick={() => setSelectedHub(hub)}
+            >
+              {hub}
+            </Button>
+          );
+        })}
+      </div>
+
+      <p className="font-mono text-xs font-bold text-muted-foreground">
+        Displaying {filtered.length} of {parties?.length ?? 171} parties
+      </p>
+
+      {parties === null ? (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[0, 1, 2, 3, 4, 5].map((k) => (
+            <Skeleton key={k} className="h-40 rounded-2xl" />
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="card-tactile p-8 text-center text-sm font-bold text-muted-foreground">
+          No parties match that filter.
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((party) => (
+            <PartyCard
+              key={`${party.date}-${party.title}-${party.timeLabel}`}
+              party={party}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

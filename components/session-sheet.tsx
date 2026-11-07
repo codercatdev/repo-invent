@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Calendar, Clock, Heart, Info, MapPin, Sparkles, Star, TicketCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +31,7 @@ export function SessionSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const router = useRouter();
   const [savingFav, setSavingFav] = useState(false);
   const [reserving, setReserving] = useState(false);
   const [isFav, setIsFav] = useState(false);
@@ -71,24 +73,24 @@ export function SessionSheet({
       if (response.status === 401) {
         toast.success(
           local.added
-            ? "Added to your local Favorites (sign in via CLI to sync to AWS Builder ID)."
-            : "Removed from local Favorites.",
+            ? "Saved to your Favorites! (Sign in on /login to sync to AWS Builder ID)"
+            : "Removed from Favorites.",
         );
         return;
       }
       if (local.added && data.saved) {
-        toast.success("Favorited and verified via GetSchedule on AWS Events API.");
+        toast.success("Favorited and verified via GetSchedule on AWS Events API!");
       } else if (!local.added && data.removed) {
         toast.success("Removed from AWS Events schedule and local Favorites.");
       } else {
         toast.info(
           local.added
-            ? `Saved locally (AWS API note: ${describeReason(data.reason ?? data.error ?? "")})`
+            ? `Saved locally (${describeReason(data.reason ?? data.error ?? "")})`
             : "Updated locally.",
         );
       }
     } catch {
-      toast.success(local.added ? "Saved to local Favorites." : "Removed from local Favorites.");
+      toast.success(local.added ? "Saved to Favorites." : "Removed from Favorites.");
     } finally {
       setSavingFav(false);
     }
@@ -109,7 +111,15 @@ export function SessionSheet({
         error?: string;
       };
       if (response.status === 401) {
-        toast.error("Run `pnpm cli login` in a terminal to reserve seats with AWS Builder ID.");
+        toast.error("Sign in with AWS Builder ID first to reserve seats.", {
+          action: {
+            label: "Sign In",
+            onClick: () => {
+              onOpenChange(false);
+              router.push("/login");
+            },
+          },
+        });
         return;
       }
       if (data.reserved) {
@@ -136,7 +146,7 @@ export function SessionSheet({
     });
     toast.success(
       stars >= 3
-        ? `Rated ${stars}/5 ★ — linked architecture gaps marked addressed!`
+        ? `+50 XP! Rated ${stars}/5 ★ — linked architecture gaps marked addressed!`
         : `Saved ${stars}/5 ★ reflection.`,
     );
   }
@@ -151,18 +161,20 @@ export function SessionSheet({
       updatedAt: new Date().toISOString(),
     });
     if (!rating) setRating(4);
-    toast.success("Session takeaway note saved.");
+    toast.success("Session takeaway note saved!");
   }
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="mx-auto max-h-[88dvh] max-w-[520px] overflow-y-auto rounded-t-3xl border-t border-white/10 bg-[#141821] p-0 text-white"
+        className="mx-auto max-h-[88dvh] max-w-2xl overflow-y-auto rounded-t-3xl border-t-2 border-border bg-background p-0 text-foreground"
       >
         <div
-          className={`flex items-center gap-2 px-5 py-2.5 text-xs font-medium ${
-            reservable ? "bg-[#093b2c] text-emerald-300" : "bg-[#003687] text-blue-200"
+          className={`flex items-center gap-2 px-5 py-3 text-xs font-extrabold ${
+            reservable
+              ? "bg-primary/15 text-primary"
+              : "bg-secondary text-secondary-foreground"
           }`}
         >
           <Info className="size-4 shrink-0" />
@@ -176,93 +188,88 @@ export function SessionSheet({
         <div className="space-y-4 p-5">
           <SheetHeader className="space-y-2 p-0 text-left">
             <div className="flex flex-wrap items-center gap-2">
-              <Badge className="bg-[#252b38] text-xs font-medium text-slate-200">
+              <Badge variant="secondary" className="font-bold">
                 {String(session.type || "Breakout")}
               </Badge>
-              <Badge variant="outline" className="border-white/15 font-mono text-xs text-slate-300">
+              <Badge variant="outline" className="font-mono text-xs font-bold">
                 Level {level}
               </Badge>
               {session.code ? (
-                <Badge variant="outline" className="border-[#9b8afb]/40 font-mono text-xs text-[#9b8afb]">
+                <Badge className="bg-accent text-accent-foreground font-mono text-xs font-bold">
                   {session.code}
                 </Badge>
               ) : null}
             </div>
-            <SheetTitle className="text-lg font-bold leading-snug text-white">
+            <SheetTitle className="font-heading text-xl font-black leading-snug text-foreground">
               {session.title}
             </SheetTitle>
-            <SheetDescription className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-slate-300">
+            <SheetDescription className="flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs font-semibold text-muted-foreground">
               <span className="inline-flex items-center gap-1">
-                <Calendar className="size-3.5 text-slate-400" />
+                <Calendar className="size-3.5" />
                 {String(session.start ?? "").slice(0, 10) || "Nov 30"}
               </span>
               <span className="inline-flex items-center gap-1">
-                <Clock className="size-3.5 text-slate-400" />
+                <Clock className="size-3.5" />
                 {formatClock(session.start)} ({durationMins(session.start, session.end)})
               </span>
               <span className="inline-flex items-center gap-1">
-                <MapPin className="size-3.5 text-slate-400" />
+                <MapPin className="size-3.5" />
                 {[session.venue, session.room].filter(Boolean).join(" • ")}
               </span>
             </SheetDescription>
           </SheetHeader>
 
           {speakers.length > 0 ? (
-            <div className="rounded-xl bg-[#1c212d] p-3 text-xs">
-              <span className="font-semibold text-white">Speakers </span>
-              <span className="text-slate-300">{speakers.join("  •  ")}</span>
+            <div className="card-tactile p-3 text-xs">
+              <span className="font-extrabold">Speakers: </span>
+              <span className="text-muted-foreground">{speakers.join("  •  ")}</span>
             </div>
           ) : null}
 
           {services.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {services.map((svc) => (
-                <span
-                  key={svc}
-                  className="rounded-full border border-white/10 bg-[#1a1f2a] px-2.5 py-0.5 text-[11px] text-slate-300"
-                >
+                <Badge key={svc} variant="outline" className="text-xs font-bold">
                   {svc}
-                </span>
+                </Badge>
               ))}
             </div>
           ) : null}
 
-          <p className="text-sm leading-relaxed text-slate-300">
+          <p className="text-sm leading-relaxed text-muted-foreground">
             {session.abstract ||
               "Explore deep architectural patterns, production lessons learned, and implementation guidance with AWS engineers and community builders at re:Invent 2026."}
           </p>
 
-          <div className="flex gap-2.5 pt-1">
+          <div className="flex gap-3 pt-1">
             {reservable ? (
               <Button
+                size="lg"
                 onClick={() => void handleReserve()}
                 disabled={reserving}
-                className="h-11 flex-1 rounded-full bg-[#0095ff] font-semibold text-white hover:bg-[#0095ff]/90"
+                className="flex-1"
               >
-                <TicketCheck className="mr-1.5 size-4" />
-                {reserving ? "Checking seat…" : "Reserve seat"}
+                <TicketCheck className="size-4" />
+                {reserving ? "Checking seat…" : "Reserve Seat"}
               </Button>
             ) : null}
             <Button
+              size="lg"
+              variant={isFav ? "secondary" : "outline"}
               onClick={() => void handleFavorite()}
               disabled={savingFav}
-              variant={isFav ? "default" : "secondary"}
-              className={`h-11 flex-1 rounded-full font-semibold ${
-                isFav
-                  ? "bg-white text-slate-950 hover:bg-slate-200"
-                  : "bg-[#222836] text-white hover:bg-[#2b3242]"
-              }`}
+              className="flex-1"
             >
-              <Heart className={`mr-1.5 size-4 ${isFav ? "fill-rose-500 text-rose-500" : ""}`} />
+              <Heart className={`size-4 ${isFav ? "fill-destructive text-destructive" : ""}`} />
               {isFav ? "Favorited" : "Favorite"}
             </Button>
           </div>
 
-          <div className="space-y-2.5 rounded-2xl border border-white/10 bg-[#1a1f2b] p-3.5">
+          <div className="card-tactile space-y-2.5 p-4">
             <div className="flex items-center justify-between">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-white">
-                <Sparkles className="size-3.5 text-[#9b8afb]" />
-                Session survey & gap reflection
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold">
+                <Sparkles className="size-4 text-primary" />
+                Session Quest & Gap Reflection (+50 XP)
               </span>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -271,11 +278,13 @@ export function SessionSheet({
                     type="button"
                     onClick={() => handleRate(star)}
                     aria-label={`Rate ${star} stars`}
-                    className="p-0.5 text-amber-400 transition-transform hover:scale-110"
+                    className="p-0.5 transition-transform hover:scale-125"
                   >
                     <Star
-                      className={`size-4 ${
-                        star <= rating ? "fill-amber-400 text-amber-400" : "text-slate-600"
+                      className={`size-5 ${
+                        star <= rating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-muted-foreground/40"
                       }`}
                     />
                   </button>
@@ -287,15 +296,10 @@ export function SessionSheet({
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder="Key takeaway for your team's architecture…"
-                className="h-9 border-white/10 bg-[#11151d] text-xs text-white"
+                className="text-xs"
               />
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={handleSaveNote}
-                className="h-9 bg-[#2a3142] text-xs text-white"
-              >
-                Save note
+              <Button size="sm" variant="secondary" onClick={handleSaveNote}>
+                Save Note
               </Button>
             </div>
           </div>

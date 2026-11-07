@@ -8,20 +8,22 @@ import {
   ArrowRight,
   ArrowUp,
   Calendar,
-  ChevronLeft,
   Clock,
   ExternalLink,
+  Flame,
   GitBranch,
   Heart,
   Info,
+  LogIn,
   Maximize2,
-  Menu,
   Sparkles,
   Timer,
+  Trophy,
   X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAppShell } from "@/components/app-shell";
 import {
@@ -38,8 +40,7 @@ const STORIES = [
   {
     id: "reserve",
     title: "Reserve your seat now",
-    gradient: "from-[#a81c83] via-[#6b1fd1] to-[#230b5c]",
-    activeRing: true,
+    badge: "Quest 1",
     detailTitle: "Reserved Seating & Walk-Up Rules",
     detailBody:
       "Reserved seating is live via ReserveSessions on the AWS Events API. Remember the 10-minute seat forfeiture rule: reserved seats are released to the walk-up line 10 minutes before start time.",
@@ -49,8 +50,7 @@ const STORIES = [
   {
     id: "know",
     title: "Know before you go",
-    gradient: "from-[#0095ff] via-[#2b3595] to-[#121629]",
-    activeRing: false,
+    badge: "Quest 2",
     detailTitle: "Know Before You Go: Las Vegas Campus",
     detailBody:
       "Pick up your badge at Harry Reid Airport (LAS) or The Venetian, Caesars Forum, Wynn, or MGM Grand. Wear comfortable shoes—walking Venetian to Wynn takes 18 minutes.",
@@ -60,8 +60,7 @@ const STORIES = [
   {
     id: "week",
     title: "Your week, your way",
-    gradient: "from-[#8c27b0] via-[#4a1882] to-[#121024]",
-    activeRing: false,
+    badge: "Quest 3",
     detailTitle: "Your Week, Your Way: Repo-Driven Planning",
     detailBody:
       "Scan your GitHub repository to automatically diagnose AWS architecture gaps, prescribe a walkable 5-day schedule, and export remediation tickets with acceptance tests.",
@@ -71,8 +70,7 @@ const STORIES = [
   {
     id: "keynotes",
     title: "Keynotes at re:Invent",
-    gradient: "from-[#0088ff] via-[#5d26c1] to-[#1a0f3b]",
-    activeRing: false,
+    badge: "Quest 4",
     detailTitle: "Featured Keynotes at re:Invent 2026",
     detailBody:
       "Don't miss the CEO Keynote, Developer Keynote (Eric Johnson & Marc Brooker), AI & Data Keynote, and Infrastructure Keynote.",
@@ -82,8 +80,7 @@ const STORIES = [
   {
     id: "parties",
     title: "171 Vegas Parties",
-    gradient: "from-[#e84393] via-[#6c5ce7] to-[#19162b]",
-    activeRing: false,
+    badge: "Bonus",
     detailTitle: "171 Unofficial Parties (conferenceparties.com)",
     detailBody:
       "Explore all 171 vendor and community parties across 6 nights (Sunday Nov 29 – Friday Dec 4) with direct RSVP links and Google Maps pins.",
@@ -109,7 +106,7 @@ const CURATED_RECOMMENDATIONS: ReinventSession[] = [
     tracks: ["Keynote"],
     topics: ["Developer Tools", "Agentic AI"],
     services: ["Bedrock", "Kiro", "Lambda"],
-    speakers: ["Eric Johnson", "Marc Brooker", " Emily Freeman"],
+    speakers: ["Eric Johnson", "Marc Brooker", "Emily Freeman"],
   },
   {
     sessionId: "SESS-AGENT-3001",
@@ -151,16 +148,17 @@ const CURATED_RECOMMENDATIONS: ReinventSession[] = [
 
 export default function HomePage() {
   const router = useRouter();
-  const { openMcp, openMore, openSession } = useAppShell();
+  const { openMcp, openMore, openSession, signedIn } = useAppShell();
 
-  const [showSwitchBanner, setShowSwitchBanner] = useState(true);
   const [activeStory, setActiveStory] = useState<(typeof STORIES)[number] | null>(null);
   const [catalog, setCatalog] = useState<ReinventSession[]>([]);
   const [askText, setAskText] = useState("");
 
   // Repo Scanner state (right on top of the Ask AWS button!)
   const [scannerOpen, setScannerOpen] = useState(false);
-  const [repoInput, setRepoInput] = useState("https://github.com/aws-samples/aws-serverless-ecommerce-platform");
+  const [repoInput, setRepoInput] = useState(
+    "https://github.com/aws-samples/aws-serverless-ecommerce-platform",
+  );
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
 
@@ -197,7 +195,8 @@ export default function HomePage() {
     return pool.filter((s) => !dismissedIds.includes(s.sessionId));
   }, [catalog, dismissedIds]);
 
-  const currentRec = recommendations[recIndex % Math.max(1, recommendations.length)] ?? CURATED_RECOMMENDATIONS[0];
+  const currentRec =
+    recommendations[recIndex % Math.max(1, recommendations.length)] ?? CURATED_RECOMMENDATIONS[0];
 
   const alertCount = useMemo(() => {
     if (catalog.length === 0) return 20;
@@ -222,7 +221,7 @@ export default function HomePage() {
       setScanResult(data);
       saveLastScan(data);
       toast.success(
-        `Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}: ${data.gaps.length} architecture gaps found!`,
+        `+100 XP! Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}: ${data.gaps.length} architecture gaps found!`,
       );
     } catch {
       toast.error("Could not reach the repository scanner.");
@@ -240,7 +239,7 @@ export default function HomePage() {
     if (!currentRec) return;
     const nextFavs = addLocalFavorite(currentRec.sessionId);
     setFavIds(nextFavs);
-    toast.success(`Saved "${currentRec.title}" to your Favorites!`);
+    toast.success(`+25 XP! Saved "${currentRec.title}" to your Favorites!`);
     try {
       await fetch("/api/favorite", {
         method: "POST",
@@ -254,103 +253,67 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-6 pb-6">
-      {/* Top Official Header */}
-      <header className="px-4 pt-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <ChevronLeft className="size-6 text-slate-300" />
-            <div className="leading-none">
-              <div className="flex items-baseline gap-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300">
-                  AWS
-                </span>
-                <span className="text-2xl font-light tracking-tight text-white">
-                  <span className="font-normal text-slate-300">re:</span>Invent
-                </span>
-              </div>
+    <div className="space-y-8 pb-8">
+      {/* Authentication Prompt Banner when not signed in */}
+      {!signedIn ? (
+        <div className="card-tactile flex flex-wrap items-center justify-between gap-3 bg-secondary/40 p-4">
+          <div className="flex items-center gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl border-2 border-primary bg-primary/15 text-primary">
+              <LogIn className="size-5" />
+            </span>
+            <div>
+              <p className="font-heading text-sm font-black">
+                Connect your AWS Builder ID to sync live reservations
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Sign in via OAuth 2.0 PKCE (`localhost:8484`) to write reservations, favorites, and
+                personal time to the live AWS Events API.
+              </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => openMore("main")}
-            aria-label="Open More menu"
-            className="rounded-lg p-1.5 text-white hover:bg-white/10"
-          >
-            <Menu className="size-6" />
-          </button>
-        </div>
-        <p className="mt-1 pl-8 text-xs text-slate-400">November 30 - December 4, 2026</p>
-      </header>
-
-      {/* Blue Switch Interface Banner */}
-      {showSwitchBanner ? (
-        <div className="flex items-center justify-between bg-[#003181] px-4 py-2.5 text-xs text-white">
-          <div className="flex items-center gap-2">
-            <Info className="size-4 shrink-0 text-[#5ab4ff]" />
-            <span>Switch to a familiar app interface.</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => router.push("/catalog")}
-              className="font-semibold text-[#5ab4ff] hover:underline"
-            >
-              Switch
-            </button>
-            <button
-              type="button"
-              aria-label="Dismiss banner"
-              onClick={() => setShowSwitchBanner(false)}
-              className="text-slate-300 hover:text-white"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
+          <Link href="/login">
+            <Button size="sm">Sign In with Builder ID</Button>
+          </Link>
         </div>
       ) : null}
 
-      {/* Top Story Cards Carousel */}
+      {/* Top Story Quest Cards */}
       <section className="space-y-3">
-        <div className="flex gap-3 overflow-x-auto px-4 pb-1 no-scrollbar">
-          {STORIES.map((story) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {STORIES.map((story, idx) => (
             <button
               key={story.id}
               type="button"
               onClick={() => setActiveStory(story)}
-              className={`relative flex h-[138px] w-[122px] shrink-0 flex-col justify-end overflow-hidden rounded-2xl bg-gradient-to-br ${story.gradient} p-3 text-left transition-transform hover:scale-[1.02] ${
-                story.activeRing
-                  ? "ring-2 ring-slate-300 ring-offset-2 ring-offset-[#0b0d13]"
-                  : "border border-white/15"
-              }`}
+              className="card-tactile-interactive flex min-h-[120px] flex-col justify-between p-4 text-left"
             >
-              <span className="text-xs font-bold leading-snug text-white drop-shadow">
+              <div className="flex items-center justify-between">
+                <Badge variant={idx === 0 ? "default" : "secondary"} className="text-[11px] font-extrabold">
+                  {story.badge}
+                </Badge>
+                <Flame className="size-4 text-amber-500" />
+              </div>
+              <span className="font-heading text-sm font-extrabold leading-snug">
                 {story.title}
               </span>
             </button>
           ))}
         </div>
-        <div className="flex justify-center gap-1.5">
-          <span className="size-2 rounded-full border border-white bg-white/80" />
-          <span className="size-2 rounded-full border border-slate-600 bg-transparent" />
-        </div>
       </section>
 
       {/* Story Modal if clicked */}
       {activeStory ? (
-        <div className="mx-4 rounded-2xl border border-[#9b8afb]/40 bg-[#171c28] p-4 shadow-xl">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-sm font-bold text-white">{activeStory.detailTitle}</h3>
-            <button
-              type="button"
-              onClick={() => setActiveStory(null)}
-              className="text-slate-400 hover:text-white"
-            >
-              <X className="size-4" />
-            </button>
-          </div>
-          <p className="mt-1.5 text-xs leading-relaxed text-slate-300">{activeStory.detailBody}</p>
-          <div className="mt-3">
+        <Card className="animate-bounce-pop border-primary bg-primary/5">
+          <CardHeader>
+            <div className="flex items-start justify-between gap-2">
+              <CardTitle className="text-base">{activeStory.detailTitle}</CardTitle>
+              <Button variant="ghost" size="icon-xs" onClick={() => setActiveStory(null)}>
+                <X className="size-4" />
+              </Button>
+            </div>
+            <CardDescription>{activeStory.detailBody}</CardDescription>
+          </CardHeader>
+          <CardContent>
             {activeStory.ctaHref ? (
               <Button
                 size="sm"
@@ -359,7 +322,6 @@ export default function HomePage() {
                   setActiveStory(null);
                   router.push(href);
                 }}
-                className="rounded-full bg-[#9b8afb] text-xs font-semibold text-[#101218]"
               >
                 {activeStory.ctaLabel}
               </Button>
@@ -372,358 +334,365 @@ export default function HomePage() {
                   if (act === "badge") openMore("badge");
                   if (act === "scan") void runRepoScan(SAMPLE_REPO);
                 }}
-                className="rounded-full bg-[#9b8afb] text-xs font-semibold text-[#101218]"
               >
                 {activeStory.ctaLabel}
               </Button>
             )}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       ) : null}
 
-      {/* Greeting */}
-      <section className="px-4">
-        <h1 className="text-[28px] font-bold leading-[1.2] tracking-tight text-white">
-          <span className="inline-flex items-center gap-1.5 text-[#9b8afb]">
-            <Sparkles className="size-6" />
-            Good afternoon,
-          </span>{" "}
-          I&apos;m here to help you get ready for re:Invent.
-        </h1>
-      </section>
+      {/* Main Two-Column Grid on Desktop / Single Column on Mobile */}
+      <div className="grid gap-8 lg:grid-cols-12">
+        {/* Left Column: Hero Greeting + Seat Alerts + Repo Scanner + Ask AWS */}
+        <div className="space-y-6 lg:col-span-7">
+          <section className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border-2 border-primary/30 bg-primary/10 px-3 py-1 text-xs font-extrabold text-primary">
+              <Sparkles className="size-3.5" />
+              <span>AI + MCP Powered Companion</span>
+            </div>
+            <h1 className="font-heading text-3xl font-black leading-tight tracking-tight sm:text-4xl">
+              Good afternoon! Let&apos;s level up your{" "}
+              <span className="text-primary">re:Invent 2026</span> week.
+            </h1>
+          </section>
 
-      {/* Session Alerts Card */}
-      <section className="px-4">
-        <button
-          type="button"
-          onClick={() => router.push("/catalog?filter=open")}
-          className="flex w-full flex-col items-start rounded-2xl bg-[#1e232e] p-5 text-left transition-colors hover:bg-[#252b38]"
-        >
-          <span className="rounded bg-[#e96d63] px-2.5 py-1 font-mono text-xs font-semibold text-[#1a0c0a]">
-            Few seats left
-          </span>
-          <p className="mt-3 text-lg font-bold text-white">{alertCount} session alerts</p>
-          <p className="mt-0.5 text-xs text-slate-300">Seats are filling up</p>
-          <ArrowRight className="mt-4 size-5 text-slate-200" />
-        </button>
-      </section>
+          {/* Session Alerts Card */}
+          <button
+            type="button"
+            onClick={() => router.push("/catalog?filter=open")}
+            className="card-tactile-interactive flex w-full items-center justify-between p-5 text-left"
+          >
+            <div className="space-y-1">
+              <Badge variant="destructive" className="font-mono text-xs font-bold">
+                Few seats left
+              </Badge>
+              <p className="font-heading pt-1 text-lg font-black">{alertCount} session alerts</p>
+              <p className="text-xs font-medium text-muted-foreground">
+                Seats are filling up — reserve now or plan walk-up buffers
+              </p>
+            </div>
+            <span className="btn-tactile flex size-10 items-center justify-center rounded-2xl">
+              <ArrowRight className="size-5" />
+            </span>
+          </button>
 
-      {/* "What can I help you get done?" + Repo Scanner Button RIGHT ON TOP of Ask AWS */}
-      <section className="space-y-3 px-4">
-        <h2 className="text-lg font-bold text-white">What can I help you get done?</h2>
+          {/* "What can I help you get done?" + Repo Scanner Button RIGHT ON TOP of Ask AWS */}
+          <section className="space-y-4">
+            <h2 className="font-heading text-xl font-black">What can I help you get done?</h2>
 
-        {/* OUR REPO:INVENT BUTTON RIGHT ON TOP OF THE ASK AWS BUTTON */}
-        <div className="rounded-2xl border border-[#9b8afb]/40 bg-gradient-to-r from-[#1c1836] via-[#171d2b] to-[#1a2234] p-3">
-          <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
-              onClick={() => setScannerOpen((prev) => !prev)}
-              className="flex flex-1 items-center gap-2.5 text-left"
-            >
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#9b8afb] text-[#101218]">
-                <GitBranch className="size-5" />
-              </span>
-              <div>
-                <p className="text-sm font-bold text-white">
-                  Scan GitHub Repo for AWS Suggestions
-                </p>
-                <p className="text-[11px] text-slate-300">
-                  Diagnose repo architecture gaps → prescribe sessions & tickets
-                </p>
+            {/* OUR REPO:INVENT BUTTON RIGHT ON TOP OF THE ASK AWS BUTTON */}
+            <div className="card-tactile border-primary bg-primary/5 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => setScannerOpen((prev) => !prev)}
+                  className="flex flex-1 items-center gap-3 text-left"
+                >
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-primary-foreground shadow-tactile-primary">
+                    <GitBranch className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-heading text-base font-black">
+                      Scan GitHub Repo for AWS Suggestions
+                    </p>
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Diagnose architecture gaps → prescribe walkable sessions & tickets
+                    </p>
+                  </div>
+                </button>
+                <Button
+                  size="sm"
+                  onClick={() => void runRepoScan(SAMPLE_REPO)}
+                  disabled={scanning}
+                >
+                  <Trophy className="size-4" />
+                  {scanning ? "Scanning…" : "Try Sample Repo"}
+                </Button>
               </div>
-            </button>
-            <Button
-              size="sm"
-              onClick={() => void runRepoScan(SAMPLE_REPO)}
-              disabled={scanning}
-              className="h-8 shrink-0 rounded-full bg-[#9b8afb] px-3 text-xs font-semibold text-[#101218] hover:bg-[#9b8afb]/90"
-            >
-              {scanning ? "Scanning…" : "Try Sample"}
-            </Button>
-          </div>
 
-          {scannerOpen ? (
+              {scannerOpen ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (repoInput.trim()) void runRepoScan(repoInput.trim());
+                  }}
+                  className="mt-4 space-y-2.5 border-t-2 border-border pt-3"
+                >
+                  <div className="flex gap-2">
+                    <Input
+                      value={repoInput}
+                      onChange={(e) => setRepoInput(e.target.value)}
+                      placeholder="https://github.com/owner/repository"
+                      aria-label="GitHub repository URL"
+                      className="font-mono text-xs"
+                    />
+                    <Button type="submit" variant="secondary" disabled={scanning}>
+                      {scanning ? "Reading…" : "Scan Repo"}
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                    <span className="font-bold">Quick targets:</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRepoInput(SAMPLE_REPO);
+                        void runRepoScan(SAMPLE_REPO);
+                      }}
+                      className="font-extrabold text-primary underline"
+                    >
+                      Bundled Sample (6 gaps)
+                    </button>
+                    <span>•</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url =
+                          "https://github.com/aws-samples/aws-serverless-ecommerce-platform";
+                        setRepoInput(url);
+                        void runRepoScan(url);
+                      }}
+                      className="font-extrabold text-primary underline"
+                    >
+                      aws-serverless-ecommerce-platform
+                    </button>
+                  </div>
+                </form>
+              ) : null}
+            </div>
+
+            {/* Official "Ask me anything..." Box directly below Repo button */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                if (repoInput.trim()) void runRepoScan(repoInput.trim());
+                if (!askText.trim()) {
+                  openMcp();
+                  return;
+                }
+                const q = askText.trim();
+                setAskText("");
+                openMcp(q);
               }}
-              className="mt-3 space-y-2 border-t border-white/10 pt-3"
+              className="card-tactile flex items-center justify-between gap-2 px-4 py-2"
             >
-              <div className="flex gap-2">
-                <Input
-                  value={repoInput}
-                  onChange={(e) => setRepoInput(e.target.value)}
-                  placeholder="https://github.com/owner/repository"
-                  aria-label="GitHub repository URL"
-                  className="h-10 border-white/15 bg-[#0f131c] font-mono text-xs text-white"
+              <div className="flex flex-1 items-center gap-2.5">
+                <Sparkles className="size-5 shrink-0 text-primary" />
+                <input
+                  type="text"
+                  value={askText}
+                  onChange={(e) => setAskText(e.target.value)}
+                  placeholder="Ask me anything about re:Invent, sessions, or parties..."
+                  aria-label="Ask me anything"
+                  className="w-full bg-transparent py-1.5 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
-                <Button
-                  type="submit"
-                  disabled={scanning}
-                  className="h-10 shrink-0 rounded-xl bg-white px-4 text-xs font-semibold text-slate-950 hover:bg-slate-200"
-                >
-                  {scanning ? "Reading…" : "Scan Repo"}
-                </Button>
               </div>
-              <div className="flex flex-wrap items-center gap-2 text-[11px] text-slate-400">
-                <span>Quick targets:</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setRepoInput(SAMPLE_REPO);
-                    void runRepoScan(SAMPLE_REPO);
-                  }}
-                  className="text-[#9b8afb] underline"
-                >
-                  Bundled Sample (5 gaps)
-                </button>
-                <span>•</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = "https://github.com/aws-samples/aws-serverless-ecommerce-platform";
-                    setRepoInput(url);
-                    void runRepoScan(url);
-                  }}
-                  className="text-[#9b8afb] underline"
-                >
-                  aws-serverless-ecommerce-platform
-                </button>
-              </div>
+              <Button type="submit" size="icon-sm" aria-label="Send question to AWS MCP agent">
+                <ArrowUp className="size-4" />
+              </Button>
             </form>
+
+            {/* Quick Action Chips */}
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "Plan my day", prompt: "Plan my day at re:Invent with walkable sessions" },
+                {
+                  label: "Recommend sessions",
+                  prompt: "Recommend 300-level Bedrock and serverless sessions",
+                },
+                { label: "Find open sessions", prompt: "Find sessions with open reservable seats" },
+                {
+                  label: "Tonight's parties",
+                  prompt: "What parties are happening Tuesday night at The Venetian?",
+                },
+              ].map((chip) => (
+                <button
+                  key={chip.label}
+                  type="button"
+                  onClick={() => openMcp(chip.prompt)}
+                  className="chip-tactile"
+                >
+                  {chip.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* Inline Repo Scan Results when a repo has been scanned */}
+          {scanResult ? (
+            <InlineScanResult result={scanResult} onClose={() => setScanResult(null)} />
           ) : null}
         </div>
 
-        {/* Official "Ask me anything..." Box directly below Repo button */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!askText.trim()) {
-              openMcp();
-              return;
-            }
-            const q = askText.trim();
-            setAskText("");
-            openMcp(q);
-          }}
-          className="flex items-center justify-between rounded-2xl border border-slate-600/80 bg-[#11141c] px-4 py-2.5 focus-within:border-[#9b8afb]"
-        >
-          <div className="flex flex-1 items-center gap-2.5">
-            <Sparkles className="size-4 shrink-0 text-[#9b8afb]" />
-            <input
-              type="text"
-              value={askText}
-              onChange={(e) => setAskText(e.target.value)}
-              placeholder="Ask me anything..."
-              aria-label="Ask me anything"
-              className="w-full bg-transparent text-sm text-white placeholder:text-[#9b8afb]/80 focus:outline-none"
-            />
-          </div>
-          <button
-            type="submit"
-            aria-label="Send question to AWS MCP agent"
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#262b38] text-slate-200 transition-colors hover:bg-[#9b8afb] hover:text-[#101218]"
-          >
-            <ArrowUp className="size-4" />
-          </button>
-        </form>
+        {/* Right Column: Swipeable AI Recommendations + Quick Links */}
+        <div className="space-y-6 lg:col-span-5">
+          <section className="space-y-4">
+            <h2 className="font-heading text-xl font-black leading-snug">
+              I have a few <span className="text-primary">Recommendations</span> for you based on
+              your open time slots.
+            </h2>
 
-        {/* Quick Action Chips */}
-        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          {[
-            { label: "Plan my day", prompt: "Plan my day at re:Invent with walkable sessions" },
-            { label: "Recommend sessions", prompt: "Recommend 300-level Bedrock and serverless sessions" },
-            { label: "Find open sessions", prompt: "Find sessions with open reservable seats" },
-            { label: "Tonight's parties", prompt: "What parties are happening Tuesday night at The Venetian?" },
-          ].map((chip) => (
-            <button
-              key={chip.label}
-              type="button"
-              onClick={() => openMcp(chip.prompt)}
-              className="shrink-0 rounded-full bg-[#1e232e] px-4 py-2 text-xs font-medium text-slate-200 transition-colors hover:bg-[#2a3140] hover:text-white"
-            >
-              {chip.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Inline Repo Scan Results when a repo has been scanned */}
-      {scanResult ? (
-        <section className="px-4">
-          <InlineScanResult
-            result={scanResult}
-            onClose={() => setScanResult(null)}
-          />
-        </section>
-      ) : null}
-
-      {/* Swipeable AI Recommendations Section (Screenshots 5 & 6) */}
-      <section className="space-y-4 px-4 pt-2">
-        <h2 className="text-xl font-bold leading-snug text-white">
-          I have a few <span className="text-[#9b8afb]">Recommendations</span> for you based on your
-          open time slots. Swipe to explore.
-        </h2>
-
-        {currentRec ? (
-          <div className="space-y-4">
-            <div
-              onClick={() => openSession(currentRec)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  openSession(currentRec);
-                }
-              }}
-              className="cursor-pointer overflow-hidden rounded-2xl border border-white/10 bg-[#1e232e] transition-colors hover:border-[#9b8afb]/40"
-            >
-              <div
-                className={`flex items-center gap-2 px-4 py-2.5 text-xs font-medium ${
-                  currentRec.availability?.reservable === false
-                    ? "bg-[#003687] text-white"
-                    : "bg-[#093b2c] text-emerald-200"
-                }`}
-              >
-                <Info className="size-4" />
-                <span>
-                  {currentRec.availability?.reservable === false
-                    ? "Walk-up only"
-                    : "Reservable seat available"}
-                </span>
-              </div>
-
-              <div className="space-y-3 p-5">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <p className="font-mono text-xs text-slate-300">AI Recommended</p>
-                    <span className="inline-block rounded-md bg-[#c5d1db] px-2.5 py-1 font-mono text-xs font-semibold text-slate-950">
-                      {String(currentRec.type || "Keynote")}
+            {currentRec ? (
+              <div className="space-y-4">
+                <div
+                  onClick={() => openSession(currentRec)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openSession(currentRec);
+                    }
+                  }}
+                  className="card-tactile-interactive overflow-hidden p-0"
+                >
+                  <div
+                    className={`flex items-center gap-2 border-b-2 border-border px-4 py-2.5 text-xs font-extrabold ${
+                      currentRec.availability?.reservable === false
+                        ? "bg-secondary text-secondary-foreground"
+                        : "bg-primary/15 text-primary"
+                    }`}
+                  >
+                    <Info className="size-4" />
+                    <span>
+                      {currentRec.availability?.reservable === false
+                        ? "Walk-up only"
+                        : "Reservable seat available"}
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    aria-label="Expand session details"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openSession(currentRec);
-                    }}
-                    className="flex size-9 items-center justify-center rounded-full bg-[#10131a] text-slate-200 hover:text-white"
+
+                  <div className="space-y-3 p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1.5">
+                        <p className="font-mono text-xs font-bold text-muted-foreground">
+                          AI Recommended
+                        </p>
+                        <Badge variant="secondary" className="font-mono text-xs font-extrabold">
+                          {String(currentRec.type || "Keynote")}
+                        </Badge>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="icon-sm"
+                        aria-label="Expand session details"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openSession(currentRec);
+                        }}
+                      >
+                        <Maximize2 className="size-4" />
+                      </Button>
+                    </div>
+
+                    <h3 className="font-heading pt-1 text-xl font-black leading-snug">
+                      {currentRec.title}
+                    </h3>
+
+                    <div className="flex flex-wrap items-center gap-4 font-mono text-xs font-semibold text-muted-foreground">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar className="size-3.5" />
+                        {formatShortDate(currentRec.start)}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock className="size-3.5" />
+                        {formatClockTime(currentRec.start)}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Timer className="size-3.5" />
+                        {formatDurationMins(currentRec.start, currentRec.end)}
+                      </span>
+                    </div>
+
+                    {currentRec.speakers && currentRec.speakers.length > 0 ? (
+                      <p className="text-xs text-muted-foreground">
+                        <span className="font-extrabold text-foreground">Speakers: </span>
+                        {currentRec.speakers.slice(0, 2).join(" • ")}
+                        {currentRec.speakers.length > 2
+                          ? ` +${currentRec.speakers.length - 2}`
+                          : ""}
+                      </p>
+                    ) : null}
+
+                    <p className="line-clamp-4 text-sm leading-relaxed text-muted-foreground">
+                      {currentRec.abstract ||
+                        "Join AWS engineers and community leaders for deep architectural insights, live demonstrations, and production patterns at re:Invent 2026."}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Dismiss (X) and Favorite (Heart) tactile circular action buttons */}
+                <div className="flex items-center justify-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="icon-lg"
+                    aria-label="Dismiss recommendation"
+                    onClick={handleDismissRec}
                   >
-                    <Maximize2 className="size-4" />
-                  </button>
+                    <X className="size-5" />
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="icon-lg"
+                    aria-label="Favorite recommended session"
+                    onClick={() => void handleHeartRec()}
+                  >
+                    <Heart
+                      className={`size-5 ${
+                        favIds.includes(currentRec.sessionId) ? "fill-current" : ""
+                      }`}
+                    />
+                  </Button>
                 </div>
+              </div>
+            ) : null}
+          </section>
 
-                <h3 className="pt-1 text-xl font-bold leading-snug text-white">
-                  {currentRec.title}
-                </h3>
+          {/* Quick Links Section */}
+          <section className="space-y-3 pt-2">
+            <h2 className="font-heading text-lg font-black">Quick links</h2>
 
-                <div className="flex flex-wrap items-center gap-4 font-mono text-xs text-slate-300">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Calendar className="size-3.5 text-slate-400" />
-                    {formatShortDate(currentRec.start)}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Clock className="size-3.5 text-slate-400" />
-                    {formatClockTime(currentRec.start)}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <Timer className="size-3.5 text-slate-400" />
-                    {formatDurationMins(currentRec.start, currentRec.end)}
-                  </span>
-                </div>
-
-                {currentRec.speakers && currentRec.speakers.length > 0 ? (
-                  <p className="text-xs text-slate-300">
-                    <span className="font-bold text-white">Speakers </span>{" "}
-                    {currentRec.speakers.slice(0, 2).join("  ")}
-                    {currentRec.speakers.length > 2 ? `  +${currentRec.speakers.length - 2}` : ""}
-                  </p>
-                ) : null}
-
-                <p className="line-clamp-4 text-sm leading-relaxed text-slate-200">
-                  {currentRec.abstract ||
-                    "Join AWS engineers and community leaders for deep architectural insights, live demonstrations, and production patterns at re:Invent 2026."}
+            <button
+              type="button"
+              onClick={() => openMore("faqs")}
+              className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left"
+            >
+              <div>
+                <p className="font-heading text-base font-extrabold">FAQs</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Got questions? We&apos;ve got the answers you need
                 </p>
               </div>
-            </div>
+              <ArrowRight className="size-5 shrink-0 text-primary" />
+            </button>
 
-            {/* Dismiss (X) and Favorite (Heart) circular action buttons */}
-            <div className="flex items-center justify-center gap-4">
-              <button
-                type="button"
-                aria-label="Dismiss recommendation"
-                onClick={handleDismissRec}
-                className="flex size-11 items-center justify-center rounded-full bg-[#1e232e] text-slate-300 transition-transform hover:scale-105 hover:text-white active:scale-95"
-              >
-                <X className="size-5" />
-              </button>
-              <button
-                type="button"
-                aria-label="Favorite recommended session"
-                onClick={() => void handleHeartRec()}
-                className="flex size-11 items-center justify-center rounded-full bg-white text-slate-950 shadow-md transition-transform hover:scale-105 active:scale-95"
-              >
-                <Heart
-                  className={`size-5 ${
-                    favIds.includes(currentRec.sessionId)
-                      ? "fill-rose-500 text-rose-500"
-                      : "fill-slate-950 text-slate-950"
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-        ) : null}
-      </section>
+            <button
+              type="button"
+              onClick={() => openMore("sponsors")}
+              className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left"
+            >
+              <div>
+                <p className="font-heading text-base font-extrabold">Sponsors</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Learn about industry-leading solutions featured across the event
+                </p>
+              </div>
+              <ArrowRight className="size-5 shrink-0 text-primary" />
+            </button>
 
-      {/* Quick Links Section (Screenshots 5 & 6) */}
-      <section className="space-y-3 px-4 pt-2">
-        <h2 className="text-lg font-bold text-white">Quick links</h2>
-
-        <button
-          type="button"
-          onClick={() => openMore("faqs")}
-          className="flex w-full items-center justify-between rounded-2xl bg-[#1e232e] p-5 text-left transition-colors hover:bg-[#252b38]"
-        >
-          <div>
-            <p className="text-base font-bold text-white">FAQs</p>
-            <p className="mt-1 text-xs text-slate-300">
-              Got questions? We&apos;ve got the answers you need
-            </p>
-          </div>
-          <ArrowRight className="size-5 shrink-0 text-slate-200" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => openMore("sponsors")}
-          className="flex w-full items-center justify-between rounded-2xl bg-[#1e232e] p-5 text-left transition-colors hover:bg-[#252b38]"
-        >
-          <div>
-            <p className="text-base font-bold text-white">Sponsors</p>
-            <p className="mt-1 text-xs text-slate-300">
-              Learn about industry-leading solutions featured across the event
-            </p>
-          </div>
-          <ArrowRight className="size-5 shrink-0 text-slate-200" />
-        </button>
-
-        <Link
-          href="/parties"
-          className="flex w-full items-center justify-between rounded-2xl bg-[#1e232e] p-5 text-left transition-colors hover:bg-[#252b38]"
-        >
-          <div>
-            <p className="text-base font-bold text-white">Conference Parties (171)</p>
-            <p className="mt-1 text-xs text-slate-300">
-              Unofficial vendor & community parties from conferenceparties.com with RSVP & maps
-            </p>
-          </div>
-          <ArrowRight className="size-5 shrink-0 text-slate-200" />
-        </Link>
-      </section>
+            <Link
+              href="/parties"
+              className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left"
+            >
+              <div>
+                <p className="font-heading text-base font-extrabold">Conference Parties (171)</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  Unofficial vendor & community parties from conferenceparties.com with RSVP & maps
+                </p>
+              </div>
+              <ArrowRight className="size-5 shrink-0 text-primary" />
+            </Link>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }
@@ -742,89 +711,67 @@ function InlineScanResult({
   const repoName = `${result.fingerprint.repo.owner}/${result.fingerprint.repo.repo}`;
 
   return (
-    <div className="space-y-4 rounded-2xl border border-[#9b8afb]/40 bg-[#141822] p-4">
+    <div className="card-tactile animate-float-up space-y-4 p-5">
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
-            <Badge className="bg-[#9b8afb] text-[10px] font-bold text-[#101218]">
-              repo:Invent Diagnosis
-            </Badge>
-            <span className="font-mono text-[11px] text-slate-400">
+            <Badge>repo:Invent Diagnosis</Badge>
+            <span className="font-mono text-xs text-muted-foreground">
               source: {result.snapshotSource}
             </span>
           </div>
-          <h3 className="mt-1 text-base font-bold text-white">{repoName}</h3>
-          <div className="mt-1 flex flex-wrap gap-1">
+          <h3 className="font-heading mt-1 text-lg font-black">{repoName}</h3>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
             {result.fingerprint.services.map((s) => (
-              <span
-                key={s.service}
-                className="rounded-full bg-[#1e2433] px-2 py-0.5 font-mono text-[10px] text-slate-300"
-              >
+              <Badge key={s.service} variant="secondary" className="font-mono text-[11px]">
                 {s.service}
-              </span>
+              </Badge>
             ))}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close scan result"
-          className="rounded-full p-1 text-slate-400 hover:text-white"
-        >
+        <Button variant="ghost" size="icon-xs" onClick={onClose} aria-label="Close scan result">
           <X className="size-4" />
-        </button>
+        </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-1.5 rounded-xl bg-[#0e1118] p-1">
-        <button
-          type="button"
+      <div className="grid grid-cols-3 gap-2">
+        <Button
+          size="sm"
+          variant={tab === "gaps" ? "default" : "outline"}
           onClick={() => setTab("gaps")}
-          className={`rounded-lg py-1.5 text-xs font-semibold ${
-            tab === "gaps" ? "bg-[#9b8afb] text-[#101218]" : "text-slate-300"
-          }`}
         >
           Gaps ({gaps.length})
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          size="sm"
+          variant={tab === "schedule" ? "default" : "outline"}
           onClick={() => setTab("schedule")}
-          className={`rounded-lg py-1.5 text-xs font-semibold ${
-            tab === "schedule" ? "bg-[#9b8afb] text-[#101218]" : "text-slate-300"
-          }`}
         >
           Week Plan ({days.reduce((s, d) => s + d.items.length, 0)})
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          size="sm"
+          variant={tab === "tickets" ? "default" : "outline"}
           onClick={() => setTab("tickets")}
-          className={`rounded-lg py-1.5 text-xs font-semibold ${
-            tab === "tickets" ? "bg-[#9b8afb] text-[#101218]" : "text-slate-300"
-          }`}
         >
           Tickets ({tickets.length})
-        </button>
+        </Button>
       </div>
 
       {tab === "gaps" ? (
         <div className="space-y-2.5">
           {gaps.map((g) => (
-            <div key={g.id} className="rounded-xl border border-white/10 bg-[#1b202d] p-3">
+            <div key={g.id} className="rounded-2xl border-2 border-border bg-muted/40 p-3.5">
               <div className="flex items-center justify-between">
-                <span
-                  className={`rounded px-2 py-0.5 font-mono text-[10px] font-bold uppercase ${
-                    g.severity === "high"
-                      ? "bg-[#e96d63]/20 text-[#e96d63]"
-                      : "bg-amber-500/20 text-amber-300"
-                  }`}
-                >
+                <Badge variant={g.severity === "high" ? "destructive" : "secondary"}>
                   {g.severity}
-                </span>
-                <span className="font-mono text-[10px] text-slate-400">
+                </Badge>
+                <span className="font-mono text-xs font-semibold text-muted-foreground">
                   Target: Level {g.targetLevel}
                 </span>
               </div>
-              <p className="mt-1.5 text-sm font-bold text-white">{g.title}</p>
-              <p className="mt-1 text-xs leading-relaxed text-slate-300">{g.why}</p>
+              <p className="font-heading mt-1.5 text-sm font-extrabold">{g.title}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{g.why}</p>
             </div>
           ))}
         </div>
@@ -834,23 +781,27 @@ function InlineScanResult({
         <div className="space-y-3">
           {days.map((d) => (
             <div key={d.date} className="space-y-1.5">
-              <p className="font-mono text-xs font-semibold text-[#9b8afb]">{d.date}</p>
+              <p className="font-mono text-xs font-extrabold text-primary">{d.date}</p>
               {d.items.map((item) => (
                 <div
                   key={`${d.date}-${item.sessionId}-${item.start}`}
-                  className="rounded-xl border border-white/10 bg-[#1b202d] p-3 text-xs"
+                  className="rounded-2xl border-2 border-border bg-muted/40 p-3 text-xs"
                 >
-                  <div className="flex items-center justify-between font-mono text-[11px] text-slate-400">
+                  <div className="flex items-center justify-between font-mono text-[11px] text-muted-foreground">
                     <span>
                       {String(item.start).slice(11, 16)} – {String(item.end).slice(11, 16)}
                     </span>
-                    <span className="text-emerald-300">{item.action}</span>
+                    <Badge variant="outline" className="text-[10px]">
+                      {item.action}
+                    </Badge>
                   </div>
-                  <p className="mt-1 font-bold text-white">{item.title}</p>
-                  <p className="mt-0.5 text-slate-300">
+                  <p className="font-heading mt-1 font-extrabold">{item.title}</p>
+                  <p className="mt-0.5 text-muted-foreground">
                     {item.venue} • Closes {item.gaps.length} gap(s)
                   </p>
-                  {item.note ? <p className="mt-1 text-[11px] text-slate-400">{item.note}</p> : null}
+                  {item.note ? (
+                    <p className="mt-1 text-[11px] text-muted-foreground">{item.note}</p>
+                  ) : null}
                 </div>
               ))}
             </div>
@@ -861,15 +812,15 @@ function InlineScanResult({
       {tab === "tickets" ? (
         <div className="space-y-2.5">
           {tickets.map((t) => (
-            <div key={t.id} className="rounded-xl border border-white/10 bg-[#1b202d] p-3 text-xs">
+            <div key={t.id} className="rounded-2xl border-2 border-border bg-muted/40 p-3.5 text-xs">
               <div className="flex items-center justify-between">
-                <span className="font-mono font-bold text-[#9b8afb]">{t.id}</span>
-                <span className="rounded bg-white/10 px-2 py-0.5 font-mono text-[10px] text-slate-200">
+                <span className="font-mono font-extrabold text-primary">{t.id}</span>
+                <Badge variant="secondary" className="font-mono text-[10px]">
                   Effort: {t.effort}
-                </span>
+                </Badge>
               </div>
-              <p className="mt-1 text-sm font-bold text-white">{t.title}</p>
-              <p className="mt-1 font-mono text-[11px] text-emerald-300">
+              <p className="font-heading mt-1 text-sm font-extrabold">{t.title}</p>
+              <p className="mt-1 font-mono text-[11px] font-semibold text-muted-foreground">
                 Acceptance: {t.acceptanceTest}
               </p>
             </div>
@@ -877,15 +828,15 @@ function InlineScanResult({
         </div>
       ) : null}
 
-      <div className="flex items-center justify-between border-t border-white/10 pt-2.5 text-xs">
-        <Link href="/calendar" className="font-semibold text-[#9b8afb] hover:underline">
+      <div className="flex items-center justify-between border-t-2 border-border pt-3 text-xs">
+        <Link href="/calendar" className="font-extrabold text-primary hover:underline">
           View on Calendar →
         </Link>
         <a
           href={`/api/report?repo=${encodeURIComponent(repoName)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 font-semibold text-[#2ea8ff] hover:underline"
+          className="inline-flex items-center gap-1 font-extrabold text-primary hover:underline"
         >
           Printable Report <ExternalLink className="size-3.5" />
         </a>

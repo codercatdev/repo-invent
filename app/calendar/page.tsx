@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ChevronRight, PartyPopper, Plus, Sparkles, Trash2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -194,7 +195,6 @@ export default function CalendarPage() {
       combined.set(`${item.kind}-${item.id}`, item);
     }
 
-    // Merge local favorites
     for (const favId of localFavIds) {
       const s = catalogMap.get(favId);
       if (s && !combined.has(`saved-${favId}`)) {
@@ -209,7 +209,6 @@ export default function CalendarPage() {
       }
     }
 
-    // Merge local personal blocks
     for (const b of localBlocks) {
       combined.set(`blocked-${b.id}`, {
         id: b.id,
@@ -221,7 +220,6 @@ export default function CalendarPage() {
       });
     }
 
-    // Also include prescribed sessions from the last repo scan if user has no API reservations yet
     const scan = typeof window !== "undefined" ? getLastScan() : null;
     const scanDay = scan?.schedule?.days?.find((d) => d.date === selectedDate);
     if (scanDay) {
@@ -234,13 +232,17 @@ export default function CalendarPage() {
             start: item.start,
             end: item.end,
             venue: item.venue,
-            kind: item.action === "reserve" ? "reserved" : item.action === "personal-time" ? "blocked" : "saved",
+            kind:
+              item.action === "reserve"
+                ? "reserved"
+                : item.action === "personal-time"
+                  ? "blocked"
+                  : "saved",
           });
         }
       }
     }
 
-    // Optionally overlay evening parties
     if (showParties) {
       for (const p of parties.filter((pt) => pt.date === selectedDate)) {
         const startIso = p.start ?? `${selectedDate}T19:00:00`;
@@ -259,7 +261,16 @@ export default function CalendarPage() {
       if (hideFavorites && entry.kind === "saved") return false;
       return String(entry.start).slice(0, 10) === selectedDate;
     });
-  }, [apiEntries, localFavIds, catalogMap, localBlocks, selectedDate, hideFavorites, showParties, parties]);
+  }, [
+    apiEntries,
+    localFavIds,
+    catalogMap,
+    localBlocks,
+    selectedDate,
+    hideFavorites,
+    showParties,
+    parties,
+  ]);
 
   const activeDayMeta =
     CONFERENCE_DAYS.find((d) => d.date === selectedDate) ?? CONFERENCE_DAYS[0];
@@ -333,27 +344,37 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="relative min-h-dvh bg-[#0b0d13] pb-16">
-      {/* Top Centered Header (Screenshot 1) */}
-      <header className="sticky top-0 z-20 bg-[#0b0d13]/95 py-3.5 text-center backdrop-blur-md">
-        <h1 className="text-base font-bold text-white">Your Calendar</h1>
-      </header>
+    <div className="space-y-6 pb-16">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-heading text-3xl font-black tracking-tight">Your Calendar</h1>
+          <p className="text-sm text-muted-foreground">
+            {activeDayMeta.month} 2026 • Manage reservations, favorites, personal blocks & party
+            overlays
+          </p>
+        </div>
 
-      {/* Month + Lavender "✦ Plan my day" Pill Row */}
-      <div className="flex items-center justify-between px-4 pt-2">
-        <span className="text-base font-bold text-white">{activeDayMeta.month}</span>
-        <button
-          type="button"
-          onClick={() => openMcp(`Plan my day for ${activeDayMeta.dow} ${activeDayMeta.date} with walkable sessions and evening parties`)}
-          className="inline-flex items-center gap-1.5 rounded-full bg-[#9b8afb] px-4 py-2 text-xs font-semibold text-[#101218] shadow transition-transform active:scale-95"
-        >
-          <Sparkles className="size-3.5" />
-          <span>Plan my day</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            onClick={() =>
+              openMcp(
+                `Plan my day for ${activeDayMeta.dow} ${activeDayMeta.date} with walkable sessions and evening parties`,
+              )
+            }
+          >
+            <Sparkles className="size-4" />
+            <span>Plan my day</span>
+          </Button>
+          <Button onClick={() => setAddOpen(true)}>
+            <Plus className="size-4" />
+            <span>Add Time Block</span>
+          </Button>
+        </div>
       </div>
 
-      {/* 5 Day Selector Pills (Mon 30, Tue 1, Wed 2, Thu 3, Fri 4) */}
-      <div className="mt-4 grid grid-cols-5 gap-2.5 px-4">
+      {/* 5 Day Selector Tactile Pills (Mon 30, Tue 1, Wed 2, Thu 3, Fri 4) */}
+      <div className="grid grid-cols-5 gap-3">
         {CONFERENCE_DAYS.map((d) => {
           const active = d.date === selectedDate;
           return (
@@ -361,53 +382,47 @@ export default function CalendarPage() {
               key={d.date}
               type="button"
               onClick={() => setSelectedDate(d.date)}
-              className={`flex h-16 flex-col items-center justify-center rounded-2xl border text-xs font-semibold transition-all ${
+              className={`flex h-16 flex-col items-center justify-center rounded-2xl border-2 text-xs font-extrabold transition-all cursor-pointer ${
                 active
-                  ? "border-[#0095ff] bg-[#0095ff] text-white shadow-md shadow-[#0095ff]/25"
-                  : "border-white/10 bg-[#181c26] text-slate-300 hover:border-white/25 hover:text-white"
+                  ? "border-primary bg-primary text-primary-foreground shadow-tactile-primary"
+                  : "border-border bg-card text-foreground shadow-tactile hover:bg-muted/50"
               }`}
             >
               <span>{d.dow}</span>
-              <span className="mt-0.5 text-sm font-bold">{d.num}</span>
+              <span className="font-heading mt-0.5 text-base font-black">{d.num}</span>
             </button>
           );
         })}
       </div>
 
-      {/* My Reservations + Hide Favorites (> circle button) */}
-      <div className="mt-5 flex items-center justify-between px-4">
-        <div className="flex items-center gap-2">
-          <h2 className="text-base font-bold text-white">My Reservations</h2>
-          <button
-            type="button"
+      {/* My Reservations + Hide Favorites + Parties Overlay Toggle */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-border pb-3">
+        <div className="flex items-center gap-2.5">
+          <h2 className="font-heading text-lg font-black">My Reservations & Schedule</h2>
+          <Button
+            size="xs"
+            variant={showParties ? "default" : "outline"}
             onClick={() => setShowParties((p) => !p)}
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 font-mono text-[10px] transition-colors ${
-              showParties
-                ? "bg-[#9b8afb] font-bold text-[#101218]"
-                : "border border-white/10 bg-[#181c26] text-slate-300"
-            }`}
           >
-            <PartyPopper className="size-3" />
-            {showParties ? "Parties On" : "+ Parties"}
-          </button>
+            <PartyPopper className="size-3.5" />
+            {showParties ? "Parties On" : "+ Overlay Parties"}
+          </Button>
         </div>
 
-        <button
-          type="button"
+        <Button
+          size="sm"
+          variant="outline"
           onClick={() => setHideFavorites((prev) => !prev)}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-white"
         >
           <span>{hideFavorites ? "Show Favorites" : "Hide Favorites"}</span>
-          <span className="flex size-7 items-center justify-center rounded-full bg-[#1e232e]">
-            <ChevronRight
-              className={`size-4 transition-transform ${hideFavorites ? "rotate-90" : ""}`}
-            />
-          </span>
-        </button>
+          <ChevronRight
+            className={`size-4 transition-transform ${hideFavorites ? "rotate-90" : ""}`}
+          />
+        </Button>
       </div>
 
-      {/* Hourly Timeline Grid (05:30 through 21:00) matching Screenshot 1 */}
-      <div className="mt-4 space-y-0 px-3">
+      {/* Hourly Timeline Grid (05:30 through 21:00) */}
+      <div className="card-tactile divide-y divide-border/60 p-4">
         {TIME_SLOTS.map((slot) => {
           const isHalfHour = slot.min === 30;
           const slotItems = dayEntries.filter((entry) => {
@@ -419,23 +434,22 @@ export default function CalendarPage() {
           });
 
           return (
-            <div key={`${slot.hour}:${slot.min}`} className="relative flex min-h-[58px] items-start gap-2">
-              <div className="w-11 shrink-0 pt-0.5 font-mono text-[11px] leading-tight text-slate-300">
-                <div>{slot.label}</div>
-                {slot.ampm ? <div className="text-[10px] text-slate-400">{slot.ampm}</div> : null}
+            <div
+              key={`${slot.hour}:${slot.min}`}
+              className="flex min-h-[54px] items-start gap-4 py-2"
+            >
+              <div className="w-14 shrink-0 font-mono text-xs font-bold text-muted-foreground">
+                <span>{slot.label}</span>
+                {slot.ampm ? <span className="ml-1 text-[10px]">{slot.ampm}</span> : null}
               </div>
 
-              <div className="relative flex-1 pt-2.5">
-                <div
-                  className={
-                    isHalfHour
-                      ? "border-t border-dashed border-slate-800/90"
-                      : "border-t border-slate-800"
-                  }
-                />
-
+              <div
+                className={`flex-1 ${
+                  isHalfHour && slotItems.length === 0 ? "opacity-60" : ""
+                }`}
+              >
                 {slotItems.length > 0 ? (
-                  <div className="mt-2 space-y-2 pb-2">
+                  <div className="grid gap-2.5 md:grid-cols-2">
                     {slotItems.map((entry) => {
                       const fullSession = catalogMap.get(entry.id);
                       return (
@@ -444,39 +458,40 @@ export default function CalendarPage() {
                           onClick={() => {
                             if (fullSession) openSession(fullSession);
                           }}
-                          className={`flex items-start justify-between gap-2 rounded-xl border p-3 text-xs transition-colors ${
+                          className={`card-tactile flex items-start justify-between gap-2 p-3 text-xs ${
                             entry.kind === "reserved"
-                              ? "border-[#0095ff]/50 bg-[#0d2542] text-white"
+                              ? "border-primary bg-primary/10"
                               : entry.kind === "blocked"
-                                ? "border-[#9b8afb]/40 bg-[#1e1a36] text-white"
-                                : "border-white/10 bg-[#1c212d] text-white"
-                          } ${fullSession ? "cursor-pointer hover:border-[#9b8afb]" : ""}`}
+                                ? "border-accent bg-accent/20"
+                                : "bg-muted/40"
+                          } ${fullSession ? "cursor-pointer hover:border-primary" : ""}`}
                         >
-                          <div className="space-y-0.5">
-                            <div className="flex items-center gap-1.5 font-mono text-[10px] text-slate-300">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-1.5 font-mono text-[10px] font-bold text-muted-foreground">
                               <span>
-                                {String(entry.start).slice(11, 16)} – {String(entry.end).slice(11, 16)}
+                                {String(entry.start).slice(11, 16)} –{" "}
+                                {String(entry.end).slice(11, 16)}
                               </span>
-                              <span className="rounded bg-black/30 px-1.5 py-0.2 uppercase">
+                              <Badge variant="outline" className="px-1.5 py-0 text-[9px] uppercase">
                                 {entry.kind}
-                              </span>
+                              </Badge>
                             </div>
-                            <p className="font-bold leading-snug text-white">{entry.title}</p>
+                            <p className="font-heading text-sm font-extrabold">{entry.title}</p>
                             {entry.venue ? (
-                              <p className="text-[11px] text-slate-300">{entry.venue}</p>
+                              <p className="text-[11px] text-muted-foreground">{entry.venue}</p>
                             ) : null}
                           </div>
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost"
+                            size="icon-xs"
                             aria-label="Remove from calendar"
                             onClick={(e) => {
                               e.stopPropagation();
                               void handleRemoveEntry(entry);
                             }}
-                            className="rounded-lg p-1 text-slate-400 hover:bg-black/30 hover:text-rose-400"
                           >
-                            <Trash2 className="size-3.5" />
-                          </button>
+                            <Trash2 className="size-3.5 text-destructive" />
+                          </Button>
                         </div>
                       );
                     })}
@@ -488,36 +503,24 @@ export default function CalendarPage() {
         })}
       </div>
 
-      {/* Floating White '+' Button above bottom bar (Screenshot 1) */}
-      <div className="fixed inset-x-0 bottom-24 z-20 mx-auto flex max-w-[480px] justify-end px-5 pointer-events-none">
-        <button
-          type="button"
-          onClick={() => setAddOpen(true)}
-          aria-label="Add personal time block"
-          className="pointer-events-auto flex size-12 items-center justify-center rounded-full bg-white text-slate-950 shadow-xl transition-transform hover:scale-105 active:scale-95"
-        >
-          <Plus className="size-6" strokeWidth={2.2} />
-        </button>
-      </div>
-
       {/* Create Personal Time Sheet */}
       <Sheet open={addOpen} onOpenChange={setAddOpen}>
         <SheetContent
           side="bottom"
-          className="mx-auto max-w-[480px] rounded-t-3xl border-t border-white/10 bg-[#141821] p-5 text-white"
+          className="mx-auto max-w-lg rounded-t-3xl border-t-2 border-border bg-background p-5 text-foreground"
         >
           <SheetHeader className="p-0 text-left">
-            <SheetTitle className="text-base font-bold text-white">
+            <SheetTitle className="font-heading text-lg font-black">
               Add Personal Time ({activeDayMeta.dow}, {activeDayMeta.month} {activeDayMeta.num})
             </SheetTitle>
-            <SheetDescription className="text-xs text-slate-400">
+            <SheetDescription className="text-xs text-muted-foreground">
               Blocks time via CreatePersonalTime on the AWS Events API & your local calendar.
             </SheetDescription>
           </SheetHeader>
 
           <form onSubmit={(e) => void handleCreateBlock(e)} className="mt-4 space-y-3">
             <div className="space-y-1">
-              <Label htmlFor="pt-title" className="text-xs text-slate-300">
+              <Label htmlFor="pt-title" className="text-xs font-bold">
                 Title
               </Label>
               <Input
@@ -525,13 +528,12 @@ export default function CalendarPage() {
                 value={blockTitle}
                 onChange={(e) => setBlockTitle(e.target.value)}
                 placeholder="e.g., Walk Venetian → Wynn, Team Dinner, Party"
-                className="border-white/15 bg-[#0e121a] text-white"
                 required
               />
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="pt-venue" className="text-xs text-slate-300">
+              <Label htmlFor="pt-venue" className="text-xs font-bold">
                 Venue / Location
               </Label>
               <Input
@@ -539,13 +541,12 @@ export default function CalendarPage() {
                 value={blockVenue}
                 onChange={(e) => setBlockVenue(e.target.value)}
                 placeholder="The Venetian"
-                className="border-white/15 bg-[#0e121a] text-white"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label htmlFor="pt-start" className="text-xs text-slate-300">
+                <Label htmlFor="pt-start" className="text-xs font-bold">
                   Start Time
                 </Label>
                 <Input
@@ -554,12 +555,12 @@ export default function CalendarPage() {
                   step={300}
                   value={blockStart}
                   onChange={(e) => setBlockStart(e.target.value)}
-                  className="border-white/15 bg-[#0e121a] font-mono text-white"
+                  className="font-mono"
                   required
                 />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="pt-end" className="text-xs text-slate-300">
+                <Label htmlFor="pt-end" className="text-xs font-bold">
                   End Time
                 </Label>
                 <Input
@@ -568,17 +569,13 @@ export default function CalendarPage() {
                   step={300}
                   value={blockEnd}
                   onChange={(e) => setBlockEnd(e.target.value)}
-                  className="border-white/15 bg-[#0e121a] font-mono text-white"
+                  className="font-mono"
                   required
                 />
               </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={savingBlock}
-              className="mt-2 h-11 w-full rounded-full bg-[#0095ff] font-semibold text-white hover:bg-[#0095ff]/90"
-            >
+            <Button type="submit" size="lg" disabled={savingBlock} className="mt-2 w-full">
               {savingBlock ? "Saving block…" : "Save to Calendar"}
             </Button>
           </form>

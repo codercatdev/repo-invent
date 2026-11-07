@@ -81,7 +81,7 @@ export function McpAssistantSheet({
     {
       id: "welcome",
       role: "assistant",
-      text: "Connected to the AWS Events MCP proxy (`https://api.awsevents.com/mcp`, 12 tools) + Repo:Invent Scanner & Party Guide (4 tools) + in-page WebMCP (`navigator.modelContext`). Ask anything or inspect tools directly.",
+      text: "Connected to the AWS Events MCP proxy (`https://api.awsevents.com/mcp`, 12 tools) + Repo:Invent Scanner & Party Guide (4 tools) + in-page WebMCP (`navigator.modelContext`). Ask anything or inspect tools directly!",
     },
   ]);
 
@@ -215,19 +215,19 @@ export function McpAssistantSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="mx-auto flex h-[90dvh] max-w-[520px] flex-col rounded-t-3xl border-t border-white/10 bg-[#0d1017] p-0 text-white"
+        className="mx-auto flex h-[88dvh] max-w-3xl flex-col rounded-t-3xl border-t-2 border-border bg-background p-0 text-foreground"
       >
-        <SheetHeader className="border-b border-white/10 px-5 pb-3 pt-4 text-left">
+        <SheetHeader className="border-b-2 border-border px-5 pb-3 pt-4 text-left">
           <div className="flex items-center justify-between pr-8">
-            <div className="flex items-center gap-2">
-              <div className="flex size-8 items-center justify-center rounded-xl bg-[#9b8afb] text-[#11131a]">
-                <Sparkles className="size-4" />
+            <div className="flex items-center gap-2.5">
+              <div className="flex size-10 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-primary-foreground shadow-tactile-primary">
+                <Sparkles className="size-5" />
               </div>
               <div>
-                <SheetTitle className="text-base font-bold text-white">
+                <SheetTitle className="font-heading text-base font-black text-foreground">
                   re:Invent MCP + WebMCP Agent
                 </SheetTitle>
-                <SheetDescription className="text-[11px] text-slate-400">
+                <SheetDescription className="text-xs text-muted-foreground">
                   api.awsevents.com/mcp (12 tools) • WebMCP ({webMcpState.registeredCount} browser tools)
                 </SheetDescription>
               </div>
@@ -235,29 +235,23 @@ export function McpAssistantSheet({
           </div>
 
           <div className="mt-2 flex gap-2">
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant={mode === "chat" ? "default" : "outline"}
               onClick={() => setMode("chat")}
-              className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-colors ${
-                mode === "chat"
-                  ? "bg-[#9b8afb] text-[#11131a]"
-                  : "bg-[#1a1f2b] text-slate-300 hover:text-white"
-              }`}
+              className="flex-1"
             >
               ✦ Ask & Act (MCP Chat)
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="sm"
+              variant={mode === "inspector" ? "default" : "outline"}
               onClick={() => setMode("inspector")}
-              className={`flex-1 rounded-full py-1.5 text-xs font-semibold transition-colors ${
-                mode === "inspector"
-                  ? "bg-[#9b8afb] text-[#11131a]"
-                  : "bg-[#1a1f2b] text-slate-300 hover:text-white"
-              }`}
+              className="flex-1"
             >
-              <Wrench className="mr-1 inline size-3.5" />
+              <Wrench className="size-3.5" />
               MCP & WebMCP Inspector (16)
-            </button>
+            </Button>
           </div>
         </SheetHeader>
 
@@ -270,7 +264,7 @@ export function McpAssistantSheet({
                     key={prompt}
                     type="button"
                     onClick={() => void sendPrompt(prompt)}
-                    className="shrink-0 rounded-full border border-white/10 bg-[#181d28] px-3 py-1.5 text-xs text-slate-200 hover:border-[#9b8afb]/50 hover:text-white"
+                    className="chip-tactile shrink-0"
                   >
                     {prompt}
                   </button>
@@ -283,45 +277,42 @@ export function McpAssistantSheet({
                   className={`space-y-2 ${turn.role === "user" ? "flex justify-end" : ""}`}
                 >
                   {turn.role === "user" ? (
-                    <div className="max-w-[85%] rounded-2xl bg-[#9b8afb] px-4 py-2.5 text-sm font-medium text-[#101218]">
+                    <div className="max-w-[85%] rounded-2xl border-2 border-primary bg-primary px-4 py-2.5 text-sm font-extrabold text-primary-foreground shadow-tactile-primary">
                       {turn.text}
                     </div>
                   ) : (
-                    <div className="space-y-3 rounded-2xl border border-white/10 bg-[#151a24] p-3.5">
+                    <div className="card-tactile space-y-3 p-4">
                       {turn.toolCalls && turn.toolCalls.length > 0 ? (
                         <div className="space-y-1.5">
                           {turn.toolCalls.map((call, idx) => (
                             <div
                               key={`${call.tool}-${idx}`}
-                              className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-[#0e1219] px-3 py-2 font-mono text-[11px]"
+                              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-muted/60 px-3 py-2 font-mono text-[11px]"
                             >
                               <div className="flex items-center gap-1.5">
                                 {call.status === "ok" ? (
-                                  <CheckCircle2 className="size-3.5 text-emerald-400" />
+                                  <CheckCircle2 className="size-3.5 text-primary" />
                                 ) : (
-                                  <XCircle className="size-3.5 text-amber-400" />
+                                  <XCircle className="size-3.5 text-destructive" />
                                 )}
-                                <span className="font-semibold text-[#9b8afb]">{call.tool}</span>
-                                <Badge
-                                  variant="outline"
-                                  className="border-white/15 px-1.5 py-0 text-[9px] text-slate-400"
-                                >
+                                <span className="font-bold text-foreground">{call.tool}</span>
+                                <Badge variant="outline" className="px-1.5 py-0 text-[9px]">
                                   {call.transport}
                                 </Badge>
                               </div>
-                              <span className="text-slate-400">{call.durationMs}ms</span>
-                              <p className="w-full text-[11px] text-slate-300">{call.preview}</p>
+                              <span className="text-muted-foreground">{call.durationMs}ms</span>
+                              <p className="w-full text-[11px] text-muted-foreground">{call.preview}</p>
                             </div>
                           ))}
                         </div>
                       ) : null}
 
-                      <p className="text-sm leading-relaxed text-slate-100">{turn.text}</p>
+                      <p className="text-sm font-medium leading-relaxed text-foreground">{turn.text}</p>
 
                       {turn.scan ? (
-                        <div className="space-y-2 rounded-xl border border-[#9b8afb]/30 bg-[#10141d] p-3">
+                        <div className="card-tactile space-y-2 bg-muted/40 p-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-[#9b8afb]">
+                            <span className="text-xs font-extrabold">
                               {turn.scan.fingerprint.repo.owner}/{turn.scan.fingerprint.repo.repo}
                             </span>
                             <a
@@ -330,18 +321,18 @@ export function McpAssistantSheet({
                               )}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1 text-xs font-semibold text-[#2ea8ff] hover:underline"
+                              className="inline-flex items-center gap-1 text-xs font-extrabold text-primary hover:underline"
                             >
                               Printable Report <ExternalLink className="size-3" />
                             </a>
                           </div>
                           <div className="space-y-1.5">
                             {turn.scan.gaps.slice(0, 4).map((g) => (
-                              <div key={g.id} className="rounded-lg bg-[#181e2b] p-2 text-xs">
-                                <span className="mr-1.5 rounded bg-rose-500/20 px-1.5 py-0.5 font-mono text-[10px] uppercase text-rose-300">
+                              <div key={g.id} className="rounded-xl border border-border bg-card p-2 text-xs">
+                                <Badge variant={g.severity === "high" ? "destructive" : "secondary"} className="mr-1.5 text-[10px]">
                                   {g.severity}
-                                </span>
-                                <span className="font-semibold text-white">{g.title}</span>
+                                </Badge>
+                                <span className="font-bold">{g.title}</span>
                               </div>
                             ))}
                           </div>
@@ -349,7 +340,7 @@ export function McpAssistantSheet({
                       ) : null}
 
                       {turn.sessions && turn.sessions.length > 0 ? (
-                        <div className="space-y-2">
+                        <div className="grid gap-2.5 sm:grid-cols-2">
                           {turn.sessions.slice(0, 4).map((session) => (
                             <SessionCard
                               key={session.sessionId}
@@ -365,7 +356,7 @@ export function McpAssistantSheet({
                       ) : null}
 
                       {turn.parties && turn.parties.length > 0 ? (
-                        <div className="space-y-2">
+                        <div className="grid gap-2.5 sm:grid-cols-2">
                           {turn.parties.slice(0, 4).map((party) => (
                             <PartyCard key={`${party.date}-${party.title}`} party={party} />
                           ))}
@@ -376,7 +367,7 @@ export function McpAssistantSheet({
                 </div>
               ))}
               {busy ? (
-                <div className="rounded-2xl border border-white/10 bg-[#151a24] p-3.5 text-xs text-slate-400">
+                <div className="card-tactile p-3.5 text-xs font-semibold text-muted-foreground">
                   Calling MCP tool…
                 </div>
               ) : null}
@@ -387,22 +378,16 @@ export function McpAssistantSheet({
                 e.preventDefault();
                 void sendPrompt(input);
               }}
-              className="border-t border-white/10 bg-[#11151e] p-3"
+              className="border-t-2 border-border bg-card p-3"
             >
-              <div className="flex items-center gap-2 rounded-2xl border border-white/15 bg-[#181d29] px-3 py-1.5">
-                <Sparkles className="size-4 shrink-0 text-[#9b8afb]" />
+              <div className="flex items-center gap-2">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask MCP agent, search sessions/parties, or paste GitHub repo…"
-                  className="border-0 bg-transparent px-1 text-sm text-white focus-visible:ring-0"
+                  className="flex-1"
                 />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={busy}
-                  className="size-8 shrink-0 rounded-full bg-[#9b8afb] text-[#11131a] hover:bg-[#9b8afb]/90"
-                >
+                <Button type="submit" size="icon" disabled={busy}>
                   <ArrowUp className="size-4" />
                 </Button>
               </div>
@@ -410,38 +395,31 @@ export function McpAssistantSheet({
           </>
         ) : (
           <div className="flex-1 space-y-4 overflow-y-auto p-4">
-            <div className="rounded-2xl border border-white/10 bg-[#151a24] p-3.5 text-xs">
+            <div className="card-tactile p-4 text-xs">
               <div className="mb-2 flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 font-semibold text-white">
-                  <Terminal className="size-4 text-[#9b8afb]" />
+                <span className="inline-flex items-center gap-1.5 font-extrabold">
+                  <Terminal className="size-4 text-primary" />
                   Claude / Cursor MCP Setup Command
                 </span>
-                <Badge
-                  variant="outline"
-                  className={
-                    mcpMeta?.signedIn
-                      ? "border-emerald-500/40 text-emerald-300"
-                      : "border-amber-500/40 text-amber-300"
-                  }
-                >
-                  {mcpMeta?.signedIn ? "Builder ID Token Active" : "Local Token Needed for Remote Writes"}
+                <Badge variant={mcpMeta?.signedIn ? "default" : "secondary"}>
+                  {mcpMeta?.signedIn ? "Builder ID Active" : "Guest Mode"}
                 </Badge>
               </div>
-              <pre className="overflow-x-auto rounded-xl bg-[#0b0e14] p-2.5 font-mono text-[11px] text-slate-300">
+              <pre className="overflow-x-auto rounded-xl border border-border bg-muted p-2.5 font-mono text-[11px]">
 {`claude mcp add --transport http --scope user awsevents \\
   https://api.awsevents.com/mcp \\
   --callback-port 8484 --client-id 7vmom55m1qstvq8i71ph127bfq`}
               </pre>
-              <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400">
-                <span className="inline-flex items-center gap-1">
-                  <Cpu className="size-3.5 text-[#2ea8ff]" />
+              <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+                <span className="inline-flex items-center gap-1 font-semibold">
+                  <Cpu className="size-3.5 text-primary" />
                   WebMCP (`window.webMcp` & `navigator.modelContext`): {webMcpState.registeredCount} tools active
                 </span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <p className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
                 Select MCP Tool to Execute (12 Remote AWS + 4 Local)
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -450,10 +428,8 @@ export function McpAssistantSheet({
                     key={spec.name}
                     type="button"
                     onClick={() => pickTool(spec)}
-                    className={`rounded-lg border px-2.5 py-1 font-mono text-[11px] transition-colors ${
-                      selectedTool === spec.name
-                        ? "border-[#9b8afb] bg-[#9b8afb]/20 text-white"
-                        : "border-white/10 bg-[#151a24] text-slate-300 hover:border-white/25"
+                    className={`chip-tactile font-mono text-[11px] ${
+                      selectedTool === spec.name ? "border-primary bg-primary/15 text-primary" : ""
                     }`}
                   >
                     {spec.shortName}
@@ -462,16 +438,11 @@ export function McpAssistantSheet({
               </div>
             </div>
 
-            <div className="space-y-2 rounded-2xl border border-white/10 bg-[#151a24] p-3.5">
+            <div className="card-tactile space-y-2 p-4">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-semibold text-[#9b8afb]">{selectedTool}</span>
-                <Button
-                  size="sm"
-                  onClick={() => void runInspectorTool()}
-                  disabled={runningTool}
-                  className="h-8 rounded-full bg-[#9b8afb] px-3.5 text-xs font-semibold text-[#11131a] hover:bg-[#9b8afb]/90"
-                >
-                  <Play className="mr-1 size-3" />
+                <span className="font-mono text-xs font-bold text-primary">{selectedTool}</span>
+                <Button size="sm" onClick={() => void runInspectorTool()} disabled={runningTool}>
+                  <Play className="size-3" />
                   {runningTool ? "Calling MCP…" : "Execute Tool"}
                 </Button>
               </div>
@@ -479,14 +450,14 @@ export function McpAssistantSheet({
                 value={argsJson}
                 onChange={(e) => setArgsJson(e.target.value)}
                 rows={4}
-                className="w-full rounded-xl border border-white/10 bg-[#0b0e14] p-2.5 font-mono text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-[#9b8afb]"
+                className="w-full rounded-xl border-2 border-border bg-muted/40 p-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-ring"
               />
               {toolOutput ? (
                 <div className="space-y-1">
-                  <span className="inline-flex items-center gap-1 font-mono text-[11px] text-slate-400">
+                  <span className="inline-flex items-center gap-1 font-mono text-[11px] text-muted-foreground">
                     <Code2 className="size-3.5" /> MCP Response Payload
                   </span>
-                  <pre className="max-h-60 overflow-auto rounded-xl bg-[#0b0e14] p-3 font-mono text-[11px] text-emerald-300">
+                  <pre className="max-h-60 overflow-auto rounded-xl border border-border bg-muted p-3 font-mono text-[11px]">
                     {toolOutput}
                   </pre>
                 </div>

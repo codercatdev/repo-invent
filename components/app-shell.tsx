@@ -3,7 +3,23 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Calendar, House, PartyPopper, Sparkles } from "lucide-react";
+import { useTheme } from "next-themes";
+import {
+  BookOpen,
+  Calendar,
+  Flame,
+  House,
+  LogIn,
+  LogOut,
+  Maximize2,
+  Menu,
+  Moon,
+  PartyPopper,
+  Smartphone,
+  Sparkles,
+  Sun,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { McpAssistantSheet } from "@/components/mcp-assistant-sheet";
 import { MoreSheet } from "@/components/more-sheet";
 import { SessionSheet } from "@/components/session-sheet";
@@ -12,18 +28,28 @@ import type { ReinventSession } from "@/lib/types";
 
 interface ShellContextValue {
   openMcp: (initialPrompt?: string) => void;
-  openMore: (subView?: "main" | "surveys" | "profile" | "badge" | "faqs" | "sponsors" | "disclosures" | "events") => void;
+  openMore: (
+    subView?:
+      | "main"
+      | "surveys"
+      | "profile"
+      | "badge"
+      | "faqs"
+      | "sponsors"
+      | "disclosures"
+      | "events",
+  ) => void;
   openSession: (session: ReinventSession) => void;
-  classicMode: boolean;
-  toggleClassicMode: () => void;
+  signedIn: boolean;
+  refreshAuth: () => void;
 }
 
 const ShellContext = createContext<ShellContextValue>({
   openMcp: () => {},
   openMore: () => {},
   openSession: () => {},
-  classicMode: false,
-  toggleClassicMode: () => {},
+  signedIn: false,
+  refreshAuth: () => {},
 });
 
 export function useAppShell() {
@@ -39,6 +65,11 @@ const TABS = [
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [mobilePreview, setMobilePreview] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+
   const [mcpOpen, setMcpOpen] = useState(false);
   const [mcpPrompt, setMcpPrompt] = useState<string | undefined>(undefined);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -47,7 +78,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   >("main");
   const [selectedSession, setSelectedSession] = useState<ReinventSession | null>(null);
   const [sessionOpen, setSessionOpen] = useState(false);
-  const [classicMode, setClassicMode] = useState(false);
+
+  function refreshAuth() {
+    fetch("/api/session")
+      .then((r) => r.json())
+      .then((d: { signedIn?: boolean }) => setSignedIn(Boolean(d.signedIn)))
+      .catch(() => setSignedIn(false));
+  }
+
+  useEffect(() => {
+    setMounted(true);
+    refreshAuth();
+    const onAuth = () => refreshAuth();
+    window.addEventListener("repo-invent:auth-updated", onAuth);
+    return () => window.removeEventListener("repo-invent:auth-updated", onAuth);
+  }, []);
 
   function openMcp(prompt?: string) {
     setMcpPrompt(prompt);
@@ -55,7 +100,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   function openMore(
-    subView: "main" | "surveys" | "profile" | "badge" | "faqs" | "sponsors" | "disclosures" | "events" = "main",
+    subView:
+      | "main"
+      | "surveys"
+      | "profile"
+      | "badge"
+      | "faqs"
+      | "sponsors"
+      | "disclosures"
+      | "events" = "main",
   ) {
     setMoreSubView(subView);
     setMoreOpen(true);
@@ -66,32 +119,165 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     setSessionOpen(true);
   }
 
-  useEffect(() => {
-    const onOpenMcp = (e: Event) => {
-      const detail = (e as CustomEvent<{ prompt?: string }>).detail;
-      openMcp(detail?.prompt);
-    };
-    window.addEventListener("repo-invent:open-mcp", onOpenMcp);
-    return () => window.removeEventListener("repo-invent:open-mcp", onOpenMcp);
-  }, []);
-
   return (
     <ShellContext.Provider
       value={{
         openMcp,
         openMore,
         openSession,
-        classicMode,
-        toggleClassicMode: () => setClassicMode((prev) => !prev),
+        signedIn,
+        refreshAuth,
       }}
     >
-      <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col bg-[#0b0d13] text-white shadow-2xl">
-        <main className="flex-1 pb-28">{children}</main>
+      <div
+        className={cn(
+          "min-h-dvh w-full bg-background text-foreground transition-all",
+          mobilePreview
+            ? "mx-auto my-2 max-w-[460px] rounded-3xl border-4 border-border shadow-tactile-lg"
+            : "w-full",
+        )}
+      >
+        {/* Top Gamified Navigation Header */}
+        <header className="sticky top-0 z-30 border-b-2 border-border bg-background/95 backdrop-blur-md">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-2.5">
+                <span className="flex size-10 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-sm font-black text-primary-foreground shadow-tactile-primary">
+                  re:
+                </span>
+                <div className="leading-tight">
+                  <span className="block font-heading text-lg font-black tracking-tight">
+                    repo:Invent <span className="text-primary">2026</span>
+                  </span>
+                  <span className="block text-[11px] font-semibold text-muted-foreground">
+                    Nov 30 – Dec 4 • Las Vegas
+                  </span>
+                </div>
+              </Link>
 
-        <div className="fixed inset-x-0 bottom-0 z-30 mx-auto flex w-full max-w-[480px] items-end justify-between gap-2 bg-gradient-to-t from-[#0b0d13] via-[#0b0d13]/95 to-transparent px-3 pb-[calc(0.65rem+env(safe-area-inset-bottom))] pt-3">
+              {/* Desktop Navigation Links */}
+              {!mobilePreview ? (
+                <nav
+                  aria-label="Desktop navigation"
+                  className="ml-4 hidden items-center gap-2 md:flex"
+                >
+                  {TABS.map((tab) => {
+                    const active =
+                      tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
+                    const Icon = tab.icon;
+                    return (
+                      <Link
+                        key={tab.href}
+                        href={tab.href}
+                        className={cn(
+                          "inline-flex items-center gap-2 rounded-2xl border-2 px-3.5 py-1.5 text-xs font-extrabold transition-all",
+                          active
+                            ? "border-primary bg-primary text-primary-foreground shadow-tactile-primary"
+                            : "border-transparent text-muted-foreground hover:border-border hover:bg-card hover:text-foreground",
+                        )}
+                      >
+                        <Icon className="size-4" />
+                        <span>{tab.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+              ) : null}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => openMore("surveys")}
+                title="Gap Closure Quest & Surveys"
+                className="chip-tactile hidden sm:inline-flex"
+              >
+                <Flame className="size-4 fill-amber-400 text-amber-500" />
+                <span>Quest XP</span>
+              </button>
+
+              {signedIn ? (
+                <Link href="/logout">
+                  <Button variant="secondary" size="sm" title="Signed in to AWS Builder ID — Click to Sign Out">
+                    <LogOut className="size-3.5" />
+                    <span className="hidden sm:inline">Sign Out</span>
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/login">
+                  <Button variant="default" size="sm" title="Sign in with AWS Builder ID">
+                    <LogIn className="size-3.5" />
+                    <span>Sign In</span>
+                  </Button>
+                </Link>
+              )}
+
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => setMobilePreview((p) => !p)}
+                title={mobilePreview ? "Switch to Fullscreen View" : "Preview Mobile Frame"}
+                aria-label="Toggle mobile or fullscreen view"
+                className="hidden sm:inline-flex"
+              >
+                {mobilePreview ? (
+                  <Maximize2 className="size-4" />
+                ) : (
+                  <Smartphone className="size-4" />
+                )}
+              </Button>
+
+              {mounted ? (
+                <Button
+                  variant="outline"
+                  size="icon-sm"
+                  onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                  aria-label="Toggle color theme"
+                  title="Toggle Light / Dark Theme"
+                >
+                  {resolvedTheme === "dark" ? (
+                    <Sun className="size-4" />
+                  ) : (
+                    <Moon className="size-4" />
+                  )}
+                </Button>
+              ) : null}
+
+              <Button
+                variant="outline"
+                size="icon-sm"
+                onClick={() => openMore("main")}
+                aria-label="Open More menu"
+              >
+                <Menu className="size-4" />
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content Container (Full-width responsive up to 7xl, or mobile frame) */}
+        <main
+          className={cn(
+            "mx-auto w-full pb-28 pt-5",
+            mobilePreview ? "max-w-[460px] px-4" : "max-w-7xl px-4 sm:px-6 lg:px-8",
+          )}
+        >
+          {children}
+        </main>
+
+        {/* Bottom Navigation Bar + Tactile Floating MCP Agent Button (✦) */}
+        <div
+          className={cn(
+            "fixed inset-x-0 bottom-0 z-30 mx-auto flex items-end justify-between gap-3 bg-gradient-to-t from-background via-background/95 to-transparent px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3",
+            mobilePreview ? "max-w-[460px]" : "max-w-7xl sm:px-6 lg:px-8",
+          )}
+        >
           <nav
-            aria-label="Main"
-            className="grid flex-1 grid-cols-4 rounded-2xl border border-white/[0.08] bg-[#12161f]/95 px-2 py-2 backdrop-blur-md"
+            aria-label="Bottom Navigation"
+            className={cn(
+              "grid flex-1 grid-cols-4 rounded-2xl border-2 border-border bg-card px-2 py-2 shadow-tactile",
+              !mobilePreview ? "md:max-w-md" : "",
+            )}
           >
             {TABS.map((tab) => {
               const active = tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
@@ -102,11 +288,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex flex-col items-center justify-center gap-1 py-0.5 text-[11px] font-medium transition-colors",
-                    active ? "text-[#0095ff]" : "text-slate-400 hover:text-slate-200",
+                    "flex flex-col items-center justify-center gap-1 rounded-xl py-1 text-xs font-extrabold transition-all",
+                    active
+                      ? "bg-primary/15 text-primary"
+                      : "text-muted-foreground hover:text-foreground",
                   )}
                 >
-                  <Icon className="size-5" strokeWidth={active ? 2.2 : 1.8} aria-hidden />
+                  <Icon className="size-5" strokeWidth={active ? 2.4 : 2} aria-hidden />
                   <span>{tab.label}</span>
                 </Link>
               );
@@ -118,9 +306,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={() => openMcp()}
             aria-label="Open AWS Events MCP Assistant"
             title="Chat with AWS Events MCP & WebMCP Agent"
-            className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-[#9b8afb] text-[#101218] shadow-lg shadow-[#9b8afb]/25 transition-transform hover:scale-[1.03] active:scale-95"
+            className="btn-tactile-accent flex h-14 items-center gap-2 px-4 text-sm"
           >
-            <Sparkles className="size-6" strokeWidth={2} />
+            <Sparkles className="size-5" strokeWidth={2.3} />
+            <span className="hidden sm:inline">Ask MCP Agent</span>
           </button>
         </div>
 
@@ -141,7 +330,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           open={moreOpen}
           onOpenChange={setMoreOpen}
           initialSubView={moreSubView}
-          onSwitchInterface={() => setClassicMode((prev) => !prev)}
         />
 
         <SessionSheet

@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
   ArrowLeft,
   ChevronRight,
   Info,
+  LogIn,
+  LogOut,
   QrCode,
   Star,
   X,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -67,7 +71,7 @@ const SPONSORS = [
   { name: "MongoDB", tier: "Diamond", booth: "Venetian Booth #610", parties: 2 },
   { name: "Dynatrace", tier: "Diamond", booth: "Venetian Booth #812", parties: 3 },
   { name: "HashiCorp (IBM)", tier: "Platinum", booth: "Venetian Booth #902", parties: 2 },
-  { name: " Wiz", tier: "Diamond", booth: "Venetian Security Zone #214", parties: 2 },
+  { name: "Wiz", tier: "Diamond", booth: "Venetian Security Zone #214", parties: 2 },
   { name: "GitLab", tier: "Platinum", booth: "Venetian Booth #1015", parties: 2 },
 ];
 
@@ -75,13 +79,12 @@ export function MoreSheet({
   open,
   onOpenChange,
   initialSubView = "main",
-  onSwitchInterface,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   initialSubView?: SubView;
-  onSwitchInterface?: () => void;
 }) {
+  const router = useRouter();
   const [view, setView] = useState<SubView>(initialSubView);
   const [signedIn, setSignedIn] = useState(false);
   const [expiresIn, setExpiresIn] = useState<number | undefined>(undefined);
@@ -117,16 +120,6 @@ export function MoreSheet({
     }
   }
 
-  async function handleSignOut() {
-    try {
-      await fetch("/api/session", { method: "DELETE" });
-      setSignedIn(false);
-      toast.success("Signed out of AWS Builder ID.");
-    } catch {
-      toast.error("Sign out request failed.");
-    }
-  }
-
   const lastScan = typeof window !== "undefined" ? getLastScan() : null;
   const closedGapsCount = reflections.filter((r) => r.rating >= 3).length;
 
@@ -135,14 +128,14 @@ export function MoreSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="mx-auto flex h-dvh w-full max-w-[520px] flex-col border-l border-white/10 bg-[#0b0d13] p-0 text-white"
+        className="flex h-dvh w-full max-w-md flex-col border-l-2 border-border bg-background p-0 text-foreground"
       >
-        <SheetHeader className="flex flex-row items-center justify-between border-b border-white/10 px-5 py-4">
+        <SheetHeader className="flex flex-row items-center justify-between border-b-2 border-border px-5 py-4">
           {view !== "main" ? (
             <button
               type="button"
               onClick={() => setView("main")}
-              className="flex items-center gap-1 text-sm text-[#2ea8ff]"
+              className="flex items-center gap-1 text-sm font-extrabold text-primary"
             >
               <ArrowLeft className="size-4" />
               Back
@@ -150,11 +143,11 @@ export function MoreSheet({
           ) : (
             <span className="w-12" />
           )}
-          <SheetTitle className="text-base font-bold text-white">
+          <SheetTitle className="font-heading text-base font-black text-foreground">
             {view === "main"
               ? "More"
               : view === "surveys"
-                ? "Surveys & Reflections"
+                ? "Surveys & Gap Quest"
                 : view === "profile"
                   ? "Profile & Settings"
                   : view === "badge"
@@ -168,137 +161,144 @@ export function MoreSheet({
                           : "Info & Disclosures"}
           </SheetTitle>
           <SheetDescription className="sr-only">More menu and event information</SheetDescription>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon-sm"
             aria-label="Close More menu"
             onClick={() => onOpenChange(false)}
-            className="rounded-full p-1 text-slate-300 hover:bg-white/10 hover:text-white"
           >
             <X className="size-5" />
-          </button>
+          </Button>
         </SheetHeader>
 
         {view === "main" ? (
-          <div className="flex-1 overflow-y-auto pb-10">
-            <div className="mx-3 mt-3 flex items-center gap-2.5 rounded-xl bg-[#222630] px-4 py-3 text-xs text-slate-200">
-              <Info className="size-4 shrink-0 text-[#2ea8ff]" />
-              <span>Looking for a different event?</span>
+          <div className="flex-1 overflow-y-auto p-5">
+            <div className="card-tactile mb-5 flex items-center justify-between p-3.5 text-xs">
+              <div className="flex items-center gap-2">
+                <Info className="size-4 shrink-0 text-primary" />
+                <span className="font-semibold">Looking for a different event?</span>
+              </div>
               <button
                 type="button"
                 onClick={() => void openEvents()}
-                className="font-semibold text-[#2ea8ff] underline"
+                className="font-extrabold text-primary underline"
               >
                 View events
               </button>
             </div>
 
-            <div className="mt-2.5 flex items-center justify-between bg-[#003181] px-4 py-2.5 text-xs text-white">
-              <div className="flex items-center gap-2">
-                <Info className="size-4 shrink-0 text-[#5ab4ff]" />
-                <span>Switch to a familiar app interface.</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onSwitchInterface) onSwitchInterface();
-                  onOpenChange(false);
-                }}
-                className="font-semibold text-[#5ab4ff] hover:underline"
-              >
-                Switch
-              </button>
-            </div>
-
-            <div className="mt-6 space-y-6 px-5">
-              <section>
-                <h3 className="mb-2 text-lg font-bold text-white">Your info</h3>
-                <div className="divide-y divide-white/15 border-b border-white/15">
+            <div className="space-y-6">
+              <section className="space-y-2">
+                <h3 className="font-heading text-sm font-black uppercase tracking-wider text-muted-foreground">
+                  Your info
+                </h3>
+                <div className="space-y-2.5">
                   <button
                     type="button"
                     onClick={() => setView("surveys")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
+                    className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                   >
-                    <span>Surveys</span>
+                    <span>Surveys & Gap Quest</span>
                     <div className="flex items-center gap-2">
-                      {reflections.length > 0 ? (
-                        <span className="rounded-full bg-[#9b8afb]/20 px-2 py-0.5 font-mono text-xs text-[#9b8afb]">
-                          {reflections.length} rated
-                        </span>
-                      ) : null}
-                      <ChevronRight className="size-4 text-slate-400" />
+                      <Badge variant="secondary">{reflections.length * 50} XP</Badge>
+                      <ChevronRight className="size-4 text-muted-foreground" />
                     </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setView("profile")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
+                    className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                   >
                     <span>Your profile and settings</span>
-                    <ChevronRight className="size-4 text-slate-400" />
+                    <div className="flex items-center gap-2">
+                      <Badge variant={signedIn ? "default" : "outline"}>
+                        {signedIn ? "Signed In" : "Guest"}
+                      </Badge>
+                      <ChevronRight className="size-4 text-muted-foreground" />
+                    </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setView("badge")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
+                    className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                   >
                     <span>Your badge pickup code</span>
-                    <div className="flex items-center gap-3">
-                      <span className="flex size-7 items-center justify-center rounded bg-white p-0.5 text-black">
-                        <QrCode className="size-5" />
-                      </span>
-                      <ChevronRight className="size-4 text-slate-400" />
+                    <div className="flex items-center gap-2">
+                      <QrCode className="size-5 text-primary" />
+                      <ChevronRight className="size-4 text-muted-foreground" />
                     </div>
                   </button>
                 </div>
               </section>
 
-              <section>
-                <h3 className="mb-2 text-lg font-bold text-white">Event info</h3>
-                <div className="divide-y divide-white/15 border-b border-white/15">
+              <section className="space-y-2">
+                <h3 className="font-heading text-sm font-black uppercase tracking-wider text-muted-foreground">
+                  Event info
+                </h3>
+                <div className="space-y-2.5">
                   <button
                     type="button"
                     onClick={() => setView("faqs")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
+                    className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                   >
                     <span>FAQs</span>
-                    <ChevronRight className="size-4 text-slate-400" />
+                    <ChevronRight className="size-4 text-muted-foreground" />
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setView("sponsors")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
+                    className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                   >
                     <span>Sponsors</span>
-                    <ChevronRight className="size-4 text-slate-400" />
+                    <ChevronRight className="size-4 text-muted-foreground" />
                   </button>
                 </div>
               </section>
 
-              <section>
-                <h3 className="mb-2 text-lg font-bold text-white">About this app</h3>
-                <div className="divide-y divide-white/15 border-b border-white/15">
-                  <button
-                    type="button"
-                    onClick={() => setView("disclosures")}
-                    className="flex w-full items-center justify-between py-4 text-left text-sm text-slate-100 hover:text-[#9b8afb]"
-                  >
-                    <span>Info and disclosures</span>
-                    <ChevronRight className="size-4 text-slate-400" />
-                  </button>
-                </div>
-              </section>
-
-              <div className="pt-8 text-center">
+              <section className="space-y-2">
+                <h3 className="font-heading text-sm font-black uppercase tracking-wider text-muted-foreground">
+                  About this app
+                </h3>
                 <button
                   type="button"
-                  onClick={() => void handleSignOut()}
-                  className="text-sm font-semibold text-[#2ea8ff] hover:underline"
+                  onClick={() => setView("disclosures")}
+                  className="card-tactile-interactive flex w-full items-center justify-between p-4 text-left text-sm font-bold"
                 >
-                  Sign out
+                  <span>Info and disclosures</span>
+                  <ChevronRight className="size-4 text-muted-foreground" />
                 </button>
+              </section>
+
+              <div className="pt-4">
+                {signedIn ? (
+                  <Button
+                    variant="destructive"
+                    className="w-full"
+                    size="lg"
+                    onClick={() => {
+                      onOpenChange(false);
+                      router.push("/logout");
+                    }}
+                  >
+                    <LogOut className="size-4" />
+                    Sign Out
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full"
+                    size="lg"
+                    onClick={() => {
+                      onOpenChange(false);
+                      router.push("/login");
+                    }}
+                  >
+                    <LogIn className="size-4" />
+                    Sign In with AWS Builder ID
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -306,11 +306,11 @@ export function MoreSheet({
 
         {view === "surveys" ? (
           <div className="flex-1 space-y-4 overflow-y-auto p-5">
-            <div className="rounded-2xl border border-[#9b8afb]/30 bg-[#151a26] p-4">
-              <p className="text-sm font-bold text-white">
-                Session Surveys & Architecture Gap Closure
+            <div className="card-tactile border-primary bg-primary/10 p-4">
+              <p className="font-heading text-sm font-black">
+                Architecture Gap Quest ({reflections.length * 50} XP)
               </p>
-              <p className="mt-1 text-xs text-slate-300">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Rate any session 3★ or higher to mark the repository architecture gaps it covers as
                 addressed. You have rated <strong>{reflections.length}</strong> session(s) and closed{" "}
                 <strong>{closedGapsCount}</strong> gap target(s).
@@ -319,7 +319,7 @@ export function MoreSheet({
 
             {lastScan?.schedule?.days ? (
               <div className="space-y-3">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <h4 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
                   Prescribed Sessions from {lastScan.fingerprint.repo.owner}/
                   {lastScan.fingerprint.repo.repo}
                 </h4>
@@ -329,12 +329,9 @@ export function MoreSheet({
                   .map((item) => {
                     const saved = reflections.find((r) => r.sessionId === item.sessionId);
                     return (
-                      <div
-                        key={`${item.sessionId}-${item.start}`}
-                        className="space-y-2 rounded-2xl border border-white/10 bg-[#161b26] p-3.5"
-                      >
-                        <p className="text-sm font-semibold text-white">{item.title}</p>
-                        <p className="font-mono text-xs text-slate-400">
+                      <div key={`${item.sessionId}-${item.start}`} className="card-tactile space-y-2 p-3.5">
+                        <p className="text-sm font-extrabold">{item.title}</p>
+                        <p className="font-mono text-xs text-muted-foreground">
                           {item.venue} • Closes {item.gaps.length} gap(s)
                         </p>
                         <div className="flex items-center gap-1.5">
@@ -351,15 +348,15 @@ export function MoreSheet({
                                   updatedAt: new Date().toISOString(),
                                 });
                                 setReflections(updated);
-                                toast.success(`Rated ${n}/5 ★`);
+                                toast.success(`+50 XP! Rated ${n}/5 ★`);
                               }}
                               className="p-1"
                             >
                               <Star
-                                className={`size-4 ${
+                                className={`size-5 ${
                                   (saved?.rating ?? 0) >= n
                                     ? "fill-amber-400 text-amber-400"
-                                    : "text-slate-600"
+                                    : "text-muted-foreground/30"
                                 }`}
                               />
                             </button>
@@ -373,25 +370,22 @@ export function MoreSheet({
 
             {reflections.length > 0 ? (
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Your Completed Session Surveys
+                <h4 className="text-xs font-extrabold uppercase tracking-wider text-muted-foreground">
+                  Completed Session Surveys
                 </h4>
                 {reflections.map((r) => (
-                  <div
-                    key={r.sessionId}
-                    className="rounded-xl border border-white/10 bg-[#161b26] p-3 text-xs"
-                  >
+                  <div key={r.sessionId} className="card-tactile p-3 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="font-semibold text-white">{r.title}</span>
-                      <span className="font-mono text-amber-400">{"★".repeat(r.rating)}</span>
+                      <span className="font-extrabold">{r.title}</span>
+                      <span className="font-mono text-amber-500">{"★".repeat(r.rating)}</span>
                     </div>
-                    {r.note ? <p className="mt-1 text-slate-300">{r.note}</p> : null}
+                    {r.note ? <p className="mt-1 text-muted-foreground">{r.note}</p> : null}
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-slate-400">
-                Tap any session in the Catalog or Home recommendations to rate it and record notes.
+              <p className="text-xs text-muted-foreground">
+                Tap any session in the Catalog or Home recommendations to rate it and earn Quest XP.
               </p>
             )}
           </div>
@@ -399,37 +393,40 @@ export function MoreSheet({
 
         {view === "profile" ? (
           <div className="flex-1 space-y-4 overflow-y-auto p-5 text-sm">
-            <div className="space-y-2 rounded-2xl border border-white/10 bg-[#151a24] p-4">
+            <div className="card-tactile space-y-3 p-4">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-white">AWS Builder ID (OAuth 2.0 PKCE)</span>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 font-mono text-xs ${
-                    signedIn
-                      ? "bg-emerald-500/20 text-emerald-300"
-                      : "bg-amber-500/20 text-amber-300"
-                  }`}
-                >
+                <span className="font-extrabold">AWS Builder ID (OAuth 2.0 PKCE)</span>
+                <Badge variant={signedIn ? "default" : "secondary"}>
                   {signedIn ? "Connected" : "Signed Out"}
-                </span>
+                </Badge>
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-muted-foreground">
                 {signedIn
                   ? `Active OAuth token for event reinvent2026 (${
                       expiresIn ? `expires in ${Math.round(expiresIn / 60)} min` : "valid"
                     }).`
-                  : "AWS Events OAuth requires a loopback redirect on http://localhost:8484/callback. Run `pnpm cli login` in your terminal to sign in."}
+                  : "Sign in on the Login page to start the loopback PKCE listener on port 8484."}
               </p>
+              <Button
+                size="sm"
+                onClick={() => {
+                  onOpenChange(false);
+                  router.push(signedIn ? "/logout" : "/login");
+                }}
+              >
+                {signedIn ? "Manage / Sign Out" : "Go to Login Screen"}
+              </Button>
             </div>
 
-            <div className="space-y-2 rounded-2xl border border-white/10 bg-[#151a24] p-4">
-              <p className="font-semibold text-white">MCP & WebMCP Endpoints</p>
-              <p className="font-mono text-xs text-slate-300">
+            <div className="card-tactile space-y-2 p-4">
+              <p className="font-extrabold">MCP & WebMCP Endpoints</p>
+              <p className="font-mono text-xs text-muted-foreground">
                 Remote MCP: https://api.awsevents.com/mcp
               </p>
-              <p className="font-mono text-xs text-slate-300">
+              <p className="font-mono text-xs text-muted-foreground">
                 REST Base: https://api.awsevents.com/v1
               </p>
-              <p className="font-mono text-xs text-slate-300">
+              <p className="font-mono text-xs text-muted-foreground">
                 Browser WebMCP: navigator.modelContext / window.webMcp
               </p>
             </div>
@@ -438,21 +435,21 @@ export function MoreSheet({
 
         {view === "badge" ? (
           <div className="flex-1 space-y-5 overflow-y-auto p-5 text-center">
-            <div className="mx-auto max-w-xs space-y-3 rounded-3xl border border-white/15 bg-white p-6 text-slate-950 shadow-xl">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+            <div className="card-tactile mx-auto max-w-xs space-y-3 p-6">
+              <p className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
                 AWS re:Invent 2026 • Las Vegas
               </p>
-              <div className="mx-auto flex size-48 items-center justify-center rounded-2xl border-2 border-slate-900 bg-white p-3">
-                <QrCode className="size-40 text-slate-950" strokeWidth={1.5} />
+              <div className="mx-auto flex size-48 items-center justify-center rounded-2xl border-2 border-border bg-white p-3 text-black">
+                <QrCode className="size-40" strokeWidth={1.5} />
               </div>
-              <p className="font-mono text-sm font-bold">ATTENDEE • REINVENT-2026-PKCE</p>
-              <p className="text-xs text-slate-600">
+              <p className="font-mono text-sm font-black">ATTENDEE • REINVENT-2026-PKCE</p>
+              <p className="text-xs text-muted-foreground">
                 Present this code with a government-issued photo ID at any campus badge pickup desk.
               </p>
             </div>
 
-            <div className="space-y-2 rounded-2xl border border-white/10 bg-[#151a24] p-4 text-left text-xs text-slate-300">
-              <p className="font-semibold text-white">Badge Pickup Locations</p>
+            <div className="card-tactile space-y-2 p-4 text-left text-xs text-muted-foreground">
+              <p className="font-extrabold text-foreground">Badge Pickup Locations</p>
               <p>• The Venetian — Hall G & Sands Expo Lobby (Sun 7 AM – 8 PM, Mon–Fri 6:30 AM – 6 PM)</p>
               <p>• Caesars Forum — Academy Ballroom</p>
               <p>• MGM Grand — Conference Center Foyer</p>
@@ -465,12 +462,9 @@ export function MoreSheet({
         {view === "faqs" ? (
           <div className="flex-1 space-y-3 overflow-y-auto p-5">
             {FAQS.map((item) => (
-              <div
-                key={item.q}
-                className="space-y-1.5 rounded-2xl border border-white/10 bg-[#151a24] p-4"
-              >
-                <p className="text-sm font-semibold text-white">{item.q}</p>
-                <p className="text-xs leading-relaxed text-slate-300">{item.a}</p>
+              <div key={item.q} className="card-tactile space-y-1.5 p-4">
+                <p className="text-sm font-extrabold">{item.q}</p>
+                <p className="text-xs leading-relaxed text-muted-foreground">{item.a}</p>
               </div>
             ))}
           </div>
@@ -479,19 +473,16 @@ export function MoreSheet({
         {view === "sponsors" ? (
           <div className="flex-1 space-y-3 overflow-y-auto p-5">
             {SPONSORS.map((s) => (
-              <div
-                key={s.name}
-                className="flex items-center justify-between rounded-2xl border border-white/10 bg-[#151a24] p-4"
-              >
+              <div key={s.name} className="card-tactile flex items-center justify-between p-4">
                 <div>
-                  <p className="text-sm font-bold text-white">{s.name}</p>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-sm font-extrabold">{s.name}</p>
+                  <p className="text-xs text-muted-foreground">
                     {s.tier} Sponsor • {s.booth}
                   </p>
                 </div>
-                <span className="rounded-full bg-[#9b8afb]/20 px-2.5 py-1 font-mono text-xs text-[#9b8afb]">
+                <Badge variant="secondary" className="font-mono">
                   {s.parties} parties
-                </span>
+                </Badge>
               </div>
             ))}
           </div>
@@ -499,24 +490,19 @@ export function MoreSheet({
 
         {view === "events" ? (
           <div className="flex-1 space-y-3 overflow-y-auto p-5">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               Loaded from `ListEvents` & `GetEvent` on `https://api.awsevents.com/v1`:
             </p>
             {eventsList.map((ev) => (
-              <div
-                key={ev.eventId}
-                className="rounded-2xl border border-[#2ea8ff]/40 bg-[#151a24] p-4"
-              >
+              <div key={ev.eventId} className="card-tactile p-4">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-white">{ev.name}</p>
-                  <span className="rounded-full bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] text-emerald-300">
-                    Active
-                  </span>
+                  <p className="text-sm font-extrabold">{ev.name}</p>
+                  <Badge>Active</Badge>
                 </div>
-                <p className="mt-1 font-mono text-xs text-slate-300">
+                <p className="mt-1 font-mono text-xs text-muted-foreground">
                   ID: {ev.eventId} • {ev.city ?? "Las Vegas, NV"}
                 </p>
-                <p className="font-mono text-xs text-slate-400">
+                <p className="font-mono text-xs text-muted-foreground">
                   {String(ev.startDate).slice(0, 10)} → {String(ev.endDate).slice(0, 10)}
                 </p>
               </div>
@@ -525,9 +511,11 @@ export function MoreSheet({
         ) : null}
 
         {view === "disclosures" ? (
-          <div className="flex-1 space-y-4 overflow-y-auto p-5 text-xs leading-relaxed text-slate-300">
-            <div className="space-y-2 rounded-2xl border border-white/10 bg-[#151a24] p-4">
-              <p className="text-sm font-bold text-white">repo:Invent — AWS re:Invent 2026 Hackathon</p>
+          <div className="flex-1 space-y-4 overflow-y-auto p-5 text-xs leading-relaxed text-muted-foreground">
+            <div className="card-tactile space-y-2 p-4">
+              <p className="text-sm font-extrabold text-foreground">
+                repo:Invent — AWS re:Invent 2026 Hackathon
+              </p>
               <p>
                 Built with Next.js 16 (App Router), React 19, shadcn/ui, Tailwind CSS v4, and the AWS
                 Events Catalog REST API + Remote MCP Server (`https://api.awsevents.com/mcp`).
@@ -543,7 +531,7 @@ export function MoreSheet({
             </div>
             <Button
               onClick={() => window.open("/api/report?repo=sample://reinvent-demo-shop", "_blank")}
-              className="w-full rounded-full bg-[#9b8afb] font-semibold text-[#11131a]"
+              className="w-full"
             >
               Open Printable Remediation & Schedule Report
             </Button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar, Clock, Heart, MapPin, Timer } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { ReinventSession } from "@/lib/types";
 
@@ -69,64 +70,71 @@ export function SessionCard({
           : undefined
       }
       className={cn(
-        "group relative rounded-2xl border border-white/[0.06] bg-[#1e232e] p-4 text-left transition-all",
-        onOpen ? "cursor-pointer hover:border-[#9b8afb]/40 hover:bg-[#232936]" : "",
+        "card-tactile flex flex-col justify-between p-4 text-left",
+        onOpen ? "card-tactile-interactive hover:border-primary/60" : "",
       )}
     >
-      <div className="mb-2.5 flex items-center justify-between gap-2">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-md bg-[#10131a] px-2.5 py-1 font-mono text-xs text-slate-200">
-            {String(session.type || "Featured experience")}
-          </span>
-          {!reservable ? (
-            <span className="rounded-md bg-[#003687]/80 px-2 py-0.5 font-mono text-[11px] text-blue-200">
-              Walk-up
-            </span>
-          ) : (
-            <span className="rounded-md bg-emerald-950/80 px-2 py-0.5 font-mono text-[11px] text-emerald-300">
-              Open seats
-            </span>
-          )}
+      <div>
+        <div className="mb-2.5 flex items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge variant="secondary" className="font-mono text-xs font-bold">
+              {String(session.type || "Featured experience")}
+            </Badge>
+            {!reservable ? (
+              <Badge variant="outline" className="font-mono text-[11px] font-bold">
+                Walk-up
+              </Badge>
+            ) : (
+              <Badge className="bg-primary/15 font-mono text-[11px] font-bold text-primary border-primary/30">
+                Open seats
+              </Badge>
+            )}
+          </div>
+          {onToggleFavorite ? (
+            <button
+              type="button"
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(session, e);
+              }}
+              className="btn-tactile flex size-9 items-center justify-center rounded-xl text-muted-foreground hover:text-destructive"
+            >
+              <Heart
+                className={cn(
+                  "size-4 transition-transform",
+                  isFavorite ? "scale-110 fill-destructive text-destructive" : "",
+                )}
+              />
+            </button>
+          ) : null}
         </div>
-        {onToggleFavorite ? (
-          <button
-            type="button"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleFavorite(session, e);
-            }}
-            className="flex size-8 items-center justify-center rounded-full bg-[#12161f] text-slate-300 transition-colors hover:text-white"
-          >
-            <Heart className={cn("size-4", isFavorite ? "fill-rose-500 text-rose-500" : "")} />
-          </button>
-        ) : null}
+
+        <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs font-semibold text-muted-foreground">
+          <span className="inline-flex items-center gap-1">
+            <Calendar className="size-3.5" />
+            {day}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Clock className="size-3.5" />
+            {formatClock(session.start)}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Timer className="size-3.5" />
+            {formatDuration(session)}
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <MapPin className="size-3.5" />
+            {shortVenue(session.venue)}
+          </span>
+        </div>
+
+        <h3 className="mb-1.5 font-heading text-base font-extrabold leading-snug text-foreground">
+          {session.title}
+        </h3>
       </div>
 
-      <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-slate-300">
-        <span className="inline-flex items-center gap-1">
-          <Calendar className="size-3.5 text-slate-400" />
-          {day}
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <Clock className="size-3.5 text-slate-400" />
-          {formatClock(session.start)}
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <Timer className="size-3.5 text-slate-400" />
-          {formatDuration(session)}
-        </span>
-        <span className="inline-flex items-center gap-1">
-          <MapPin className="size-3.5 text-slate-400" />
-          {shortVenue(session.venue)}
-        </span>
-      </div>
-
-      <h3 className="mb-1.5 text-base font-bold leading-snug text-white group-hover:text-[#9b8afb]">
-        {session.title}
-      </h3>
-
-      <p className="line-clamp-3 text-sm leading-relaxed text-slate-300">
+      <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
         {session.abstract || fallbackDesc}
       </p>
     </div>
