@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={`${plusJakarta.variable} ${nunito.variable} ${jetbrainsMono.variable} min-h-dvh bg-background font-sans text-foreground antialiased`}
+        className={`${plusJakarta.variable} ${nunito.variable} ${jetbrainsMono.variable} min-h-dvh overflow-x-hidden bg-background font-sans text-foreground antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <AppShell>{children}</AppShell>

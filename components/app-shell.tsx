@@ -131,7 +131,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     >
       <div
         className={cn(
-          "min-h-dvh w-full bg-background text-foreground transition-all",
+          "min-h-dvh w-full overflow-x-hidden bg-background text-foreground transition-all",
           mobilePreview
             ? "mx-auto my-2 max-w-[460px] rounded-3xl border-4 border-border shadow-tactile-lg"
             : "w-full",
@@ -139,17 +139,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         {/* Top Gamified Navigation Header */}
         <header className="sticky top-0 z-30 border-b-2 border-border bg-background/95 backdrop-blur-md">
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-2.5">
-                <span className="flex size-10 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-sm font-black text-primary-foreground shadow-tactile-primary">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-3 sm:gap-3 sm:px-6">
+            <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+              <Link href="/" className="flex min-w-0 items-center gap-2">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-xs font-black text-primary-foreground shadow-tactile-primary sm:size-10 sm:text-sm">
                   re:
                 </span>
-                <div className="leading-tight">
-                  <span className="block font-heading text-lg font-black tracking-tight">
+                <div className="min-w-0 leading-tight">
+                  <span className="block truncate font-heading text-base font-black tracking-tight sm:text-lg">
                     repo:Invent <span className="text-primary">2026</span>
                   </span>
-                  <span className="block text-[11px] font-semibold text-muted-foreground">
+                  <span className="block truncate text-[10px] font-semibold text-muted-foreground sm:text-[11px]">
                     Nov 30 – Dec 4 • Las Vegas
                   </span>
                 </div>
@@ -198,16 +198,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
               {signedIn ? (
                 <Link href="/logout">
-                  <Button variant="secondary" size="sm" title="Signed in to AWS Builder ID — Click to Sign Out">
+                  <Button variant="secondary" size="sm" title="Signed in to AWS Builder ID — Click to Sign Out" className="px-2.5 sm:px-3">
                     <LogOut className="size-3.5" />
                     <span className="hidden sm:inline">Sign Out</span>
                   </Button>
                 </Link>
               ) : (
                 <Link href="/login">
-                  <Button variant="default" size="sm" title="Sign in with AWS Builder ID">
+                  <Button variant="default" size="sm" title="Sign in with AWS Builder ID" className="px-2.5 sm:px-3">
                     <LogIn className="size-3.5" />
-                    <span>Sign In</span>
+                    <span className="hidden sm:inline">Sign In</span>
                   </Button>
                 </Link>
               )}

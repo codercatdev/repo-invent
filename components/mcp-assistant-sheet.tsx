@@ -215,19 +215,19 @@ export function McpAssistantSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="mx-auto flex h-[88dvh] max-w-3xl flex-col rounded-t-3xl border-t-2 border-border bg-background p-0 text-foreground"
+        className="mx-auto flex h-[85dvh] max-h-[85dvh] w-full max-w-3xl flex-col overflow-hidden rounded-t-3xl border-t-2 border-border bg-background p-0 text-foreground"
       >
-        <SheetHeader className="border-b-2 border-border px-5 pb-3 pt-4 text-left">
+        <SheetHeader className="shrink-0 border-b-2 border-border px-4 pb-3 pt-4 text-left sm:px-5">
           <div className="flex items-center justify-between pr-8">
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-10 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-primary-foreground shadow-tactile-primary">
+            <div className="flex min-w-0 items-center gap-2.5">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl border-2 border-primary bg-primary text-primary-foreground shadow-tactile-primary">
                 <Sparkles className="size-5" />
               </div>
-              <div>
-                <SheetTitle className="font-heading text-base font-black text-foreground">
+              <div className="min-w-0">
+                <SheetTitle className="font-heading truncate text-sm font-black text-foreground sm:text-base">
                   re:Invent MCP + WebMCP Agent
                 </SheetTitle>
-                <SheetDescription className="text-xs text-muted-foreground">
+                <SheetDescription className="truncate text-[11px] text-muted-foreground sm:text-xs">
                   api.awsevents.com/mcp (12 tools) • WebMCP ({webMcpState.registeredCount} browser tools)
                 </SheetDescription>
               </div>
@@ -239,7 +239,7 @@ export function McpAssistantSheet({
               size="sm"
               variant={mode === "chat" ? "default" : "outline"}
               onClick={() => setMode("chat")}
-              className="flex-1"
+              className="flex-1 text-xs"
             >
               ✦ Ask & Act (MCP Chat)
             </Button>
@@ -247,17 +247,17 @@ export function McpAssistantSheet({
               size="sm"
               variant={mode === "inspector" ? "default" : "outline"}
               onClick={() => setMode("inspector")}
-              className="flex-1"
+              className="flex-1 text-xs"
             >
               <Wrench className="size-3.5" />
-              MCP & WebMCP Inspector (16)
+              <span className="truncate">Inspector (16)</span>
             </Button>
           </div>
         </SheetHeader>
 
         {mode === "chat" ? (
           <>
-            <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+            <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden px-4 py-4">
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {STARTER_PROMPTS.map((prompt) => (
                   <button
@@ -277,37 +277,37 @@ export function McpAssistantSheet({
                   className={`space-y-2 ${turn.role === "user" ? "flex justify-end" : ""}`}
                 >
                   {turn.role === "user" ? (
-                    <div className="max-w-[85%] rounded-2xl border-2 border-primary bg-primary px-4 py-2.5 text-sm font-extrabold text-primary-foreground shadow-tactile-primary">
+                    <div className="max-w-[85%] break-words rounded-2xl border-2 border-primary bg-primary px-4 py-2.5 text-sm font-extrabold text-primary-foreground shadow-tactile-primary">
                       {turn.text}
                     </div>
                   ) : (
-                    <div className="card-tactile space-y-3 p-4">
+                    <div className="card-tactile min-w-0 max-w-full space-y-3 overflow-hidden p-4">
                       {turn.toolCalls && turn.toolCalls.length > 0 ? (
                         <div className="space-y-1.5">
                           {turn.toolCalls.map((call, idx) => (
                             <div
                               key={`${call.tool}-${idx}`}
-                              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-muted/60 px-3 py-2 font-mono text-[11px]"
+                              className="flex flex-wrap items-center justify-between gap-2 overflow-hidden rounded-xl border border-border bg-muted/60 px-3 py-2 font-mono text-[11px]"
                             >
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex min-w-0 items-center gap-1.5">
                                 {call.status === "ok" ? (
-                                  <CheckCircle2 className="size-3.5 text-primary" />
+                                  <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
                                 ) : (
-                                  <XCircle className="size-3.5 text-destructive" />
+                                  <XCircle className="size-3.5 shrink-0 text-destructive" />
                                 )}
-                                <span className="font-bold text-foreground">{call.tool}</span>
-                                <Badge variant="outline" className="px-1.5 py-0 text-[9px]">
+                                <span className="truncate font-bold text-foreground">{call.tool}</span>
+                                <Badge variant="outline" className="shrink-0 px-1.5 py-0 text-[9px]">
                                   {call.transport}
                                 </Badge>
                               </div>
-                              <span className="text-muted-foreground">{call.durationMs}ms</span>
-                              <p className="w-full text-[11px] text-muted-foreground">{call.preview}</p>
+                              <span className="shrink-0 text-muted-foreground">{call.durationMs}ms</span>
+                              <p className="w-full break-words text-[11px] text-muted-foreground">{call.preview}</p>
                             </div>
                           ))}
                         </div>
                       ) : null}
 
-                      <p className="text-sm font-medium leading-relaxed text-foreground">{turn.text}</p>
+                      <p className="break-words text-sm font-medium leading-relaxed text-foreground">{turn.text}</p>
 
                       {turn.scan ? (
                         <div className="card-tactile space-y-2 bg-muted/40 p-3">
@@ -378,14 +378,14 @@ export function McpAssistantSheet({
                 e.preventDefault();
                 void sendPrompt(input);
               }}
-              className="border-t-2 border-border bg-card p-3"
+              className="shrink-0 border-t-2 border-border bg-card p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
             >
               <div className="flex items-center gap-2">
                 <Input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask MCP agent, search sessions/parties, or paste GitHub repo…"
-                  className="flex-1"
+                  className="min-w-0 flex-1"
                 />
                 <Button type="submit" size="icon" disabled={busy}>
                   <ArrowUp className="size-4" />
@@ -394,11 +394,11 @@ export function McpAssistantSheet({
             </form>
           </>
         ) : (
-          <div className="flex-1 space-y-4 overflow-y-auto p-4">
-            <div className="card-tactile p-4 text-xs">
-              <div className="mb-2 flex items-center justify-between">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+            <div className="card-tactile overflow-hidden p-4 text-xs">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                 <span className="inline-flex items-center gap-1.5 font-extrabold">
-                  <Terminal className="size-4 text-primary" />
+                  <Terminal className="size-4 shrink-0 text-primary" />
                   Claude / Cursor MCP Setup Command
                 </span>
                 <Badge variant={mcpMeta?.signedIn ? "default" : "secondary"}>
@@ -412,7 +412,7 @@ export function McpAssistantSheet({
               </pre>
               <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
                 <span className="inline-flex items-center gap-1 font-semibold">
-                  <Cpu className="size-3.5 text-primary" />
+                  <Cpu className="size-3.5 shrink-0 text-primary" />
                   WebMCP (`window.webMcp` & `navigator.modelContext`): {webMcpState.registeredCount} tools active
                 </span>
               </div>
@@ -438,9 +438,9 @@ export function McpAssistantSheet({
               </div>
             </div>
 
-            <div className="card-tactile space-y-2 p-4">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-primary">{selectedTool}</span>
+            <div className="card-tactile space-y-2 overflow-hidden p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="min-w-0 truncate font-mono text-xs font-bold text-primary">{selectedTool}</span>
                 <Button size="sm" onClick={() => void runInspectorTool()} disabled={runningTool}>
                   <Play className="size-3" />
                   {runningTool ? "Calling MCP…" : "Execute Tool"}

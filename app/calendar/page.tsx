@@ -507,7 +507,7 @@ export default function CalendarPage() {
       <Sheet open={addOpen} onOpenChange={setAddOpen}>
         <SheetContent
           side="bottom"
-          className="mx-auto max-w-lg rounded-t-3xl border-t-2 border-border bg-background p-5 text-foreground"
+          className="mx-auto max-h-[85dvh] w-full max-w-lg overflow-y-auto overflow-x-hidden rounded-t-3xl border-t-2 border-border bg-background p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] text-foreground"
         >
           <SheetHeader className="p-0 text-left">
             <SheetTitle className="font-heading text-lg font-black">

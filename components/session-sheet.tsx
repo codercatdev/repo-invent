@@ -168,7 +168,7 @@ export function SessionSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="mx-auto max-h-[88dvh] max-w-2xl overflow-y-auto rounded-t-3xl border-t-2 border-border bg-background p-0 text-foreground"
+        className="mx-auto max-h-[85dvh] w-full max-w-2xl overflow-y-auto overflow-x-hidden rounded-t-3xl border-t-2 border-border bg-background p-0 pb-[env(safe-area-inset-bottom)] text-foreground"
       >
         <div
           className={`flex items-center gap-2 px-5 py-3 text-xs font-extrabold ${

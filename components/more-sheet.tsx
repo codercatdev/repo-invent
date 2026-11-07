@@ -129,7 +129,7 @@ export function MoreSheet({
       <SheetContent
         side="right"
         showCloseButton={false}
-        className="flex h-dvh w-full max-w-md flex-col border-l-2 border-border bg-background p-0 text-foreground"
+        className="flex h-dvh max-h-dvh w-full max-w-md flex-col overflow-hidden border-l-2 border-border bg-background p-0 text-foreground data-[side=right]:w-full data-[side=right]:sm:max-w-md"
       >
         <SheetHeader className="flex flex-row items-center justify-between border-b-2 border-border px-5 py-4">
           {view !== "main" ? (

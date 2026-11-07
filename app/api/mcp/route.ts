@@ -464,6 +464,7 @@ async function handleAgentPrompt(prompt: string) {
       "what", "which", "where", "when", "are", "the", "best", "good", "parties", "party",
       "on", "at", "in", "for", "tonight", "night", "afterhours", "networking", "show", "me",
       "find", "any", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday",
+      "happening", "going", "there", "events", "list", "all", "around", "near", "evening",
     ]);
     const terms = lower
       .replace(/[^a-z0-9 ]+/g, " ")
