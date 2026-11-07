@@ -223,6 +223,9 @@ export default function HomePage() {
       toast.success(
         `+100 XP! Scanned ${data.fingerprint.repo.owner}/${data.fingerprint.repo.repo}: ${data.gaps.length} architecture gaps found!`,
       );
+      setTimeout(() => {
+        document.getElementById("scan-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
     } catch {
       toast.error("Could not reach the repository scanner.");
     } finally {
@@ -711,7 +714,7 @@ function InlineScanResult({
   const repoName = `${result.fingerprint.repo.owner}/${result.fingerprint.repo.repo}`;
 
   return (
-    <div className="card-tactile animate-float-up space-y-4 p-5">
+    <div id="scan-results" className="card-tactile animate-float-up space-y-4 p-5 scroll-mt-24">
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="flex items-center gap-2">
