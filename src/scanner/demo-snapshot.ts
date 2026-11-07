@@ -1,4 +1,4 @@
-import type { RepoSnapshot, RepoRef } from "../types.js";
+import type { RepoSnapshot, RepoRef } from "../types";
 
 /**
  * A small, real repository recorded once so the demo page works without the

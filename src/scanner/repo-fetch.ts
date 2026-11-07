@@ -1,4 +1,4 @@
-import type { RepoFile, RepoRef, RepoSnapshot } from "../types.js";
+import type { RepoFile, RepoRef, RepoSnapshot } from "../types";
 
 export const GITHUB_API = "https://api.github.com";
 

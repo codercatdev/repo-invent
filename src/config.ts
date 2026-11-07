@@ -1,6 +1,6 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const DEFAULT_EVENT_ID = "reinvent2026";
@@ -35,31 +35,20 @@ export interface FixtureCatalogLike {
   sessions: unknown[];
 }
 
-/**
- * Read the bundled fixture.
- *
- * This is synthetic test data. `source: "fixture"` travels with it all the way
- * into any output, so nothing renders it as a live catalog.
- */
 export function loadFixture(path?: string): FixtureCatalogLike {
   const target = path ?? join(dataDir(), "mock-reinvent2026.json");
-  return JSON.parse(readFileSync(target, "utf8")) as FixtureCatalogLike;
+  return JSON.parse(readFileSync(/*turbopackIgnore: true*/ target, "utf8")) as FixtureCatalogLike;
 }
 
 export function dataDir(): string {
+  const cwdData = join(process.cwd(), "data");
+  if (existsSync(/*turbopackIgnore: true*/ cwdData)) return cwdData;
   const here = import.meta.url;
   if (here.startsWith("file:")) {
-    // src/config.ts -> ../data when running from source, dist/config.js ->
-    // ../data when built. Both resolve to the package's own data folder, so a
-    // fixture read never depends on the caller's working directory.
-    //
-    // The path is assembled rather than written literally: a bundler that sees
-    // "../data/" tries to resolve it at build time and fails, and this string
-    // is only meaningful at runtime anyway.
-    const url = new URL(["..", "data", ""].join("/"), here);
-    return decodeURIComponent(fileURLToPath(url));
+    const dir = dirname(fileURLToPath(here));
+    return join(dir, "..", "data");
   }
-  return join(process.cwd(), "data");
+  return cwdData;
 }
 
 /** Redact anything that smells like a credential before it reaches a log. */

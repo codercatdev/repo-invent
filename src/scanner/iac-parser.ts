@@ -1,4 +1,4 @@
-import type { DetectedService, RepoSnapshot } from "../types.js";
+import type { DetectedService, RepoSnapshot } from "../types";
 
 export type IacKind = "terraform" | "cdk" | "serverless" | "sst" | "none";
 export type ComputeKind = "lambda" | "ecs" | "eks" | "ec2" | "apprunner" | "unknown";

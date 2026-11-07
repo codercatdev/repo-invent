@@ -1,6 +1,6 @@
-import type { IssueDraft } from "./markdown.js";
+import type { IssueDraft } from "./markdown";
 
-export { renderIssueDrafts, issuesToJson } from "./markdown.js";
+export { renderIssueDrafts, issuesToJson } from "./markdown";
 export type { IssueDraft };
 
 export const GITHUB_ISSUES_ENDPOINT = "POST /repos/{owner}/{repo}/issues";

@@ -3,22 +3,24 @@ import {
   loadTokens,
   signIn,
   signOut,
-} from "./auth/pkce.js";
-import { AwsEventsClient, type ScheduleSnapshot } from "./api/events-client.js";
-import type { PersonalTimeEntry } from "./types.js";
-import { loadConfig } from "./config.js";
+} from "./auth/pkce";
+import {
+  AwsEventsClient,
+  type EventSummary,
+  type ScheduleSnapshot,
+} from "./api/events-client";
+import { servedCatalog } from "./catalog-cache";
+import type { PersonalTimeEntry } from "./types";
+import { loadConfig } from "./config";
 
 export interface SessionStatus {
   signedIn: boolean;
-  /** Seconds until the access token expires, when signed in. */
   expiresInSeconds?: number;
   eventId: string;
 }
 
 export interface MySchedule {
-  /** The attendee's favourite sessions, with full detail. */
   favorites: Array<Record<string, unknown>>;
-  /** Reservations. The catalog gives ids only, so titles are joined in. */
   reservations: Array<Record<string, unknown>>;
   personalTime: Array<Record<string, unknown>>;
   counts: { favorites: number; reservations: number; personalTime: number };
@@ -31,7 +33,6 @@ export class NotSignedInError extends Error {
   }
 }
 
-/** Report whether this machine holds a live Builder ID sign-in. */
 export async function sessionStatus(): Promise<SessionStatus> {
   const config = loadConfig();
   const tokens = await loadTokens();
@@ -40,19 +41,8 @@ export async function sessionStatus(): Promise<SessionStatus> {
   return { signedIn: true, expiresInSeconds: remaining, eventId: config.eventId };
 }
 
-/**
- * Start the Builder ID sign-in.
- *
- * The redirect is `http://localhost:8484-8489/callback`, which is why this
- * cannot run on a hosted page: AWS matches that string exactly, and no hosted
- * origin can be a loopback address. The caller opens the URL it returns.
- */
 export async function startSignIn(): Promise<{ authorizeUrl: string }> {
-  const result = await signIn({});
-  void result;
-  // signIn blocks until the callback lands, so by the time this returns the
-  // tokens are already stored. The URL is printed by the CLI; here we only
-  // need to know it finished.
+  await signIn({});
   return { authorizeUrl: "" };
 }
 
@@ -60,13 +50,42 @@ export async function endSignIn(): Promise<void> {
   await signOut();
 }
 
-/**
- * Fetch the attendee's own schedule.
- *
- * The API returns bare session ids for reservations and favourites, so the
- * catalog is read once to attach titles, venues and times. A title the catalog
- * does not know is left blank rather than invented.
- */
+export async function listAllEvents(): Promise<{
+  current: EventSummary;
+  events: EventSummary[];
+}> {
+  const config = loadConfig();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  try {
+    const [events, current] = await Promise.all([
+      client.listEvents(false),
+      client.getEvent(config.eventId),
+    ]);
+    return { current, events };
+  } catch {
+    return {
+      current: {
+        eventId: config.eventId,
+        name: "AWS re:Invent 2026",
+        startDate: "2026-11-30",
+        endDate: "2026-12-04",
+        timezone: "America/Los_Angeles",
+        city: "Las Vegas, NV",
+      },
+      events: [
+        {
+          eventId: config.eventId,
+          name: "AWS re:Invent 2026",
+          startDate: "2026-11-30",
+          endDate: "2026-12-04",
+          timezone: "America/Los_Angeles",
+          city: "Las Vegas, NV",
+        },
+      ],
+    };
+  }
+}
+
 export async function mySchedule(): Promise<MySchedule> {
   const config = loadConfig();
   await getValidTokens();
@@ -75,7 +94,7 @@ export async function mySchedule(): Promise<MySchedule> {
 
   const catalog = new Map<string, Record<string, unknown>>();
   try {
-    const sessions = await client.listSessions({ includeAbstracts: false });
+    const sessions = await servedCatalog();
     for (const session of sessions.sessions) {
       catalog.set(session.sessionId, {
         sessionId: session.sessionId,
@@ -90,8 +109,7 @@ export async function mySchedule(): Promise<MySchedule> {
       });
     }
   } catch {
-    // A catalog read can fail while a schedule read succeeds. The schedule is
-    // still useful with ids only, so this is not fatal.
+    // Schedule is still returned if catalog decoration fails
   }
 
   const decorate = (entries: Array<{ sessionId: string }>): Array<Record<string, unknown>> =>
@@ -112,12 +130,6 @@ export async function mySchedule(): Promise<MySchedule> {
   };
 }
 
-/**
- * Save a session to the account, then confirm it from `GetSchedule`.
- *
- * The API answers a batch with per-id outcomes and has no idempotency key, so a
- * `200` is not proof. This reports `saved` only for a favourite it read back.
- */
 export async function favoriteSession(
   sessionId: string,
 ): Promise<{ saved: boolean; reason?: string }> {
@@ -134,12 +146,6 @@ export async function favoriteSession(
   return saved ? { saved: true } : { saved: false, reason: "not read back from the schedule" };
 }
 
-/**
- * Remove a favourite, then confirm it is gone from `GetSchedule`.
- *
- * A delete answers 204 with no body, so the only proof is a fresh read. This
- * reports `removed` for a session the schedule no longer lists.
- */
 export async function unfavoriteSession(
   sessionId: string,
 ): Promise<{ removed: boolean; reason?: string }> {
@@ -152,13 +158,32 @@ export async function unfavoriteSession(
   return still ? { removed: false, reason: "still on the schedule" } : { removed: true };
 }
 
-/**
- * Block personal time, then confirm it from `GetSchedule`.
- *
- * `CreatePersonalTime` answers 204 with no body, and re-sending after an
- * unknown outcome would add a second block, so the new entry is found by
- * matching its title and start rather than being created twice.
- */
+export async function reserveSession(
+  sessionId: string,
+): Promise<{ reserved: boolean; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  const { held, result } = await client.reserveThenVerify([sessionId]);
+  if (held.includes(sessionId)) {
+    return { reserved: true };
+  }
+  const reason = result.outcome.failed.find((entry) => entry.sessionId === sessionId)?.reason;
+  return { reserved: false, reason: reason ?? "not held on schedule" };
+}
+
+export async function cancelReservationById(
+  sessionId: string,
+): Promise<{ cancelled: boolean; reason?: string }> {
+  const config = loadConfig();
+  await getValidTokens();
+  const client = new AwsEventsClient({ eventId: config.eventId });
+  await client.cancelReservation(sessionId);
+  const snapshot = await client.getSchedule();
+  const still = snapshot.reservations.some((entry) => entry.sessionId === sessionId);
+  return still ? { cancelled: false, reason: "still on the schedule" } : { cancelled: true };
+}
+
 export async function addPersonalTime(
   input: { title: string; start: string; end: string; location?: string },
 ): Promise<{ ok: boolean; id?: string; reason?: string }> {
@@ -185,15 +210,9 @@ export async function addPersonalTime(
     );
   return match
     ? { ok: true, id: match.personalTimeId }
-    : { ok: false, reason: 'not found after write' };
+    : { ok: false, reason: "not found after write" };
 }
 
-/**
- * Remove a block of personal time, then confirm it is gone.
- *
- * `DeletePersonalTime` answers 204 with no body, so the schedule is read back
- * and the id must be absent for this to report success.
- */
 export async function removePersonalTime(
   personalTimeId: string,
 ): Promise<{ removed: boolean; reason?: string }> {

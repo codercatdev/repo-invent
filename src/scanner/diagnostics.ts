@@ -5,7 +5,7 @@ import type {
   RepoSnapshot,
   SessionLevel,
   StackFingerprint,
-} from "../types.js";
+} from "../types";
 
 export interface DiagnosticsInput {
   snapshot: RepoSnapshot;

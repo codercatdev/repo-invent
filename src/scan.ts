@@ -1,14 +1,14 @@
-import { loadConfig, loadFixture } from "./config.js";
-import { AwsEventsClient } from "./api/events-client.js";
-import { fetchRepo } from "./scanner/repo-fetch.js";
-import { scanManifests } from "./scanner/manifest-parser.js";
-import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
-import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
-import { prescribe } from "./solver/scorer.js";
-import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot.js";
-import { sampleSnapshot } from "./scanner/demo-sample.js";
-import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types.js";
-import type { RepoSnapshot } from "./types.js";
+import { loadConfig, loadFixture } from "./config";
+import { AwsEventsClient } from "./api/events-client";
+import { fetchRepo } from "./scanner/repo-fetch";
+import { scanManifests } from "./scanner/manifest-parser";
+import { scanIac, hasWildcardIam } from "./scanner/iac-parser";
+import { buildFingerprint, diagnose } from "./scanner/diagnostics";
+import { prescribe } from "./solver/scorer";
+import { DEMO_REPO, isDemoRepo } from "./scanner/demo-snapshot";
+import { sampleSnapshot } from "./scanner/demo-sample";
+import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types";
+import type { RepoSnapshot } from "./types";
 
 /**
  * Scanning a repository, without an HTTP server around it.
@@ -68,7 +68,7 @@ export interface ScanResponse {
  */
 export async function renderReportFor(repo: string): Promise<string> {
   const result = await scanForPrescription(repo);
-  const { renderReportHtml } = await import("./report.js");
+  const { renderReportHtml } = await import("./report");
   return renderReportHtml(result);
 }
 

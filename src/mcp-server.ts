@@ -2,15 +2,15 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { loadConfig, loadFixture } from "./config.js";
-import { AwsEventsClient } from "./api/events-client.js";
-import { fetchRepo } from "./scanner/repo-fetch.js";
-import { scanManifests } from "./scanner/manifest-parser.js";
-import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
-import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
-import { prescribe } from "./solver/scorer.js";
-import { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./export/index.js";
-import type { Catalog, PrescriptionPlan, StackFingerprint, ArchitecturalGap } from "./types.js";
+import { loadConfig, loadFixture } from "./config";
+import { AwsEventsClient } from "./api/events-client";
+import { fetchRepo } from "./scanner/repo-fetch";
+import { scanManifests } from "./scanner/manifest-parser";
+import { scanIac, hasWildcardIam } from "./scanner/iac-parser";
+import { buildFingerprint, diagnose } from "./scanner/diagnostics";
+import { prescribe } from "./solver/scorer";
+import { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./export/index";
+import type { Catalog, PrescriptionPlan, StackFingerprint, ArchitecturalGap } from "./types";
 
 interface ScanOutcome {
   fingerprint: StackFingerprint;

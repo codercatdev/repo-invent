@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { AwsEventsClient } from "./api/events-client.js";
-import { dataHome, loadConfig, loadFixture } from "./config.js";
-import type { Catalog, ReinventSession } from "./types.js";
+import { AwsEventsClient } from "./api/events-client";
+import { dataHome, loadConfig, loadFixture } from "./config";
+import type { Catalog, ReinventSession } from "./types";
 
 /**
  * The catalog the app browses.
@@ -27,9 +27,9 @@ function cachePath(): string {
 
 function readCache(): { fetchedAt: string; sessions: ReinventSession[] } | undefined {
   const path = cachePath();
-  if (!existsSync(path)) return undefined;
+  if (!existsSync(/*turbopackIgnore: true*/ path)) return undefined;
   try {
-    const parsed = JSON.parse(readFileSync(path, "utf8")) as {
+    const parsed = JSON.parse(readFileSync(/*turbopackIgnore: true*/ path, "utf8")) as {
       fetchedAt?: unknown;
       sessions?: unknown;
     };

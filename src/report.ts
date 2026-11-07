@@ -1,4 +1,4 @@
-import type { PrescriptionPlan } from "./types.js";
+import type { PrescriptionPlan } from "./types";
 
 /** Escape text for safe insertion into HTML. */
 export function escapeHtml(value: string): string {

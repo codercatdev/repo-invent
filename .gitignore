@@ -1,5 +1,9 @@
 node_modules/
 dist/
+.next/
+out/
+.turbo/
+tsconfig.tsbuildinfo
 *.log
 .DS_Store
 .env
@@ -8,9 +12,3 @@ dist/
 coverage/
 .cache/
 tokens.json
-
-# Next.js app
-web-next/node_modules/
-web-next/.next/
-web-next/out/
-web-next/.turbo/

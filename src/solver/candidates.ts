@@ -1,5 +1,5 @@
-import type { Catalog, ReinventSession } from "../types.js";
-import { VenueTransit } from "./transit-guard.js";
+import type { Catalog, ReinventSession } from "../types";
+import { VenueTransit } from "./transit-guard";
 
 export interface Candidate {
   session: ReinventSession;

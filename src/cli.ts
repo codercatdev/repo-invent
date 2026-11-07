@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { signIn, signOut, getValidTokens } from "./auth/pkce.js";
-import { loadConfig, loadFixture, redact } from "./config.js";
-import { AwsEventsClient } from "./api/events-client.js";
-import { fetchRepo } from "./scanner/repo-fetch.js";
-import { scanManifests } from "./scanner/manifest-parser.js";
-import { scanIac, hasWildcardIam } from "./scanner/iac-parser.js";
-import { buildFingerprint, diagnose } from "./scanner/diagnostics.js";
-import { prescribe } from "./solver/scorer.js";
-import { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./export/index.js";
-import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types.js";
+import { signIn, signOut, getValidTokens } from "./auth/pkce";
+import { loadConfig, loadFixture, redact } from "./config";
+import { AwsEventsClient } from "./api/events-client";
+import { fetchRepo } from "./scanner/repo-fetch";
+import { scanManifests } from "./scanner/manifest-parser";
+import { scanIac, hasWildcardIam } from "./scanner/iac-parser";
+import { buildFingerprint, diagnose } from "./scanner/diagnostics";
+import { prescribe } from "./solver/scorer";
+import { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./export/index";
+import type { ArchitecturalGap, Catalog, PrescriptionPlan, StackFingerprint } from "./types";
 
 const WEB_FRAMEWORKS = new Set([
   "Express",

@@ -1,4 +1,4 @@
-import type { PlanAction, ScheduleItem, SchedulePlan } from "../types.js";
+import type { PlanAction, ScheduleItem, SchedulePlan } from "../types";
 
 export interface PlanDiff {
   added: ScheduleItem[];

@@ -1,38 +1,20 @@
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
-import type { RepoSnapshot } from "../types.js";
+import { join } from "node:path";
+import type { RepoSnapshot } from "../types";
 
-// The files the sample repository ships, in the order the scanner would rank
-// them. Reading them at run time keeps the bundle and the sample identical.
 const SAMPLE_FILES = ["package.json", "infra/main.tf", "src/orders.js", "src/server.js"];
 
-function sampleDir(): string {
-  const here = import.meta.url.startsWith("file:")
-    ? dirname(fileURLToPath(import.meta.url))
-    : dirname(import.meta.url);
-  // src/scanner/demo-sample.ts -> ../../demo-sample; dist/scanner -> ../../demo-sample
-  return join(here, "..", "..", "demo-sample");
-}
-
-/**
- * The bundled demo repository.
- *
- * Shipping the files rather than a hand-written JSON copy keeps the sample
- * honest: the scanner reads exactly what a reader would see on GitHub, so every
- * gap it reports is reproducible from the repository that ships beside it.
- */
 export function sampleSnapshot(): RepoSnapshot | null {
-  const dir = sampleDir();
   const manifests: Record<string, string> = {};
   let bytes = 0;
   for (const path of SAMPLE_FILES) {
     try {
-      const content = readFileSync(join(dir, path), "utf8");
+      const target = join(/*turbopackIgnore: true*/ process.cwd(), "demo-sample", path);
+      const content = readFileSync(/*turbopackIgnore: true*/ target, "utf8");
       manifests[path] = content;
       bytes += Buffer.byteLength(content, "utf8");
     } catch {
-      // A missing file simply means the scan sees less; it is not an error.
+      // Missing sample file
     }
   }
   if (Object.keys(manifests).length === 0) return null;

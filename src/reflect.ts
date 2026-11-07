@@ -1,4 +1,4 @@
-import type { ArchitecturalGap } from "./types.js";
+import type { ArchitecturalGap } from "./types";
 
 export interface Reflection {
   sessionId: string;

@@ -38,13 +38,7 @@ export interface TravelCheck {
 let cached: VenueTransit | undefined;
 
 function dataDir(): string {
-  const here = import.meta.url.startsWith("file:")
-    ? import.meta.url
-    : new URL(`file://${import.meta.url}`).toString();
-  const moduleDir = dirname(fileURLToPath(here));
-  // src/solver -> ../../data when running from source; dist/solver -> ../../data
-  // when built, so the same relative walk reaches the bundled data folder.
-  return join(moduleDir, "..", "..", "data");
+  return join(process.cwd(), "data");
 }
 
 function normalizeVenue(value: string): string {
@@ -78,7 +72,7 @@ export class VenueTransit {
   static load(path?: string): VenueTransit {
     if (cached !== undefined && path === undefined) return cached;
     const target = path ?? join(dataDir(), "venues-transit.json");
-    const parsed = JSON.parse(readFileSync(target, "utf8")) as TransitMatrix;
+    const parsed = JSON.parse(readFileSync(/*turbopackIgnore: true*/ target, "utf8")) as TransitMatrix;
     const instance = new VenueTransit(parsed);
     if (path === undefined) cached = instance;
     return instance;

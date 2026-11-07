@@ -13,8 +13,8 @@ import type {
   SessionLevel,
   StackFingerprint,
   TravelCheck,
-} from "../types.js";
-import { VenueTransit } from "./transit-guard.js";
+} from "../types";
+import { VenueTransit } from "./transit-guard";
 
 const INTERACTIVE_FORMATS = new Set(["Chalk Talk", "Builders' Session", "Workshop", "Code Talk", "Lab"]);
 

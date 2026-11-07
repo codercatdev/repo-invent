@@ -1,6 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
-import { getValidTokens, type TokenSet } from "../auth/pkce.js";
+import { getValidTokens, type TokenSet } from "../auth/pkce";
 
 export const REMOTE_MCP_URL = "https://api.awsevents.com/mcp";
 

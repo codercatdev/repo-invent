@@ -1,11 +1,11 @@
-import { authorizedFetch } from "../auth/pkce.js";
+import { authorizedFetch } from "../auth/pkce";
 import type {
   ApiAuditReport,
   Catalog,
   PersonalTimeEntry,
   ReinventSession,
   SessionLevel,
-} from "../types.js";
+} from "../types";
 
 export const API_BASE = "https://api.awsevents.com/v1";
 export const DEFAULT_EVENT_ID = "reinvent2026";

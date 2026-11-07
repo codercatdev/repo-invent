@@ -1,4 +1,4 @@
-import type { DetectedService, RepoSnapshot, SignalSource } from "../types.js";
+import type { DetectedService, RepoSnapshot, SignalSource } from "../types";
 
 interface ServicePattern {
   service: string;

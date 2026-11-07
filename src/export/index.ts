@@ -1,5 +1,5 @@
-export { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./markdown.js";
-export { diffPlans, renderPlanDiff } from "./plan-diff.js";
+export { issuesToJson, renderIssueDrafts, renderRemediationMarkdown } from "./markdown";
+export { diffPlans, renderPlanDiff } from "./plan-diff";
 
-export type { IssueDraft } from "./markdown.js";
-export type { PlanDiff } from "./plan-diff.js";
+export type { IssueDraft } from "./markdown";
+export type { PlanDiff } from "./plan-diff";

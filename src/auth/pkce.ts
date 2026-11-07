@@ -238,15 +238,15 @@ export async function exchangeCode(params: {
 
 export async function saveTokens(tokens: TokenSet): Promise<void> {
   const path = tokensPath();
-  await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+  await mkdir(/*turbopackIgnore: true*/ dirname(path), { recursive: true, mode: 0o700 });
   const temporary = `${path}.${process.pid}.tmp`;
-  await writeFile(temporary, JSON.stringify(tokens, null, 2), { mode: 0o600 });
-  await rename(temporary, path);
+  await writeFile(/*turbopackIgnore: true*/ temporary, JSON.stringify(tokens, null, 2), { mode: 0o600 });
+  await rename(/*turbopackIgnore: true*/ temporary, path);
 }
 
 export async function loadTokens(): Promise<TokenSet | null> {
   try {
-    const text = await readFile(tokensPath(), "utf8");
+    const text = await readFile(/*turbopackIgnore: true*/ tokensPath(), "utf8");
     const parsed = JSON.parse(text) as Partial<TokenSet>;
     if (
       typeof parsed.accessToken !== "string" ||

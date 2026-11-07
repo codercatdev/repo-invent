@@ -6,7 +6,7 @@ import type {
   RemediationTicket,
   ScheduleItem,
   SchedulePlan,
-} from "../types.js";
+} from "../types";
 
 export interface IssueDraft {
   title: string;
