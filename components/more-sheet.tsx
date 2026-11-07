@@ -13,6 +13,7 @@ import {
   Star,
   X,
 } from "lucide-react";
+import { QrCodeSvg } from "@/components/qr-code";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -439,8 +440,8 @@ export function MoreSheet({
               <p className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">
                 AWS re:Invent 2026 • Las Vegas
               </p>
-              <div className="mx-auto flex size-48 items-center justify-center rounded-2xl border-2 border-border bg-white p-3 text-black">
-                <QrCode className="size-40" strokeWidth={1.5} />
+              <div className="mx-auto flex size-48 items-center justify-center rounded-2xl border-2 border-border bg-white p-3 shadow-tactile-sm">
+                <QrCodeSvg value="https://reinvent.awsevents.com/badge/REINVENT-2026-PKCE" size={168} />
               </div>
               <p className="font-mono text-sm font-black">ATTENDEE • REINVENT-2026-PKCE</p>
               <p className="text-xs text-muted-foreground">
