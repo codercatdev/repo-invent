@@ -4,6 +4,8 @@
 
 Built for the **AWS re:Invent 2026 Event Catalog API Hackathon**, `repo:Invent` combines the full official AWS re:Invent mobile companion experience with static GitHub repository analysis, 10-minute seat forfeiture transit guards, 171 community & sponsor parties (`conferenceparties.com`), the live **AWS Events Remote MCP Server** (`https://api.awsevents.com/mcp`), and in-browser **WebMCP** (`navigator.modelContext`).
 
+<img width="1200" height="675" alt="repo_invent" src="https://github.com/user-attachments/assets/c8fcc3a1-ecc7-43ca-9086-def0ca73aa73" />
+
 ---
 
 ## What This Project Does
