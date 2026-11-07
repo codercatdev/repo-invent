@@ -11,4 +11,5 @@ tsconfig.tsbuildinfo
 !.env.example
 coverage/
 .cache/
+.local/
 tokens.json
