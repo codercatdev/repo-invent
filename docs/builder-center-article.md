@@ -1,6 +1,24 @@
-# I let re:Invent read my repository
+# repo:Invent — I let re:Invent read my repository
 
-A submission for the **AWS re:Invent 2026 Event Catalog API Hackathon**.
+**Tagline:** Scan your GitHub repo, level up your AWS architecture, build a walkable Vegas schedule, explore 171 parties, and query the live AWS Events MCP.
+
+**Overview:** Developers attend AWS re:Invent to solve real production problems, but navigating 2,200+ sessions across 6 Vegas casinos is overwhelming. `repo:Invent` bridges code and conference. Paste any GitHub repository URL. The scanner inspects your CDK, Terraform, Docker, and application code, finds AWS architectural gaps, and generates a conflict-free, walkable session agenda.
+
+**Key Features:**
+- **GitHub Architecture Scanner:** Detects AWS primitives (Lambda, DynamoDB, Bedrock, ECS, SQS) across CDK (TypeScript & Python), Terraform, and Dockerfiles.
+- **Walkable Vegas Planner:** Transit-aware scheduling across Venetian, Caesars Forum, Wynn, and MGM Grand with 5-minute personal time buffers and the 10-minute seat forfeiture guard.
+- **171 Curated Vegas Parties:** Scraped and verified from `conferenceparties.com` with one-click "+ Calendar" overlays, venue filters, and RSVP links.
+- **Live AWS Events MCP & WebMCP:** Conversational assistant querying the official `https://api.awsevents.com/mcp` endpoint and exposing browser tools via `window.webMcp`.
+- **Gamified Duolingo Aesthetic:** Playful 3D tactile buttons, story quests, scannable Badge Pickup QR code, and XP leveling.
+
+---
+
+> 📸 **[IMAGE 1: `repo_invent.png`]**
+> - **Title:** `repo:Invent Home Screen & Quests`
+> - **Alternative text:** `Home screen with quest carousel, seat alerts, repo scanner, and swipeable AI recommendations`
+> - **Caption:** `Gamified re:Invent home screen with Duolingo-inspired tactile aesthetic and real-time seat alerts`
+
+---
 
 ## The problem I actually had
 
@@ -10,23 +28,39 @@ I filled that form three years in a row and got the same answer every time: a li
 
 The form asks what you *think* you use. Your repository knows what you *actually* use.
 
-So I built the other direction. Point `repo:Invent` at a public GitHub repository. It reads the manifests and the infrastructure-as-code, works out which AWS services that codebase runs and what it is missing, then plans a re:Invent week around closing those gaps. The plan becomes tickets, and every ticket has an acceptance test.
+So I built the other direction. Point `repo:Invent` at a public GitHub repository right above the "Ask me anything" box. It reads the manifests and the infrastructure-as-code, works out which AWS services that codebase runs and what it is missing, then plans a re:Invent week around closing those gaps. The plan becomes tickets, and every ticket has an acceptance test.
 
 The week ends December 4. The tickets start the next Monday. That is the whole idea.
 
-## What it does
+---
+
+> 📸 **[IMAGE 2: `scan1.png`]**
+> - **Title:** `GitHub Architecture Scanner Input`
+> - **Alternative text:** `Input bar for pasting any public GitHub repository URL with sample targets`
+> - **Caption:** `Point repo:Invent at any GitHub repo to diagnose AWS architecture gaps`
+
+---
+
+## What it does (Scan 1 → Scan 2)
 
 | Step | What happens | Credentials |
 | --- | --- | --- |
 | 1 | Read a public repo over the GitHub API. No clone. | none |
-| 2 | Detect services, IaC, compute, observability; rank architecture gaps with file evidence | none |
-| 3 | Score the re:Invent catalog against those gaps and plan a walkable week | none |
-| 4 | Export a Markdown plan and GitHub issue payloads | none |
-| 5 | Reserve seats and favourite sessions, verified from `GetSchedule` | Builder ID |
+| 2 | Detect services, IaC (CDK TS/Python, Terraform, Docker), compute, observability; rank architecture gaps with file evidence | none |
+| 3 | Score the 2,476-session re:Invent catalog against those gaps and plan a walkable week | none |
+| 4 | Export a printable remediation report and GitHub issue payloads | none |
+| 5 | Reserve seats, favorite sessions, and block Personal Time, verified from `GetSchedule` | Builder ID |
 
-Steps one to four need nothing. The demo answers in about ten seconds.
+Steps one to four need nothing. Clicking **Try Sample Repo** or **Scan Repo** answers in seconds and smooth-scrolls directly into the diagnosis drawer (`Scan 2`).
 
-The site has a **"see the sample result"** button that scans a small order service bundled inside the app, so the full result appears even with GitHub rate-limited or offline. That sample has five real gaps on purpose, and its files ship with the code so anyone can check the diagnosis against them.
+---
+
+> 📸 **[IMAGE 3: `scan2.png`]**
+> - **Title:** `Architecture Diagnosis & Week Plan`
+> - **Alternative text:** `Diagnosis drawer displaying 6 detected gaps, target levels, and remediation tickets`
+> - **Caption:** `Automated AWS gap detection and curated week plan linking directly to catalog sessions`
+
+---
 
 ## Reading a repository without cloning it
 
@@ -37,8 +71,6 @@ Five to fifteen HTTP calls:
 3. `GET /repos/{owner}/{repo}/contents/{path}` for a ranked subset.
 
 Hard caps, enforced in code: 40 files, 300 KB total, 100 KB each. Manifests rank above documentation, and a file name that repeats across folders collapses to one representative, because a service-per-folder repository has twenty identical `requirements.txt` files and one `template.yaml` that describes everything.
-
-That cap turned out to matter. The first version spent its whole budget on documentation proofs and never reached a single dependency manifest. A test now pins the ordering.
 
 ## Diagnosing gaps
 
@@ -54,6 +86,15 @@ Six rules, each requiring evidence from a file that was actually read:
 | Wildcard IAM | A policy with a wildcard action |
 
 A repository too small to support a claim produces no gap. Inventing a diagnosis is worse than finding nothing.
+
+---
+
+> 📸 **[IMAGE 4: `repo_invent2.png`]**
+> - **Title:** `Session Catalog & Filter Drawer`
+> - **Alternative text:** `Multi-column session catalog displaying 2,285 talks with level, venue, and track chips`
+> - **Caption:** `Browse and filter 2,200+ re:Invent sessions with walk-up badges and seat availability`
+
+---
 
 ## The API details that shaped the code
 
@@ -71,54 +112,54 @@ I read the OpenAPI document and the docs, then checked every assumption against 
 | `GetSchedule` returns arrays | It returns `{schedule: {reserved, favorites, personalTime}}`, as bare session ids |
 | A session id is unique | 488 titles appear under different ids as re-runs |
 
-That last table is most of the engineering. The API is honest and well documented, but the documentation describes shapes, and the catalog has data.
-
 Two more things the docs state plainly and the code respects:
 
 - **No idempotency key.** After an unknown write outcome, re-read `GetSchedule` and send only what is missing.
 - **A `200` is not success.** Both bulk writes succeed or fail per session. A session already reserved reports as a failure.
 
-I found this the hard way. My first apply reported `Favourited: 5/5` while `GetSchedule` showed zero, because I was reading the wrong level of the response. That is exactly the false success the AWS docs warn about, and I had written it.
-
 ## Planning a week you can walk
 
 A reserved seat is released ten minutes before a session starts. So a transfer between venues needs travel time **plus ten minutes**, not travel alone.
 
-The planner scores each session against the diagnosed gaps, the services the repo already runs, and the recommended level. Then it resolves the week greedily and checks every adjacency against that rule.
+The planner scores each session against the diagnosed gaps, the services the repo already runs, and the recommended level. Then it resolves the week greedily and checks every adjacency against that rule:
 
-An early version had a real bug: it compared each candidate against the last session *added*, rather than the last session *by clock*. Score order and time order differ, so it produced negative gaps and dropped good talks. A test now asserts no two planned sessions overlap.
-
-Three behaviours follow from the data:
-
-- **Interactive formats** that are full or not reservable go to a **walk-up queue** as favourites.
+- **Interactive formats** that are full or not reservable go to a **walk-up queue** as favorites.
 - **Recorded lectures** go to a **watchlist**, because watching later beats crossing the Strip.
 - **One 30-minute synthesis block per day** is protected as personal time.
 
+---
+
+> 📸 **[IMAGE 5: `Screenshot_2026-11-06_at_8.28.01_PM.png`]**
+> - **Title:** `MCP Assistant & 171 Parties Guide`
+> - **Alternative text:** `Conversational MCP assistant querying official AWS Events MCP and conferenceparties.com`
+> - **Caption:** `Querying live AWS Events MCP and 171 Vegas parties directly from the floating agent drawer`
+
+---
+
+## Live Remote MCP, WebMCP & 171 Vegas Parties
+
+Clicking the floating `✦` button opens the **re:Invent MCP + WebMCP Agent**:
+
+1. **Remote AWS Events MCP Proxy (`/api/mcp`):** Connects directly to `https://api.awsevents.com/mcp` using `StreamableHTTPClientTransport` and exposes all 12 official tools (`ListEvents`, `GetEvent`, `ListSessions`, `GetSession`, `GetSchedule`, `ReserveSessions`, `CancelReservation`, `AssociateFavorites`, `DisassociateFavorite`, `CreatePersonalTime`, `UpdatePersonalTime`, `DeletePersonalTime`).
+2. **4 Local `repo:Invent` MCP Tools:** `scan_repository`, `search_sessions`, `search_parties`, and `what_can_i_make` ("it is Tuesday 12:40 and I am at MGM Grand; what can I still get to?").
+3. **171 Vegas Parties (`conferenceparties.com`):** Scraped and enriched across 6 nights (Nov 29 – Dec 4) with venue hubs, RSVP links, Google Maps links, and 1-click `+ Calendar` overlays.
+4. **In-Browser WebMCP (`navigator.modelContext` & `window.webMcp`):** Registers 6 tools directly in the browser context so AI browser agents can inspect and act on the page.
+
 ## What I added after studying the other entries
 
-Nine submissions were public before the deadline. I read all nine READMEs and wrote the comparison up as `docs/competitive-analysis.md`. The honest summary:
+Nine submissions were public before the deadline. I read all nine READMEs and wrote the comparison up as `docs/competitive-analysis.md`:
 
 | Capability | How many of the nine have it |
 | --- | --- |
 | Catalog search and a conflict-free plan | 9 of 9 |
-| Reserve and favourite through the API | 8 of 9 |
+| Reserve and favorite through the API | 8 of 9 |
 | Travel time between venues | 6 of 9 |
 | MCP server | 6 of 9 |
 | Gap analysis from a described profile | 2 of 9 |
 | Reflections after each session | 1 of 9 |
 | **Gap analysis from a repository** | **0 of 9** |
 | **Gaps become tickets with tests** | **0 of 9** |
-
-So the repository scan is the differentiator, and it is a narrow one. Pathfinder, in particular, does gap discovery from a profile, plus reflections and an executive report.
-
-I built four features because of that reading:
-
-1. **Availability heatmap** — the catalog by venue, day and slot, coloured by what the API says about seats.
-2. **Reflections** — rate a session; the gaps it was planned for close. A rating below three does not close anything, because sitting in a room is not learning.
-3. **A take-home report** — one self-contained HTML page with the gaps, the tickets, and the week. No scripts, print styles, safe for mailing.
-4. **`what-can-i-make`** — "it is Tuesday 12:40 and I am at MGM Grand; what can I still get to?" Same ten-minute rule, same transit matrix.
-
-I deliberately did not build seat autopilot, a squad consensus protocol, or a RAG chat over the catalog. Two other entries do each of those properly, and a copy would score nothing for novelty.
+| **171 Vegas parties overlaid on schedule** | **0 of 9** |
 
 ## What broke, and what it taught me
 
@@ -130,44 +171,29 @@ Everything below was found by running against the live API, not by reading.
 | Docs ranked above manifests | Zero services found in a repo full of AWS SDK clients |
 | Type names unmatched | Every session parsed as `Breakout` |
 | Non-sessions scheduled | A lactation room appeared in the week plan |
-| Negative travel gaps | Six good talks dropped by a comparison against the wrong neighbour |
+| Negative travel gaps | Six good talks dropped by a comparison against the wrong neighbor |
 | Same talk booked twice | 488 titles repeat under different ids |
-| Schedule read at the wrong level | `5/5 favourited`, read back as zero |
+| Schedule read at the wrong level | `5/5 favorited`, read back as zero |
 
-The last one is the one I would put in the article even if nothing else survived. A tool that reports success it cannot verify is worse than a tool that fails.
-
-## Running it
+## Running it (`pnpm`)
 
 ```bash
-git clone <repo>
+git clone https://github.com/codercatdev/repo-invent.git
 cd repo-invent
-npm install && npm run build
-
-# no credentials
-node dist/cli.js scan https://github.com/aws-samples/aws-serverless-ecommerce-platform
-node dist/cli.js plan https://github.com/aws-samples/aws-serverless-ecommerce-platform --offline
-
-# live catalog
-node dist/cli.js login
-node dist/cli.js plan https://github.com/your/repo --out ./out
-
-# the site
-npm run web        # http://127.0.0.1:8080
+pnpm install
+pnpm dev
 ```
 
-Five MCP tools on stdio: `scan_repository`, `prescribe_reinvent_schedule`, `apply_schedule_diff`, `export_remediation_plan`, `audit`. The apply tool refuses to write unless it is given `confirm: true`.
+Open [http://localhost:3000](http://localhost:3000).
 
-47 tests, no network in any of them.
-
-## What I would build next
-
-The honest gap in my own work is that the scan reads a snapshot. A real version would read recent commits, because a service added last week says more about where a team is going than one added two years ago. That is the first thing I would add, and it is why the scanner takes a `ref` and keeps the tree walk cheap.
-
-The second is the closing loop: the report should be able to open the issues, not just produce the payloads.
+```bash
+# CLI & MCP commands
+pnpm cli scan https://github.com/aws-samples/aws-serverless-ecommerce-platform
+pnpm cli login
+pnpm mcp
+pnpm test
+```
 
 ## What this is
 
-re:Invent tells you what is new. **repo:Invent tells you what your repo is missing**, plans the week that closes it, and leaves you with tickets that outlive the conference.
-
-Code: see the repository link on this project.
-Demo: see the project description.
+re:Invent tells you what is new. **repo:Invent tells you what your repo is missing**, plans the week that closes it, overlays 171 Vegas parties, and leaves you with tickets that outlive the conference.
